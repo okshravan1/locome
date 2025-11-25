@@ -1,0 +1,1137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Home - LOCOME</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Poppins', sans-serif;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(180deg, #FFFFFF 0%, #F1EDFF 33%, #D9CCFF 66%, #C1A4FF 100%);
+      padding: 20px;
+    }
+
+    .phone-wrapper {
+      width: 360px;
+      height: 780px;
+      border-radius: 40px;
+      background: linear-gradient(180deg, #A77BFF 0%, #8C5BFF 40%, #6C3BFF 100%);
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      border: 12px solid #1a1a1a;
+    }
+
+    .phone-wrapper::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 150px;
+      height: 30px;
+      background: #1a1a1a;
+      border-radius: 0 0 20px 20px;
+      z-index: 10;
+    }
+
+    .status-bar {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      padding: 8px 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 14px;
+      font-weight: 600;
+      color: #0F1724;
+      z-index: 11;
+    }
+
+    .status-time {
+      margin-top: 4px;
+    }
+
+    .status-icons {
+      display: flex;
+      gap: 4px;
+      align-items: center;
+      margin-top: 4px;
+    }
+
+    .header {
+      padding: 46px 20px 20px;
+      position: relative;
+      z-index: 5;
+    }
+
+    .header-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 20px;
+    }
+
+    .location-section {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .mall-thumb {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.25);
+      backdrop-filter: blur(6px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      border: 2px solid rgba(255, 255, 255, 0.3);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+
+    .location-info {
+      flex: 1;
+    }
+
+    .location-name {
+      font-size: 16px;
+      font-weight: 700;
+      color: #0F1724;
+      line-height: 1.2;
+      margin-bottom: 2px;
+    }
+
+    .location-area {
+      font-size: 13px;
+      font-weight: 400;
+      color: rgba(15, 23, 36, 0.65);
+    }
+
+    .header-icons {
+      display: flex;
+      gap: 8px;
+    }
+
+    .icon-btn {
+      width: 38px;
+      height: 38px;
+      border-radius: 12px;
+      background: rgba(255, 255, 255, 0.2);
+      backdrop-filter: blur(6px);
+      border: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      cursor: pointer;
+      transition: all 200ms ease;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+
+    .icon-btn:active {
+      background: rgba(255, 255, 255, 0.3);
+      transform: scale(0.95);
+    }
+
+    .hero-carousel {
+      padding: 0 20px 20px;
+      overflow-x: auto;
+      display: flex;
+      gap: 12px;
+      scroll-snap-type: x mandatory;
+      scrollbar-width: none;
+    }
+
+    .hero-carousel::-webkit-scrollbar {
+      display: none;
+    }
+
+    .hero-card {
+      min-width: 280px;
+      background: rgba(255, 255, 255, 0.15);
+      backdrop-filter: blur(20px);
+      border-radius: 20px;
+      padding: 16px;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+      border: 1.5px solid rgba(255, 255, 255, 0.25);
+      scroll-snap-align: start;
+      flex-shrink: 0;
+    }
+
+    .hero-image {
+      width: 100%;
+      height: 120px;
+      background: linear-gradient(135deg, rgba(207, 255, 226, 0.3) 0%, rgba(191, 161, 255, 0.3) 100%);
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 40px;
+      margin-bottom: 12px;
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+    }
+
+    .hero-image img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center;
+      position: absolute;
+      top: 0;
+      left: 0;
+      border-radius: 14px;
+    }
+
+    .hero-image-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: linear-gradient(135deg, rgba(0, 0, 0, 0.2) 0%, rgba(0, 0, 0, 0.4) 100%);
+      z-index: 1;
+    }
+
+    .hero-badge,
+    .hero-image > span {
+      position: relative;
+      z-index: 2;
+    }
+
+    .hero-badge {
+      position: absolute;
+      top: 8px;
+      left: 8px;
+      background: rgba(207, 255, 226, 0.95);
+      padding: 4px 10px;
+      border-radius: 12px;
+      font-size: 11px;
+      font-weight: 600;
+      color: #0F1724;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .hero-title {
+      font-size: 15px;
+      font-weight: 700;
+      color: #FFFFFF;
+      margin-bottom: 4px;
+      line-height: 1.3;
+    }
+
+    .hero-subtitle {
+      font-size: 12px;
+      font-weight: 400;
+      color: rgba(15, 23, 36, 0.7);
+      line-height: 1.3;
+    }
+
+    .content-wrapper {
+      flex: 1;
+      background: #FFFFFF;
+      border-radius: 40px 40px 0 0;
+      display: flex;
+      flex-direction: column;
+      box-shadow: 0 -10px 40px rgba(0, 0, 0, 0.1);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .content {
+      flex: 1;
+      overflow-y: auto;
+      overflow-x: hidden;
+      padding: 24px 0 90px 0;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    .search-section {
+      padding: 0 20px 20px;
+    }
+
+    .search-pill {
+      background: #F5F5F7;
+      border-radius: 24px;
+      padding: 14px 18px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      cursor: pointer;
+      border: 2px solid #E8E8EA;
+      transition: all 200ms ease;
+    }
+
+    .search-pill:active {
+      background: #ECECEE;
+      transform: scale(0.98);
+    }
+
+    .search-icon {
+      font-size: 18px;
+      opacity: 0.6;
+    }
+
+    .search-placeholder {
+      flex: 1;
+      font-size: 14px;
+      font-weight: 400;
+      color: rgba(15, 23, 36, 0.5);
+    }
+
+    .filter-tabs {
+      padding: 0 20px 16px;
+      display: flex;
+      gap: 12px;
+      background: #FFFFFF;
+    }
+
+    .filter-tab {
+      flex: 1;
+      padding: 10px 16px;
+      border-radius: 20px;
+      font-size: 14px;
+      font-weight: 500;
+      color: rgba(15, 23, 36, 0.6);
+      background: #F5F5F7;
+      border: none;
+      cursor: pointer;
+      transition: all 200ms ease;
+      font-family: 'Poppins', sans-serif;
+    }
+
+    .filter-tab.active {
+      background: linear-gradient(90deg, #D5BEFF 0%, #BFA1FF 100%);
+      color: #0F1724;
+      font-weight: 600;
+      box-shadow: 0 4px 12px rgba(191, 161, 255, 0.3);
+    }
+
+    .filter-tab:active {
+      transform: scale(0.96);
+    }
+
+    .section-date {
+      padding: 12px 20px 10px;
+      font-size: 13px;
+      font-weight: 600;
+      color: rgba(15, 23, 36, 0.5);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .store-card {
+      margin: 0 20px 16px;
+      background: #FFFFFF;
+      border-radius: 20px;
+      padding: 14px;
+      display: flex;
+      gap: 14px;
+      cursor: pointer;
+      transition: all 200ms ease;
+      border: 2px solid #F0F0F2;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+    }
+
+    .store-card:active {
+      transform: scale(0.98);
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+    }
+
+    .store-thumbnail {
+      width: 90px;
+      height: 90px;
+      border-radius: 14px;
+      background: #F5F5F7;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      position: relative;
+      overflow: hidden;
+      border: 1px solid #F0F0F2;
+    }
+
+    .store-thumbnail img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center;
+    }
+
+    .store-info {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .store-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: start;
+      gap: 8px;
+    }
+
+    .store-name {
+      font-size: 16px;
+      font-weight: 700;
+      color: #0F1724;
+      margin-bottom: 4px;
+      line-height: 1.2;
+    }
+
+    .store-category {
+      font-size: 12px;
+      font-weight: 400;
+      color: rgba(15, 23, 36, 0.6);
+      line-height: 1.3;
+      margin-bottom: 8px;
+    }
+
+    .store-offer {
+      background: linear-gradient(90deg, rgba(207, 255, 226, 0.8) 0%, rgba(207, 255, 226, 0.5) 100%);
+      padding: 4px 10px;
+      border-radius: 10px;
+      font-size: 11px;
+      font-weight: 600;
+      color: #0F1724;
+      display: inline-block;
+      width: fit-content;
+    }
+
+    .store-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .store-distance {
+      font-size: 12px;
+      font-weight: 500;
+      color: rgba(15, 23, 36, 0.5);
+    }
+
+    .store-menu-btn {
+      width: 28px;
+      height: 28px;
+      border-radius: 8px;
+      background: #F5F5F7;
+      border: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 16px;
+    }
+
+    .quick-actions {
+      padding: 0 20px 20px;
+      display: flex;
+      gap: 12px;
+    }
+
+    .quick-action-card {
+      flex: 1;
+      background: linear-gradient(135deg, #F8F7FF 0%, #EEE9FF 100%);
+      border-radius: 18px;
+      padding: 16px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 200ms ease;
+      border: 2px solid rgba(191, 161, 255, 0.2);
+    }
+
+    .quick-action-card:active {
+      transform: scale(0.96);
+    }
+
+    .quick-action-icon {
+      font-size: 32px;
+      margin-bottom: 8px;
+    }
+
+    .quick-action-label {
+      font-size: 12px;
+      font-weight: 600;
+      color: #0F1724;
+    }
+
+    .bottom-nav {
+      position: absolute;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(15, 23, 36, 0.9);
+      backdrop-filter: blur(20px);
+      border-radius: 30px;
+      padding: 12px 28px;
+      display: flex;
+      gap: 44px;
+      z-index: 100;
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+    }
+
+    .nav-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      cursor: pointer;
+      transition: all 200ms ease;
+      text-decoration: none;
+    }
+
+    .nav-icon {
+      font-size: 24px;
+      opacity: 0.5;
+      transition: all 200ms ease;
+    }
+
+    .nav-item.active .nav-icon {
+      opacity: 1;
+      filter: drop-shadow(0 0 12px #CFFFE2);
+    }
+
+    .nav-label {
+      font-size: 10px;
+      font-weight: 500;
+      color: rgba(255, 255, 255, 0.5);
+      transition: color 200ms ease;
+    }
+
+    .nav-item.active .nav-label {
+      color: #CFFFE2;
+    }
+
+    .search-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: linear-gradient(180deg, #A77BFF 0%, #8C5BFF 40%, #6C3BFF 100%);
+      z-index: 200;
+      display: none;
+      flex-direction: column;
+      animation: slideUp 300ms ease;
+    }
+
+    .search-overlay.visible {
+      display: flex;
+    }
+
+    @keyframes slideUp {
+      from {
+        transform: translateY(100%);
+      }
+      to {
+        transform: translateY(0);
+      }
+    }
+
+    .search-header {
+      padding: 50px 20px 16px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .back-btn {
+      width: 36px;
+      height: 36px;
+      border-radius: 10px;
+      background: rgba(255, 255, 255, 0.2);
+      backdrop-filter: blur(6px);
+      border: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      font-weight: 600;
+      color: #0F1724;
+      cursor: pointer;
+    }
+
+    .search-input {
+      flex: 1;
+      background: rgba(255, 255, 255, 0.25);
+      backdrop-filter: blur(6px);
+      border-radius: 20px;
+      padding: 12px 16px;
+      font-size: 15px;
+      font-weight: 400;
+      color: #0F1724;
+      border: 1.5px solid rgba(255, 255, 255, 0.3);
+      font-family: 'Poppins', sans-serif;
+      outline: none;
+    }
+
+    .search-input::placeholder {
+      color: rgba(15, 23, 36, 0.5);
+    }
+
+    .search-results {
+      flex: 1;
+      overflow-y: auto;
+      padding: 0 20px 20px;
+    }
+
+    .search-section-title {
+      font-size: 13px;
+      font-weight: 600;
+      color: rgba(15, 23, 36, 0.7);
+      margin: 16px 0 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .search-item {
+      background: rgba(255, 255, 255, 0.12);
+      backdrop-filter: blur(6px);
+      border-radius: 16px;
+      padding: 14px 16px;
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      cursor: pointer;
+      border: 1.5px solid rgba(255, 255, 255, 0.2);
+      transition: all 200ms ease;
+    }
+
+    .search-item:active {
+      transform: scale(0.98);
+      background: rgba(255, 255, 255, 0.18);
+    }
+
+    .search-item-icon {
+      font-size: 24px;
+    }
+
+    .search-item-text {
+      flex: 1;
+    }
+
+    .search-item-name {
+      font-size: 15px;
+      font-weight: 600;
+      color: #0F1724;
+      margin-bottom: 2px;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      * {
+        animation-duration: 0.01ms !important;
+        transition-duration: 0.01ms !important;
+      }
+    }
+
+    /* --- Gigs Happening Now Section Styles --- */
+.gigs-list {
+  padding: 0 20px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.gig-card {
+  display: flex;
+  gap: 12px;
+  background: #F8F8FA; /* Slightly different background for visual separation */
+  border-radius: 16px;
+  padding: 10px;
+  cursor: pointer;
+  transition: all 200ms ease;
+  border: 1px solid #EAEAEA;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05);
+}
+
+.gig-card:active {
+  transform: scale(0.98);
+  background: #F5F5F7;
+}
+
+.gig-image {
+  width: 90px;
+  height: 60px;
+  border-radius: 10px;
+  overflow: hidden;
+  flex-shrink: 0;
+  position: relative;
+}
+
+.gig-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+}
+
+.gig-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.gig-date {
+  font-size: 11px;
+  font-weight: 700;
+  color: #6C3BFF; /* Highlighted color */
+  text-transform: uppercase;
+  margin-bottom: 2px;
+  letter-spacing: 0.3px;
+}
+
+.gig-name {
+  font-size: 14px;
+  font-weight: 600;
+  color: #0F1724;
+  line-height: 1.2;
+}
+
+/* Carousel Indicators */
+.carousel-indicators {
+  display: flex;
+  justify-content: center;
+  gap: 6px;
+  padding-bottom: 20px; /* Space below the dots, before content-wrapper starts */
+  margin-top: -10px; /* Pulls the dots up slightly closer to the carousel */
+}
+
+.indicator {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background-color: rgba(15, 23, 36, 0.25); /* Dark, semi-transparent default dot */
+  transition: all 300ms ease;
+}
+
+.indicator.active {
+  width: 18px; /* Stretches the active dot horizontally */
+  border-radius: 3px;
+  background-color: #FFFFFF; /* Solid color for the active dot */
+}
+
+
+  </style>
+</head>
+<body>
+  <div class="phone-wrapper">
+    <div class="status-bar">
+      <div class="status-time">9:41</div>
+      <div class="status-icons">
+        <span>📶</span>
+        <span>📡</span>
+        <span>🔋</span>
+      </div>
+    </div>
+
+    <div class="header">
+      <div class="header-top">
+        <div class="location-section">
+          <div class="mall-thumb">🏬</div>
+          <div class="location-info">
+            <div class="location-name">Infinity Mall</div>
+            <div class="location-area">Andheri, Mumbai</div>
+          </div>
+        </div>
+        <div class="header-icons">
+          <button class="icon-btn" id="searchIconBtn" aria-label="Search">🔍</button>
+          <button class="icon-btn" aria-label="Notifications">🔔</button>
+        </div>
+      </div>
+
+
+
+      <div class="hero-carousel">
+        <div class="hero-card">
+          <div class="hero-image">
+            <img src="/Users/macbookairm1/Desktop/locome/zara.jpg" alt="Sale">
+            <div class="hero-image-overlay"></div>
+            <div class="hero-badge">Mega Sale</div>
+            <span>🎉</span>
+          </div>
+          <div class="hero-title">End of Season Sale</div>
+          <div class="hero-subtitle">Up to 70% OFF on brands</div>
+        </div>
+
+
+        <div class="hero-card">
+          <div class="hero-image" style="background: linear-gradient(135deg, rgba(255, 240, 180, 0.3) 0%, rgba(255, 200, 150, 0.3) 100%);">
+            <img src="/Users/macbookairm1/Desktop/locome/kfc.avif" alt="Food">
+            <div class="hero-image-overlay"></div>
+            <div class="hero-badge" style="background: rgba(255, 240, 180, 0.95);">Flash Deal</div>
+            <span>🍔</span>
+          </div>
+          <div class="hero-title">₹99 Combo Meals</div>
+          <div class="hero-subtitle">Limited time food court deals</div>
+        </div>
+
+        <div class="hero-card">
+          <div class="hero-image" style="background: linear-gradient(135deg, rgba(200, 220, 255, 0.3) 0%, rgba(180, 200, 255, 0.3) 100%);">
+            <img src="/Users/macbookairm1/Desktop/locome/pvr.webp" alt="Movie">
+            <div class="hero-image-overlay"></div>
+            <div class="hero-badge" style="background: rgba(200, 220, 255, 0.95);">Movie Night</div>
+            <span>🎬</span>
+          </div>
+          <div class="hero-title">Flat 50% OFF</div>
+          <div class="hero-subtitle">All shows before 6 PM</div>
+        </div>
+
+ 
+      </div>
+    </div>
+           <div class="carousel-indicators">
+  <div class="indicator active"></div>
+  <div class="indicator"></div>
+  <div class="indicator"></div>
+</div>
+
+
+    <div class="content-wrapper">
+      <div class="content">
+        <div class="search-section">
+          <div class="search-pill" id="searchPill">
+            <span class="search-icon">🔍</span>
+            <span class="search-placeholder">Search stores, brands, offers...</span>
+          </div>
+        </div>
+
+        <div class="filter-tabs">
+          <button class="filter-tab active">All</button>
+          <button class="filter-tab">Fashion</button>
+          <button class="filter-tab">Food</button>
+        </div>
+
+        <div class="section-date">Today • Nov 25</div>
+
+        <!-- All Stores (shown by default) -->
+        <div class="store-list" data-category="all">
+          <div class="store-card" onclick="window.location.href='store.html'">
+            <div class="store-thumbnail">
+              <img src="/Users/macbookairm1/Desktop/locome/zara.jpg" alt="Zara">
+            </div>
+            <div class="store-info">
+              <div>
+                <div class="store-header">
+                  <div>
+                    <div class="store-name">Zara</div>
+                    <div class="store-category">Fashion & Lifestyle • Floor 2</div>
+                  </div>
+                </div>
+                <div class="store-offer">20% OFF on all items</div>
+              </div>
+              <div class="store-footer">
+                <div class="store-distance">150 steps • 2 min</div>
+                <button class="store-menu-btn" onclick="event.stopPropagation()">⋮</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="store-card" onclick="window.location.href='store.html'">
+            <div class="store-thumbnail">
+              <img src="/Users/macbookairm1/Desktop/locome/kfc.avif" alt="KFC">
+            </div>
+            <div class="store-info">
+              <div>
+                <div class="store-header">
+                  <div>
+                    <div class="store-name">KFC</div>
+                    <div class="store-category">Fast Food • Food Court</div>
+                  </div>
+                </div>
+                <div class="store-offer">Popcorn Bucket ₹99</div>
+              </div>
+              <div class="store-footer">
+                <div class="store-distance">80 steps • 1 min</div>
+                <button class="store-menu-btn" onclick="event.stopPropagation()">⋮</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="store-card" onclick="window.location.href='store.html'">
+            <div class="store-thumbnail">
+              <img src="/Users/macbookairm1/Desktop/locome/snitch.webp" alt="Snitch">
+            </div>
+            <div class="store-info">
+              <div>
+                <div class="store-header">
+                  <div>
+                    <div class="store-name">Snitch</div>
+                    <div class="store-category">Men's Fashion • Floor 1</div>
+                  </div>
+                </div>
+                <div class="store-offer">Buy 2 Get 1 Free</div>
+              </div>
+              <div class="store-footer">
+                <div class="store-distance">200 steps • 3 min</div>
+                <button class="store-menu-btn" onclick="event.stopPropagation()">⋮</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Fashion Stores (hidden by default) -->
+        <div class="store-list" data-category="fashion" style="display: none;">
+          <div class="store-card" onclick="window.location.href='store.html'">
+            <div class="store-thumbnail">
+              <img src="/Users/macbookairm1/Desktop/locome/zara.jpg" alt="Zara">
+            </div>
+            <div class="store-info">
+              <div>
+                <div class="store-header">
+                  <div>
+                    <div class="store-name">Zara</div>
+                    <div class="store-category">Fashion & Lifestyle • Floor 2</div>
+                  </div>
+                </div>
+                <div class="store-offer">20% OFF on all items</div>
+              </div>
+              <div class="store-footer">
+                <div class="store-distance">150 steps • 2 min</div>
+                <button class="store-menu-btn" onclick="event.stopPropagation()">⋮</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="store-card" onclick="window.location.href='store.html'">
+            <div class="store-thumbnail">
+              <img src="/Users/macbookairm1/Desktop/locome/snitch.webp" alt="Snitch">
+            </div>
+            <div class="store-info">
+              <div>
+                <div class="store-header">
+                  <div>
+                    <div class="store-name">Snitch</div>
+                    <div class="store-category">Men's Fashion • Floor 1</div>
+                  </div>
+                </div>
+                <div class="store-offer">Buy 2 Get 1 Free</div>
+              </div>
+              <div class="store-footer">
+                <div class="store-distance">200 steps • 3 min</div>
+                <button class="store-menu-btn" onclick="event.stopPropagation()">⋮</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Food Stores (hidden by default) -->
+        <div class="store-list" data-category="food" style="display: none;">
+          <div class="store-card" onclick="window.location.href='store.html'">
+            <div class="store-thumbnail">
+              <img src="/Users/macbookairm1/Desktop/locome/kfc.avif" alt="KFC">
+            </div>
+            <div class="store-info">
+              <div>
+                <div class="store-header">
+                  <div>
+                    <div class="store-name">KFC</div>
+                    <div class="store-category">Fast Food • Food Court</div>
+                  </div>
+                </div>
+                <div class="store-offer">Popcorn Bucket ₹99</div>
+              </div>
+              <div class="store-footer">
+                <div class="store-distance">80 steps • 1 min</div>
+                <button class="store-menu-btn" onclick="event.stopPropagation()">⋮</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+
+
+
+<div class="section-date">Gigs Happening Now</div>
+
+<div class="gigs-list">
+  <div class="gig-card">
+    <div class="gig-image">
+      <img src="/Users/macbookairm1/Desktop/locome/e1.png" alt="Live Music Event">
+    </div>
+    <div class="gig-info">
+      <div class="gig-date">🎤 TODAY, 7:00 PM</div>
+      <div class="gig-name">Acoustic Evening with Sarah J.</div>
+    </div>
+  </div>
+
+  <div class="gig-card">
+    <div class="gig-image">
+      <img src="/Users/macbookairm1/Desktop/locome/e2.png" alt="Stand-up Comedy Show">
+    </div>
+    <div class="gig-info">
+      <div class="gig-date">😂 FRIDAY, 8:30 PM</div>
+      <div class="gig-name">Mall Laughs Comedy Show</div>
+    </div>
+  </div>
+
+  <div class="gig-card">
+    <div class="gig-image">
+      <img src="/Users/macbookairm1/Desktop/locome/e3.png" alt="Magic Show">
+    </div>
+    <div class="gig-info">
+      <div class="gig-date">🎩 SATURDAY, 4:00 PM</div>
+      <div class="gig-name">Illusionist Max's Wonders</div>
+    </div>
+  </div>
+</div>
+
+
+        <div class="section-date">Quick Actions</div>
+
+        <div class="quick-actions">
+          <div class="quick-action-card">
+            <div class="quick-action-icon">🗺️</div>
+            <div class="quick-action-label">Navigate</div>
+          </div>
+          <div class="quick-action-card">
+            <div class="quick-action-icon">🎫</div>
+            <div class="quick-action-label">Offers</div>
+          </div>
+          <div class="quick-action-card">
+            <div class="quick-action-icon">🧭</div>
+            <div class="quick-action-label">Route</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="search-overlay" id="searchOverlay">
+      <div class="search-header">
+        <button class="back-btn" id="closeSearch">‹</button>
+        <input type="text" class="search-input" placeholder="Search stores..." autofocus>
+      </div>
+      <div class="search-results">
+        <div class="search-section-title">Recent Searches</div>
+        <div class="search-item">
+
+          <div class="search-item-icon">🛍️</div>
+
+          <div class="search-item-text">
+            <div class="search-item-name">Zara</div>
+            <div class="search-item-subtitle">Fashion & Apparel</div>
+          </div>
+        </div>
+        <div class="search-item">
+          <div class="search-item-icon">🍗</div>
+          <div class="search-item-text">
+            <div class="search-item-name">KFC</div>
+            <div class="search-item-subtitle">Fast Food Restaurant</div>
+          </div>
+        </div>
+
+        <div class="search-section-title">Popular Stores</div>
+        <div class="search-item">
+          <div class="search-item-icon">☕</div>
+          <div class="search-item-text">
+            <div class="search-item-name">Starbucks</div>
+            <div class="search-item-subtitle">Coffee & Beverages</div>
+          </div>
+        </div>
+        <div class="search-item">
+          <div class="search-item-icon">🍔</div>
+          <div class="search-item-text">
+            <div class="search-item-name">McDonald's</div>
+            <div class="search-item-subtitle">Fast Food</div>
+          </div>
+        </div>
+        <div class="search-item">
+          <div class="search-item-icon">👗</div>
+          <div class="search-item-text">
+            <div class="search-item-name">H&M</div>
+            <div class="search-item-subtitle">Fashion & Accessories</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="bottom-nav">
+      <a href="#" class="nav-item active">
+        <div class="nav-icon">🏠</div>
+        <div class="nav-label">Home</div>
+      </a>
+      <a href="#" class="nav-item">
+        <div class="nav-icon">🏪</div>
+        <div class="nav-label">Stores</div>
+      </a>
+      <a href="#" class="nav-item">
+        <div class="nav-icon">🧭</div>
+        <div class="nav-label">Route</div>
+      </a>
+      <a href="saved.html" class="nav-item">
+        <div class="nav-icon">⭐</div>
+        <div class="nav-label">Saved</div>
+      </a>
+    </div>
+  </div>
+
+  <script>
+    const filterTabs = document.querySelectorAll('.filter-tab');
+    const storeLists = document.querySelectorAll('.store-list');
+    const searchPill = document.getElementById('searchPill');
+    const searchIconBtn = document.getElementById('searchIconBtn');
+    const searchOverlay = document.getElementById('searchOverlay');
+    const closeSearch = document.getElementById('closeSearch');
+
+    // Category filtering
+    filterTabs.forEach(tab => {
+      tab.addEventListener('click', () => {
+        // Update active tab
+        filterTabs.forEach(t => t.classList.remove('active'));
+        tab.classList.add('active');
+
+        // Get category from tab text
+        const category = tab.textContent.toLowerCase();
+
+        // Show/hide store lists based on category
+        storeLists.forEach(list => {
+          const listCategory = list.getAttribute('data-category');
+          if (category === 'all' || listCategory === category) {
+            list.style.display = 'block';
+          } else {
+            list.style.display = 'none';
+          }
+        });
+      });
+    });
+
+    // Open search overlay
+    searchPill.addEventListener('click', () => {
+      searchOverlay.classList.add('visible');
+    });
+
+    searchIconBtn.addEventListener('click', () => {
+      searchOverlay.classList.add('visible');
+    });
+
+    // Close search overlay
+    closeSearch.addEventListener('click', () => {
+      searchOverlay.classList.remove('visible');
+    });
+  </script>
+</body>
+</html>

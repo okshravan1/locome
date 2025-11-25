@@ -1,0 +1,562 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LOCOME</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Poppins', sans-serif;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(180deg, #FFFFFF 0%, #F1EDFF 33%, #D9CCFF 66%, #C1A4FF 100%);
+      padding: 20px;
+    }
+
+    .phone-wrapper {
+      width: 360px;
+      height: 780px;
+      border-radius: 40px;
+      background: linear-gradient(180deg, #A77BFF 0%, #8C5BFF 40%, #6C3BFF 100%);
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 40px 30px;
+      border: 12px solid #1a1a1a;
+    }
+
+    .phone-wrapper::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 150px;
+      height: 30px;
+      background: #1a1a1a;
+      border-radius: 0 0 20px 20px;
+      z-index: 10;
+    }
+
+    /* Dripping offer cards */
+    .offer-card {
+      position: absolute;
+      padding: 10px 16px;
+      backdrop-filter: blur(6px);
+      border-radius: 16px;
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      color: #FFFFFF;
+      font-size: 13px;
+      font-weight: 600;
+      opacity: 0.1;
+      z-index: 0;
+      white-space: nowrap;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    }
+
+    .offer-store {
+      display: block;
+      font-size: 14px;
+      margin-bottom: 2px;
+    }
+
+    .offer-discount {
+      display: block;
+      font-size: 11px;
+      font-weight: 500;
+    }
+
+    /* Brand-specific pastel colors */
+    .offer-1 { background: rgba(255, 182, 193, 0.25); } /* Zara - Light Pink */
+    .offer-2 { background: rgba(255, 218, 185, 0.25); } /* Titan - Peach */
+    .offer-3 { background: rgba(173, 216, 230, 0.25); } /* Nike - Light Blue */
+    .offer-4 { background: rgba(221, 160, 221, 0.25); } /* Puma - Plum */
+    .offer-5 { background: rgba(255, 192, 203, 0.25); } /* H&M - Pink */
+    .offer-6 { background: rgba(176, 224, 230, 0.25); } /* Adidas - Powder Blue */
+    .offer-7 { background: rgba(135, 206, 235, 0.25); } /* Levis - Sky Blue */
+    .offer-8 { background: rgba(255, 228, 196, 0.25); } /* Lifestyle - Bisque */
+    .offer-9 { background: rgba(216, 191, 216, 0.25); } /* Westside - Thistle */
+    .offer-10 { background: rgba(255, 239, 213, 0.25); } /* Bata - Papaya */
+    .offer-11 { background: rgba(244, 164, 96, 0.25); } /* Pantaloons - Sandy Brown */
+    .offer-12 { background: rgba(255, 182, 193, 0.25); } /* Max - Light Pink */
+    .offer-13 { background: rgba(173, 216, 230, 0.25); } /* Reliance - Light Blue */
+    .offer-14 { background: rgba(255, 192, 203, 0.25); } /* Sephora - Pink */
+    .offer-15 { background: rgba(221, 160, 221, 0.25); } /* Shoppers Stop - Plum */
+    .offer-16 { background: rgba(144, 238, 144, 0.25); } /* Woodland - Light Green */
+    .offer-17 { background: rgba(255, 218, 185, 0.25); } /* Reebok - Peach */
+    .offer-18 { background: rgba(176, 224, 230, 0.25); } /* Sketchers - Powder Blue */
+    .offer-19 { background: rgba(255, 228, 181, 0.25); } /* Mango - Moccasin */
+    .offer-20 { background: rgba(255, 182, 193, 0.25); } /* Forever 21 - Light Pink */
+    .offer-21 { background: rgba(255, 218, 185, 0.25); } /* Miniso - Peach */
+    .offer-22 { background: rgba(255, 192, 203, 0.25); } /* Uniqlo - Pink */
+    .offer-23 { background: rgba(173, 216, 230, 0.25); } /* Decathlon - Light Blue */
+    .offer-24 { background: rgba(135, 206, 235, 0.25); } /* Gap - Sky Blue */
+    .offer-25 { background: rgba(221, 160, 221, 0.25); } /* Aeropostale - Plum */
+
+    /* Random positioning and timing for each card */
+    .offer-1 { left: 5%; animation: drip 9s linear infinite; animation-delay: 0s; }
+    .offer-2 { left: 15%; animation: drip 11s linear infinite; animation-delay: 1.5s; }
+    .offer-3 { left: 25%; animation: drip 8s linear infinite; animation-delay: 3s; }
+    .offer-4 { left: 35%; animation: drip 10s linear infinite; animation-delay: 0.5s; }
+    .offer-5 { left: 45%; animation: drip 12s linear infinite; animation-delay: 2s; }
+    .offer-6 { left: 55%; animation: drip 9.5s linear infinite; animation-delay: 4s; }
+    .offer-7 { left: 65%; animation: drip 11.5s linear infinite; animation-delay: 1s; }
+    .offer-8 { left: 75%; animation: drip 10.5s linear infinite; animation-delay: 5s; }
+    .offer-9 { left: 85%; animation: drip 8.5s linear infinite; animation-delay: 2.5s; }
+    .offer-10 { left: 10%; animation: drip 13s linear infinite; animation-delay: 6s; }
+    .offer-11 { left: 20%; animation: drip 9s linear infinite; animation-delay: 3.5s; }
+    .offer-12 { left: 30%; animation: drip 11s linear infinite; animation-delay: 4.5s; }
+    .offer-13 { left: 40%; animation: drip 10s linear infinite; animation-delay: 7s; }
+    .offer-14 { left: 50%; animation: drip 12s linear infinite; animation-delay: 1.2s; }
+    .offer-15 { left: 60%; animation: drip 8s linear infinite; animation-delay: 5.5s; }
+    .offer-16 { left: 70%; animation: drip 10.5s linear infinite; animation-delay: 2.8s; }
+    .offer-17 { left: 80%; animation: drip 11.5s linear infinite; animation-delay: 6.5s; }
+    .offer-18 { left: 12%; animation: drip 9.5s linear infinite; animation-delay: 0.8s; }
+    .offer-19 { left: 22%; animation: drip 13s linear infinite; animation-delay: 4.2s; }
+    .offer-20 { left: 32%; animation: drip 10s linear infinite; animation-delay: 7.5s; }
+    .offer-21 { left: 42%; animation: drip 11s linear infinite; animation-delay: 3.8s; }
+    .offer-22 { left: 52%; animation: drip 12.5s linear infinite; animation-delay: 5.8s; }
+    .offer-23 { left: 62%; animation: drip 8.5s linear infinite; animation-delay: 2.2s; }
+    .offer-24 { left: 72%; animation: drip 9.5s linear infinite; animation-delay: 6.8s; }
+    .offer-25 { left: 82%; animation: drip 10.5s linear infinite; animation-delay: 1.8s; }
+
+    @keyframes drip {
+      0% {
+        top: -100px;
+        opacity: 0;
+      }
+      5% {
+        opacity: 0.1;
+      }
+      95% {
+        opacity: 0.1;
+      }
+      100% {
+        top: 100%;
+        opacity: 0;
+      }
+    }
+
+    /* Animated background orbs */
+    .bg-orb {
+      position: absolute;
+      border-radius: 50%;
+      opacity: 0.15;
+      z-index: 0;
+      pointer-events: none;
+      filter: blur(40px);
+    }
+
+    .bg-orb-1 {
+      width: 200px;
+      height: 200px;
+      background: radial-gradient(circle, #CFFFE2 0%, transparent 70%);
+      top: 10%;
+      left: -50px;
+      animation: float1 8s ease-in-out infinite;
+    }
+
+    .bg-orb-2 {
+      width: 250px;
+      height: 250px;
+      background: radial-gradient(circle, #D5BEFF 0%, transparent 70%);
+      bottom: 15%;
+      right: -60px;
+      animation: float2 10s ease-in-out infinite;
+    }
+
+    .bg-orb-3 {
+      width: 180px;
+      height: 180px;
+      background: radial-gradient(circle, #BFA1FF 0%, transparent 70%);
+      top: 40%;
+      right: -40px;
+      animation: float3 12s ease-in-out infinite;
+    }
+
+    @keyframes float1 {
+      0%, 100% {
+        transform: translate(0, 0) scale(1);
+      }
+      50% {
+        transform: translate(30px, 40px) scale(1.1);
+      }
+    }
+
+    @keyframes float2 {
+      0%, 100% {
+        transform: translate(0, 0) scale(1);
+      }
+      50% {
+        transform: translate(-40px, -30px) scale(1.15);
+      }
+    }
+
+    @keyframes float3 {
+      0%, 100% {
+        transform: translate(0, 0) scale(1);
+      }
+      50% {
+        transform: translate(-20px, 50px) scale(1.08);
+      }
+    }
+
+    .glow {
+      position: absolute;
+      width: 300px;
+      height: 300px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(207, 255, 226, 0.3) 0%, rgba(207, 255, 226, 0.08) 40%, transparent 70%);
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      pointer-events: none;
+      z-index: 1;
+      animation: pulseGlow 4s ease-in-out infinite;
+    }
+
+    @keyframes pulseGlow {
+      0%, 100% {
+        opacity: 1;
+        transform: translate(-50%, -50%) scale(1);
+      }
+      50% {
+        opacity: 0.7;
+        transform: translate(-50%, -50%) scale(1.05);
+      }
+    }
+
+    .content {
+      position: relative;
+      z-index: 2;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .logo-container {
+      width: 140px;
+      height: 140px;
+      background: rgba(255, 255, 255, 0.15);
+      backdrop-filter: blur(10px);
+      border-radius: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+      animation: pulse 2s ease-in-out infinite alternate;
+      border: 3px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .logo-img {
+      width: 100px;
+      height: 100px;
+      object-fit: contain;
+      border-radius: 20px;
+    }
+
+    @keyframes pulse {
+      0% {
+        transform: scale(1);
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+      }
+      100% {
+        transform: scale(1.03);
+        box-shadow: 0 15px 40px rgba(207, 255, 226, 0.3);
+      }
+    }
+
+    .logo-text {
+      font-size: 40px;
+      font-weight: 700;
+      color: #FFFFFF;
+      letter-spacing: 3px;
+      text-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+      position: relative;
+      animation: glitch 3s infinite;
+    }
+
+    .logo-text::before,
+    .logo-text::after {
+      content: 'LOCOME';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+    }
+
+    .logo-text::before {
+      animation: glitchTop 2s infinite;
+      clip-path: polygon(0 0, 100% 0, 100% 33%, 0 33%);
+      color: #CFFFE2;
+    }
+
+    .logo-text::after {
+      animation: glitchBottom 2.5s infinite;
+      clip-path: polygon(0 67%, 100% 67%, 100% 100%, 0 100%);
+      color: #BFA1FF;
+    }
+
+    @keyframes glitch {
+      0%, 90%, 100% {
+        transform: translate(0);
+      }
+      92% {
+        transform: translate(-2px, 1px);
+      }
+      94% {
+        transform: translate(2px, -1px);
+      }
+      96% {
+        transform: translate(-1px, 2px);
+      }
+      98% {
+        transform: translate(1px, -2px);
+      }
+    }
+
+    @keyframes glitchTop {
+      0%, 90%, 100% {
+        transform: translate(0);
+      }
+      91% {
+        transform: translate(-3px, -2px);
+      }
+      93% {
+        transform: translate(3px, 2px);
+      }
+      95% {
+        transform: translate(-2px, 1px);
+      }
+    }
+
+    @keyframes glitchBottom {
+      0%, 88%, 100% {
+        transform: translate(0);
+      }
+      89% {
+        transform: translate(3px, 2px);
+      }
+      91% {
+        transform: translate(-3px, -2px);
+      }
+      93% {
+        transform: translate(2px, -1px);
+      }
+    }
+
+    .tagline {
+      font-size: 16px;
+      font-weight: 400;
+      color: rgba(255, 255, 255, 0.8);
+      letter-spacing: 0.5px;
+    }
+
+    .cta-container {
+      position: absolute;
+      bottom: 50px;
+      left: 30px;
+      right: 30px;
+      z-index: 3;
+      animation: slideUp 700ms ease-out 300ms forwards;
+      opacity: 0;
+    }
+
+    @keyframes slideUp {
+      0% {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      100% {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .cta {
+      display: block;
+      width: 100%;
+      height: 56px;
+      border-radius: 28px;
+      background: linear-gradient(90deg, #D5BEFF 0%, #BFA1FF 100%);
+      color: #0F1724;
+      font-size: 17px;
+      font-weight: 600;
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 8px 20px rgba(191, 161, 255, 0.4);
+      transition: transform 200ms ease, box-shadow 200ms ease;
+    }
+
+    .cta:active {
+      transform: scale(0.97);
+      box-shadow: 0 4px 12px rgba(191, 161, 255, 0.3);
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .logo-container,
+      .glow,
+      .bg-orb-1,
+      .bg-orb-2,
+      .bg-orb-3,
+      .offer-card {
+        animation: none !important;
+      }
+      .offer-card {
+        display: none;
+      }
+      .cta-container {
+        animation: none;
+        opacity: 1;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="phone-wrapper">
+    <!-- 25 Dripping offer cards from random positions -->
+    <div class="offer-card offer-1">
+      <span class="offer-store">Zara</span>
+      <span class="offer-discount">10% OFF</span>
+    </div>
+    <div class="offer-card offer-2">
+      <span class="offer-store">Titan</span>
+      <span class="offer-discount">10% OFF</span>
+    </div>
+    <div class="offer-card offer-3">
+      <span class="offer-store">Nike</span>
+      <span class="offer-discount">15% OFF</span>
+    </div>
+    <div class="offer-card offer-4">
+      <span class="offer-store">Puma</span>
+      <span class="offer-discount">20% OFF</span>
+    </div>
+    <div class="offer-card offer-5">
+      <span class="offer-store">H&M</span>
+      <span class="offer-discount">10% OFF</span>
+    </div>
+    <div class="offer-card offer-6">
+      <span class="offer-store">Adidas</span>
+      <span class="offer-discount">12% OFF</span>
+    </div>
+    <div class="offer-card offer-7">
+      <span class="offer-store">Levis</span>
+      <span class="offer-discount">18% OFF</span>
+    </div>
+    <div class="offer-card offer-8">
+      <span class="offer-store">Lifestyle</span>
+      <span class="offer-discount">15% OFF</span>
+    </div>
+    <div class="offer-card offer-9">
+      <span class="offer-store">Westside</span>
+      <span class="offer-discount">25% OFF</span>
+    </div>
+    <div class="offer-card offer-10">
+      <span class="offer-store">Bata</span>
+      <span class="offer-discount">10% OFF</span>
+    </div>
+    <div class="offer-card offer-11">
+      <span class="offer-store">Pantaloons</span>
+      <span class="offer-discount">20% OFF</span>
+    </div>
+    <div class="offer-card offer-12">
+      <span class="offer-store">Max</span>
+      <span class="offer-discount">15% OFF</span>
+    </div>
+    <div class="offer-card offer-13">
+      <span class="offer-store">Reliance</span>
+      <span class="offer-discount">12% OFF</span>
+    </div>
+    <div class="offer-card offer-14">
+      <span class="offer-store">Sephora</span>
+      <span class="offer-discount">10% OFF</span>
+    </div>
+    <div class="offer-card offer-15">
+      <span class="offer-store">Shoppers Stop</span>
+      <span class="offer-discount">15% OFF</span>
+    </div>
+    <div class="offer-card offer-16">
+      <span class="offer-store">Woodland</span>
+      <span class="offer-discount">18% OFF</span>
+    </div>
+    <div class="offer-card offer-17">
+      <span class="offer-store">Reebok</span>
+      <span class="offer-discount">20% OFF</span>
+    </div>
+    <div class="offer-card offer-18">
+      <span class="offer-store">Sketchers</span>
+      <span class="offer-discount">12% OFF</span>
+    </div>
+    <div class="offer-card offer-19">
+      <span class="offer-store">Mango</span>
+      <span class="offer-discount">10% OFF</span>
+    </div>
+    <div class="offer-card offer-20">
+      <span class="offer-store">Forever 21</span>
+      <span class="offer-discount">25% OFF</span>
+    </div>
+    <div class="offer-card offer-21">
+      <span class="offer-store">Miniso</span>
+      <span class="offer-discount">15% OFF</span>
+    </div>
+    <div class="offer-card offer-22">
+      <span class="offer-store">Uniqlo</span>
+      <span class="offer-discount">10% OFF</span>
+    </div>
+    <div class="offer-card offer-23">
+      <span class="offer-store">Decathlon</span>
+      <span class="offer-discount">20% OFF</span>
+    </div>
+    <div class="offer-card offer-24">
+      <span class="offer-store">Gap</span>
+      <span class="offer-discount">15% OFF</span>
+    </div>
+    <div class="offer-card offer-25">
+      <span class="offer-store">Aeropostale</span>
+      <span class="offer-discount">18% OFF</span>
+    </div>
+    
+    <!-- Animated background orbs -->
+    <div class="bg-orb bg-orb-1"></div>
+    <div class="bg-orb bg-orb-2"></div>
+    <div class="bg-orb bg-orb-3"></div>
+    
+    <div class="glow"></div>
+    
+    <div class="content">
+      <!-- Logo Image Container -->
+      <div class="logo-container">
+        <img src="/Users/macbookairm1/Desktop/locome/logo1.png" alt="LOCOME Logo" class="logo-img">
+      </div>
+      
+      <div class="logo-text">LOCOME</div>
+      <div class="tagline">Never Be Lost Again</div>
+    </div>
+    
+    <div class="cta-container">
+
+      <a href="login.html" class="cta">Let's Go</a>
+    </div>
+  </div>
+</body>
+</html>

@@ -1,0 +1,578 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Locate Car - Infinity Mall</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* --- General Reset & Structure --- */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(180deg, #FFFFFF 0%, #F1EDFF 25%, #D9CCFF 60%, #C1A4FF 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            overflow: hidden;
+        }
+
+        .phone-wrapper {
+            width: 360px;
+            height: 780px;
+            border-radius: 40px;
+            background: linear-gradient(180deg, #A77BFF 0%, #8C5BFF 40%, #6C3BFF 100%);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            border: 12px solid #1a1a1a;
+        }
+
+        .phone-content {
+            width: 100%;
+            height: 100%;
+            background: transparent;
+            overflow-y: auto;
+            padding-top: 50px;
+            padding-bottom: 90px; 
+            display: flex;
+            flex-direction: column;
+        }
+
+        .status-bar {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 50px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 20px;
+            color: #fff;
+            font-size: 13px;
+            font-weight: 500;
+            z-index: 99;
+        }
+
+        .header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 10px 20px 15px;
+            flex-shrink: 0;
+        }
+
+        .back-btn {
+            width: 40px;
+            height: 40px;
+            background: rgba(255, 255, 255, 0.12);
+            backdrop-filter: blur(6px);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: none;
+            cursor: pointer;
+            color: #fff;
+            font-size: 20px;
+        }
+
+        .header-title {
+            color: #fff;
+            font-size: 18px;
+            font-weight: 600;
+        }
+
+        /* --- Car Locator Specific Styling --- */
+        .car-info-card {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(8px);
+            border-radius: 25px;
+            margin: 20px;
+            padding: 25px;
+            flex-shrink: 0;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .parking-status {
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 13px;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .parking-status span {
+            font-weight: 600;
+            color: #CFFFE2;
+            font-size: 14px;
+        }
+
+        .parking-location {
+            color: #fff;
+            font-size: 24px; /* Increased size for focus */
+            font-weight: 700;
+            margin-bottom: 25px;
+            line-height: 1.2;
+        }
+        
+        /* NEW STYLING for the lighter prompt text */
+        .parking-location .prompt-text {
+            display: block;
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 14px; /* Reduced size */
+            font-weight: 500; /* Lighter weight */
+            margin-bottom: 4px;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 15px;
+        }
+
+        .action-btn {
+            flex: 1;
+            padding: 15px 10px;
+            border-radius: 20px;
+            border: none;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            font-family: 'Poppins', sans-serif;
+            transition: transform 0.2s;
+            z-index: 10;
+            position: relative;
+        }
+
+        .action-btn:active {
+            transform: scale(0.98);
+        }
+
+        #locateCarBtn {
+            background: #CFFFE2;
+            color: #0F1724;
+        }
+
+        #payParkingBtn {
+            background: rgba(255, 255, 255, 0.3);
+            color: #fff;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+            padding: 20px;
+            flex-shrink: 0;
+            align-content: flex-start;
+        }
+
+        .stat-box {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(4px);
+            border-radius: 20px;
+            padding: 15px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            min-height: 100px;
+        }
+
+        .stat-label {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 12px;
+            font-weight: 500;
+            margin-bottom: 5px;
+        }
+
+        .stat-value {
+            color: #fff;
+            font-size: 24px;
+            font-weight: 700;
+        }
+
+        /* --- Modals --- */
+        .modal-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(8px);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 200;
+            animation: fadeIn 0.4s ease;
+        }
+
+        .modal-overlay.show {
+            display: flex;
+        }
+        
+        .minimap-popup, .payment-popup {
+            background: #fff;
+            border-radius: 30px;
+            padding: 25px;
+            margin: 0 30px;
+            text-align: center;
+            animation: slideUp 0.5s ease;
+            width: 300px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        /* Centering container for success elements */
+        #success-group {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center; 
+        }
+
+        .minimap-title {
+            color: #0F1724;
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 15px;
+        }
+
+        .minimap-area {
+            width: 100%;
+            height: 180px;
+            background: #F0F0F0;
+            border-radius: 15px;
+            margin-bottom: 20px;
+            position: relative;
+            overflow: hidden;
+            display: block;
+            padding: 10px;
+        }
+        
+        .parking-map {
+            width: 100%;
+            height: 100%;
+            display: block;
+        }
+
+        .close-btn {
+            width: 100%;
+            background: linear-gradient(90deg, #D5BEFF 0%, #BFA1FF 100%);
+            color: #0F1724;
+            border: none;
+            padding: 12px;
+            border-radius: 20px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            font-family: 'Poppins', sans-serif;
+            margin-top: 10px;
+        }
+
+        /* Payment Specific Styles */
+        .gpay-logo {
+            font-size: 36px;
+            font-weight: 700;
+            color: #000;
+            margin-bottom: 10px;
+        }
+        
+        .gpay-logo span { color: #4285F4; }
+        
+        .gpay-logo-sub {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 20px;
+        }
+
+        .payment-amount {
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 30px;
+            color: #0F1724;
+        }
+
+        .payment-status {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 20px;
+            min-height: 20px; 
+            color: #20C20E; 
+        }
+        
+        .spinner {
+            display: none; 
+        }
+
+        /* Success Checkmark */
+        .success-circle {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: #20C20E;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 10px 0;
+            transform: scale(0);
+            animation: popIn 0.3s ease-out 1 forwards;
+        }
+
+        @keyframes popIn {
+            0% { transform: scale(0); }
+            80% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+
+        .success-circle::before {
+            content: '✓';
+            color: #fff;
+            font-size: 40px;
+            font-weight: 700;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* --- Standard Bottom Navigation --- */
+        .bottom-nav {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 90px;
+            background: rgba(30, 30, 40, 0.95);
+            backdrop-filter: blur(10px);
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            padding: 0 10px 20px;
+            border-radius: 30px 30px 0 0;
+            z-index: 50;
+        }
+
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+            color: #8E8E93;
+            text-decoration: none;
+            font-size: 11px;
+            transition: all 0.3s ease;
+            padding: 10px;
+        }
+
+        .nav-item.active {
+            color: #BFA1FF;
+        }
+
+        .nav-icon {
+            width: 26px;
+            height: 26px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+        }
+        
+        .nav-label {
+            font-weight: 500;
+        }
+
+        /* Animations */
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        @keyframes slideUp { from { transform: translateY(100px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+    </style>
+</head>
+<body>
+    <div class="phone-wrapper">
+        <div class="status-bar">
+            <span>9:41</span>
+            <span>📶 📡 🔋</span>
+        </div>
+
+        <div class="phone-content">
+            <div class="header">
+                <button class="back-btn" onclick="window.location.href='home.html'">←</button>
+                <div class="header-title">Car Location & Activity</div>
+                <div style="width: 40px;"></div>
+            </div>
+
+            <div class="car-info-card">
+                <div class="parking-status" id="parkingStatusCard">
+                    Parking Status: <span id="parkingStatusText">Active</span>
+                </div>
+                <div class="parking-location">
+                    <span class="prompt-text">You parked your car at:</span>
+                    P2, Zone C, Spot 15
+                </div>
+                <div class="action-buttons">
+                    <button class="action-btn" id="locateCarBtn">Locate Your Car 🗺️</button>
+                    <button class="action-btn" id="payParkingBtn">Pay for Parking 💳</button>
+                </div>
+            </div>
+
+            <div class="stats-grid">
+                <div class="stat-box">
+                    <div class="stat-label">Total Walked Today</div>
+                    <div class="stat-value" id="totalSteps">3,892</div>
+                    <div class="stat-label">Steps</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-label">Calories Burned (Total)</div>
+                    <div class="stat-value" id="caloriesBurned">215</div>
+                    <div class="stat-label">kcal</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-label">Total Money Saved</div>
+                    <div class="stat-value" id="moneySaved">₹ 1,280</div>
+                    <div class="stat-label">Offers Applied using Locome</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-label">Parking Entry</div>
+                    <div class="stat-value" id="parkingTime">4:40 PM</div>
+                    <div class="stat-label">25 November</div>
+                </div>
+            </div>
+            
+            <div class="modal-overlay" id="minimapModal">
+                <div class="minimap-popup">
+                    <div class="minimap-title">Your Car Location</div>
+                    <div class="minimap-area">
+                        <svg viewBox="0 0 100 150" xmlns="http://www.w3.org/2000/svg" class="parking-map">
+                            <rect x="5" y="5" width="90" height="140" fill="#F9F9F9" rx="5"/>
+                            
+                            <line x1="50" y1="5" x2="50" y2="145" stroke="#E0E0E0" stroke-width="2" stroke-dasharray="4 4"/>
+                            
+                            <text x="25" y="15" fill="#AAAAAA" font-size="8" text-anchor="middle" font-weight="600">ZONE B</text>
+                            <text x="75" y="15" fill="#8C5BFF" font-size="8" text-anchor="middle" font-weight="700">ZONE C</text>
+
+                            <rect x="5" y="25" width="40" height="20" fill="#E8E8E8" rx="3"/>
+                            <rect x="5" y="48" width="40" height="20" fill="#E8E8E8" rx="3"/>
+                            
+                            <rect x="55" y="25" width="40" height="20" fill="#E8E8E8" rx="3"/>
+                            <rect x="55" y="48" width="40" height="20" fill="#E8E8E8" rx="3"/>
+                            
+                            <rect x="55" y="110" width="40" height="20" fill="#BFA1FF" rx="3"/>
+                            <text x="75" y="125" fill="#FFFFFF" font-size="8" text-anchor="middle" font-weight="700">Spot 15</text>
+
+                            <circle cx="75" cy="120" r="10" fill="rgba(32, 194, 14, 0.4)"/>
+                            <text x="75" y="123" fill="#0F1724" font-size="8" text-anchor="middle" font-weight="700">🚗</text>
+
+                            <text x="50" y="145" fill="#666" font-size="8" text-anchor="middle">Entrance/Exit</text>
+                        </svg>
+                    </div>
+                    <button class="close-btn" onclick="hideModal('minimapModal')">Close</button>
+                </div>
+            </div>
+            
+            <div class="modal-overlay" id="paymentModal">
+                <div class="payment-popup">
+                    <div class="gpay-logo">G<span>Pay</span></div>
+                    <div class="gpay-logo-sub">Paying Infinity Mall Parking</div>
+                    <div class="payment-amount">₹ 60.00</div>
+                    
+                    <div id="success-group">
+                        <div class="success-circle" id="paymentSuccessCircle"></div>
+                        <div class="payment-status" id="paymentStatusText">Payment Done! 🎉 Thank you for using Locome App</div>
+                        <button class="close-btn" id="paymentDoneBtn" onclick="hideModal('paymentModal')">Close</button>
+                    </div>
+                    
+                </div>
+            </div>
+        </div>
+
+        <div class="bottom-nav">
+            <a href="#" class="nav-item active">
+                <div class="nav-icon">🏠</div>
+                <div class="nav-label">Home</div>
+            </a>
+            <a href="#" class="nav-item">
+                <div class="nav-icon">🏪</div>
+                <div class="nav-label">Stores</div>
+            </a>
+            <a href="#" class="nav-item">
+                <div class="nav-icon">🧭</div>
+                <div class="nav-label">Route</div>
+            </a>
+            <a href="saved.html" class="nav-item">
+                <div class="nav-icon">⭐</div>
+                <div class="nav-label">Saved</div>
+            </a>
+        </div>
+    </div>
+
+    <script>
+        const locateBtn = document.getElementById('locateCarBtn');
+        const payParkingBtn = document.getElementById('payParkingBtn');
+        const minimapModal = document.getElementById('minimapModal');
+        const paymentModal = document.getElementById('paymentModal');
+        const parkingStatusSpan = document.getElementById('parkingStatusText');
+        
+        // Essential functions for modal control
+        function showModal(id) {
+            document.getElementById(id).classList.add('show');
+        }
+
+        function hideModal(id) {
+            document.getElementById(id).classList.remove('show');
+        }
+
+        // --- Function: Shows Success State Instantly ---
+        function showPaymentSuccess() {
+            // Update the main page status text to reflect payment status
+            const cardStatusSpan = document.querySelector('.parking-status span');
+            if (cardStatusSpan) {
+                cardStatusSpan.textContent = 'Paid (Exit Free)';
+                cardStatusSpan.style.color = '#20C20E'; // Green color for Paid status
+            }
+
+            // Show the modal which is already populated with success content
+            showModal('paymentModal');
+        }
+
+        // Event listener for Locate Car
+        locateBtn.addEventListener('click', () => {
+            showModal('minimapModal');
+        });
+
+        // Event listener for Pay for Parking
+        payParkingBtn.addEventListener('click', () => {
+            showPaymentSuccess();
+        });
+        
+        // Optional: Close modal if clicking outside the popup
+        minimapModal.addEventListener('click', (event) => {
+            if (event.target === minimapModal) {
+                hideModal('minimapModal');
+            }
+        });
+        
+        // Optional: Close payment modal if clicking outside
+        paymentModal.addEventListener('click', (event) => {
+            if (event.target === paymentModal) {
+                hideModal('paymentModal');
+            }
+        });
+    </script>
+</body>
+</html>

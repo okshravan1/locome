@@ -1,0 +1,1063 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Locome - Find Friends</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* --- General Reset & Structure --- */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(180deg, #FFFFFF 0%, #F1EDFF 25%, #D9CCFF 60%, #C1A4FF 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            overflow: hidden;
+        }
+
+        .phone-wrapper {
+            width: 360px;
+            height: 780px;
+            border-radius: 40px;
+            background: linear-gradient(180deg, #A77BFF 0%, #8C5BFF 40%, #6C3BFF 100%);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            border: 12px solid #1a1a1a;
+        }
+
+        .phone-content {
+            width: 100%;
+            height: 100%;
+            background: #fff;
+            overflow-y: hidden;
+            padding-top: 50px;
+            padding-bottom: 0;
+            display: flex;
+            flex-direction: column;
+            border-radius: 30px 30px 0 0;
+        }
+
+        .status-bar {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 50px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 20px;
+            color: #1a1a1a;
+            font-size: 13px;
+            font-weight: 500;
+            z-index: 99;
+            background: #fff;
+            border-radius: 40px 40px 0 0;
+        }
+
+        .header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 10px 20px 15px;
+            flex-shrink: 0;
+        }
+
+        .back-btn {
+            width: 40px;
+            height: 40px;
+            background: #F1EDFF;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: none;
+            cursor: pointer;
+            color: #8C5BFF;
+            font-size: 20px;
+            transition: all 0.2s;
+        }
+        
+        .back-btn:active {
+            transform: scale(0.95);
+        }
+
+        .header-title {
+            color: #1a1a1a;
+            font-size: 18px;
+            font-weight: 600;
+        }
+        
+        /* --- Shared Styles for Main Views --- */
+        .app-view {
+            width: 100%;
+            flex-grow: 1;
+            padding: 0;
+            position: relative;
+            overflow: hidden;
+            display: none; 
+            flex-direction: column;
+        }
+        
+        /* --- 1. Permission View Styles --- */
+        .permission-content {
+            padding: 0 20px;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .permission-heading {
+            font-size: 24px;
+            font-weight: 700;
+            color: #1a1a1a;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        .permission-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+
+        .permission-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 15px;
+            background: #F1EDFF;
+            color: #8C5BFF;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            margin-right: 15px;
+            flex-shrink: 0;
+        }
+
+        .permission-text h3 {
+            font-size: 16px;
+            font-weight: 600;
+            color: #1a1a1a;
+            margin-bottom: 2px;
+        }
+
+        .permission-text p {
+            font-size: 13px;
+            color: #555;
+            line-height: 1.4;
+        }
+
+        .permission-footer {
+            padding: 20px 20px 30px;
+            flex-shrink: 0;
+            text-align: center;
+        }
+
+        .get-started-btn {
+            width: 100%;
+            background: #8C5BFF;
+            color: white;
+            font-size: 18px;
+            font-weight: 600;
+            padding: 15px;
+            border-radius: 20px;
+            border: none;
+            cursor: pointer;
+            box-shadow: 0 8px 20px rgba(140, 91, 255, 0.4);
+            transition: all 0.2s;
+        }
+
+        .get-started-btn:active {
+            transform: scale(0.98);
+        }
+
+        .fine-print {
+            font-size: 10px;
+            color: #888;
+            margin-top: 15px;
+            line-height: 1.3;
+        }
+
+        .permission-message {
+            margin-top: 15px;
+            font-size: 14px;
+            color: #ff5757;
+            font-weight: 500;
+            min-height: 20px;
+        }
+        
+        /* --- 2. Map View Styles (Friend Markers, etc. - Unchanged) --- */
+        
+        .map-container {
+            width: 100%;
+            flex-grow: 1;
+            position: relative;
+            background: #f8f8f8; 
+            overflow: hidden;
+        }
+
+        .mall-map-svg {
+            width: 100%; 
+            height: 100%; 
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+
+        /* --- Map Store Design (Unchanged) --- */
+        .store-unit {
+            fill: #C1A4FF;
+            stroke: #fff;
+            stroke-width: 4;
+            rx: 8; 
+            ry: 8;
+            opacity: 0.9;
+            cursor: pointer;
+            transition: fill 0.3s;
+        }
+        .store-unit:hover {
+            fill: #A77BFF;
+        }
+        
+        .store-label {
+            fill: #fff;
+            font-weight: 600;
+            font-size: 20px;
+            font-family: 'Poppins', sans-serif;
+            pointer-events: none; 
+        }
+        .store-label-small {
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+
+        /* --- Markers --- */
+        .you-marker {
+            position: absolute;
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            background: #fff; 
+            border: 4px solid #8C5BFF;
+            box-shadow: 0 0 15px rgba(140, 91, 255, 0.6);
+            z-index: 20;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            color: #8C5BFF;
+            animation: pulse-border 2s infinite;
+            transform: translate(-50%, -50%); 
+        }
+        
+        @keyframes pulse-border {
+            0% { box-shadow: 0 0 0 0 rgba(140, 91, 255, 0.6); }
+            70% { box-shadow: 0 0 0 10px rgba(140, 91, 255, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(140, 91, 255, 0); }
+        }
+
+        .friend-marker {
+            position: absolute;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            cursor: pointer;
+            z-index: 10;
+            transform: translate(-50%, -100%); 
+            transition: transform 0.2s;
+        }
+
+        .friend-marker:hover {
+            transform: translate(-50%, -110%) scale(1.1);
+        }
+        
+        .friend-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            border: 4px solid #fff;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px; 
+            color: #fff; 
+            flex-shrink: 0;
+            position: relative;
+            background-color: var(--friend-color, #000); 
+        }
+        
+        .friend-avatar::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: #20C20E;
+            border: 2px solid #fff;
+            z-index: 2;
+        }
+        
+        .friend-marker.away .friend-avatar::after,
+        .friend-marker.unavailable .friend-avatar::after {
+            background: #ff5757; 
+        }
+
+        .friend-info {
+            margin-top: 5px;
+            background: #8C5BFF; 
+            color: white;
+            padding: 4px 8px; 
+            border-radius: 12px;
+            text-align: center;
+            font-size: 12px;
+            font-weight: 600;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            min-width: 80px;
+            white-space: nowrap;
+            position: relative;
+            display: flex; 
+            flex-direction: column; 
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .friend-info::before {
+            content: '';
+            position: absolute;
+            bottom: -5px; 
+            left: 50%;
+            transform: translateX(-50%) rotate(45deg);
+            width: 10px;
+            height: 10px;
+            background: #8C5BFF;
+            z-index: -1;
+            border-radius: 2px;
+        }
+
+        .friend-name {
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        .friend-status {
+            font-size: 10px;
+            font-weight: 500;
+            color: #D5BEFF;
+            margin-top: 2px;
+            display: block;
+        }
+        
+        /* --- Map View Bottom Navigation (Unchanged) --- */
+        .bottom-nav-map {
+            position: relative;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 80px;
+            background: #fff;
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            padding: 0 10px 10px;
+            box-shadow: 0 -5px 20px rgba(0, 0, 0, 0.05);
+            z-index: 50;
+            flex-shrink: 0;
+            border-radius: 30px 30px 0 0;
+        }
+
+        .map-nav-icon-wrapper {
+            width: 70px; 
+            height: 40px;
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+            margin-bottom: 2px;
+            transition: all 0.3s ease;
+        }
+        
+        /* --- Modal Styles (LLM Feature - Unchanged) --- */
+        .modal-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(2px);
+            z-index: 100;
+            display: none;
+            justify-content: center;
+            align-items: flex-end;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .modal-overlay.open {
+            display: flex;
+            opacity: 1;
+        }
+        
+        .modal-content {
+            width: 100%;
+            max-height: 80%;
+            background: white;
+            border-radius: 25px 25px 0 0;
+            padding: 20px;
+            box-shadow: 0 -10px 30px rgba(0, 0, 0, 0.3);
+            transform: translateY(100%);
+            transition: transform 0.3s ease;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .modal-overlay.open .modal-content {
+            transform: translateY(0);
+        }
+        
+        /* --- Native-Style Permission Modal (NEW) --- */
+        #contacts-modal {
+            align-items: center;
+            justify-content: center;
+        }
+
+        .native-modal-content {
+            width: 85%;
+            max-width: 300px;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border-radius: 18px;
+            overflow: hidden;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
+            text-align: center;
+            padding-top: 25px;
+            transform: scale(0.9);
+            transition: transform 0.2s ease;
+        }
+        
+        #contacts-modal.open .native-modal-content {
+            transform: scale(1);
+        }
+
+        .modal-title {
+            font-size: 17px;
+            font-weight: 600;
+            color: #1a1a1a;
+            margin-bottom: 5px;
+            padding: 0 20px;
+        }
+
+        .modal-body {
+            font-size: 13px;
+            color: #555;
+            margin-bottom: 25px;
+            padding: 0 20px;
+        }
+
+        .modal-actions {
+            display: flex;
+            border-top: 1px solid rgba(0, 0, 0, 0.1);
+        }
+
+        .modal-actions button {
+            flex: 1;
+            padding: 12px 0;
+            font-size: 15px;
+            font-weight: 400;
+            color: #007AFF;
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            transition: background 0.1s;
+        }
+
+        .modal-actions button:first-child {
+            border-right: 1px solid rgba(0, 0, 0, 0.1);
+            color: #ff5757;
+        }
+
+        .modal-actions button:last-child {
+            font-weight: 600;
+        }
+
+        .modal-actions button:hover {
+            background: rgba(0, 0, 0, 0.05);
+        }
+
+        /* --- LLM Card Styles (Unchanged) --- */
+        .llm-card {
+            background: #F1EDFF;
+            padding: 15px;
+            border-radius: 15px;
+            margin-top: 15px;
+            box-shadow: inset 0 0 10px rgba(140, 91, 255, 0.1);
+        }
+        
+        .llm-title {
+            color: #6C3BFF;
+            font-weight: 700;
+            font-size: 16px;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+        }
+
+        .llm-output {
+            font-size: 14px;
+            color: #333;
+            line-height: 1.5;
+        }
+        
+        .llm-loading {
+            text-align: center;
+            padding: 20px;
+            font-style: italic;
+            color: #8C5BFF;
+        }
+
+        .llm-button {
+            background-color: #8C5BFF;
+            color: white;
+            font-weight: 600;
+            padding: 12px 20px;
+            border-radius: 15px;
+            transition: all 0.2s;
+            cursor: pointer;
+            text-align: center;
+            margin-top: 10px;
+        }
+        
+        .llm-button:hover {
+            background-color: #A77BFF;
+        }
+        .llm-button:active {
+            transform: scale(0.98);
+        }
+
+    </style>
+</head>
+<body>
+    <div class="phone-wrapper">
+        <div class="status-bar">
+            <span>9:41</span>
+            <span>📶 📡 🔋</span>
+        </div>
+
+        <!-- MAIN CONTENT AREA -->
+        <div class="phone-content">
+            
+            <!-- 1. PERMISSION REQUEST VIEW -->
+            <div id="permission-view" class="app-view" style="display: flex;">
+                
+                <div class="header">
+                    <button class="back-btn" onclick="showView('permission-view')">←</button>
+                    <div style="width: 40px;"></div>
+                </div>
+
+                <div class="permission-content">
+                    <h1 class="permission-heading">Find friends easily in the mall</h1>
+                    
+                    <div class="permission-item">
+                        <div class="permission-icon">👥</div>
+                        <div class="permission-text">
+                            <h3>Connect Contacts</h3>
+                            <p>Select which friends you want to connect with in Locome.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="permission-item">
+                        <div class="permission-icon">📍</div>
+                        <div class="permission-text">
+                            <h3>Real-time Location</h3>
+                            <p>See their current location while they are inside the mall.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="permission-item">
+                        <div class="permission-icon">🔔</div>
+                        <div class="permission-text">
+                            <h3>Get Notified</h3>
+                            <p>We'll notify you if a close friend is nearby.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="permission-footer">
+                    <button class="get-started-btn" id="getStartedBtn">
+                        Get Started
+                    </button>
+                    <div class="permission-message" id="permissionMessage"></div>
+                    <p class="fine-print">*We respect your privacy. Location sharing is only active when both users are inside the mall.</p>
+                </div>
+            </div>
+            
+            <!-- 2. MAP VIEW (FRIENDS LOCATOR) -->
+            <div id="map-view" class="app-view">
+                <div class="header">
+                    <button class="back-btn" onclick="showView('permission-view')">←</button>
+                    <div class="header-title">Friends Locator</div>
+                    <div style="width: 40px;"></div>
+                </div>
+                
+                <div class="map-container" id="friendMapContainer">
+                    <!-- BACKGROUND MAP SVG - New Structured Layout -->
+                    <svg class="mall-map-svg" viewBox="0 0 480 680" xmlns="http://www.w3.org/2000/svg">
+                        <!-- Background -->
+                        <rect x="0" y="0" width="480" height="680" fill="#f8f8f8"/>
+                        
+                        <!-- Grid Lines (Hallways) -->
+                        <path d="M 0 170 L 480 170 M 0 340 L 480 340 M 0 510 L 480 510 M 120 0 L 120 680 M 240 0 L 240 680 M 360 0 L 360 680" 
+                              stroke="#fff" stroke-width="30" fill="none" opacity="0.7"/>
+
+                        <!-- Store Units - Smaller width (90px) to increase hallway space -->
+                        <!-- Store Layout. Each rect has a unique ID for easy targeting -->
+                        <rect id="store-1" x="15" y="20" width="90" height="130" class="store-unit"/>
+                        <rect id="store-2" x="135" y="20" width="90" height="130" class="store-unit"/>
+                        <rect id="store-3" x="255" y="20" width="90" height="130" class="store-unit"/>
+                        <rect id="store-4" x="375" y="20" width="90" height="130" class="store-unit"/>
+                        
+                        <rect id="store-5" x="15" y="190" width="90" height="130" class="store-unit"/>
+                        <rect id="store-6" x="135" y="190" width="90" height="130" class="store-unit"/>
+                        <rect id="store-7" x="255" y="190" width="90" height="130" class="store-unit"/>
+                        <rect id="store-8" x="375" y="190" width="90" height="130" class="store-unit"/>
+
+                        <rect id="store-9" x="15" y="360" width="90" height="130" class="store-unit"/>
+                        <rect id="store-10" x="135" y="360" width="90" height="130" class="store-unit"/>
+                        <rect id="store-11" x="255" y="360" width="90" height="130" class="store-unit"/>
+                        <rect id="store-12" x="375" y="360" width="90" height="130" class="store-unit"/>
+                        
+                        <rect id="store-13" x="15" y="530" width="90" height="130" class="store-unit"/>
+                        <rect id="store-14" x="135" y="530" width="90" height="130" class="store-unit"/>
+                        <rect id="store-15" x="255" y="530" width="90" height="130" class="store-unit"/>
+                        <rect id="store-16" x="375" y="530" width="90" height="130" class="store-unit"/>
+
+                        <!-- Store Labels (centered within the 90px wide shops) -->
+                        <text x="60" y="85" class="store-label store-label-small" text-anchor="middle">Lifestyle</text>
+                        <text x="180" y="85" class="store-label store-label-small" text-anchor="middle">Nike</text>
+                        <text x="300" y="85" class="store-label store-label-small" text-anchor="middle">Titan</text>
+                        <text x="420" y="85" class="store-label store-label-small" text-anchor="middle">Adidas</text>
+                        
+                        <text x="60" y="255" class="store-label store-label-small" text-anchor="middle">Zara</text>
+                        <text x="180" y="255" class="store-label store-label-small" text-anchor="middle">H&M</text>
+                        <text x="300" y="255" class="store-label store-label-small" text-anchor="middle">Puma</text>
+                        <text x="420" y="255" class="store-label store-label-small" text-anchor="middle">Levis</text>
+                        
+                        <text x="60" y="425" class="store-label store-label-small" text-anchor="middle">Cafe</text>
+                        <text x="180" y="425" class="store-label store-label-small" text-anchor="middle">Subway</text>
+                        <text x="300" y="425" class="store-label store-label-small" text-anchor="middle">Starb</text>
+                        <text x="420" y="425" class="store-label store-label-small" text-anchor="middle">KFC</text>
+
+                        <text x="60" y="595" class="store-label store-label-small" text-anchor="middle">Bank</text>
+                        <text x="180" y="595" class="store-label store-label-small" text-anchor="middle">Elec</text>
+                        <text x="300" y="595" class="store-label store-label-small" text-anchor="middle">Gifts</text>
+                        <text x="420" y="595" class="store-label store-label-small" text-anchor="middle">Toys</text>
+                        
+                        <!-- Navigation Path (Example) -->
+                        <polyline points="420,660 420,510 300,510 300,340 180,340 180,170 240,170" 
+                                  fill="none" stroke="#fff" stroke-width="15" stroke-linecap="round" stroke-linejoin="round"
+                                  filter="url(#glow)"/>
+                        
+                        <!-- Define Glow Filter for path -->
+                        <defs>
+                            <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
+                                <feGaussianBlur in="SourceGraphic" stdDeviation="5" result="blur" />
+                                <feColorMatrix in="blur" mode="matrix" values="0 0 0 0 0.54 0 0 0 0 0.4 0 0 0 0 1 0 0 0 1 0" result="colorblur"/>
+                                <feMerge>
+                                    <feMergeNode in="colorblur"/>
+                                    <feMergeNode in="SourceGraphic"/>
+                                </feMerge>
+                            </filter>
+                        </defs>
+
+                    </svg>
+                    
+                    <!-- 'YOU' Marker - Placed near the start of the path (New coordinates) -->
+                    <div class="you-marker" style="left: 420px; top: 660px;">
+                        🎯
+                    </div>
+
+
+                    <!-- FRIEND MARKERS ARE APPENDED HERE BY JS -->
+                </div>
+
+                <!-- MAP BOTTOM NAVIGATION -->
+                <div class="bottom-nav-map">
+                    <a href="#" class="map-nav-item">
+                        <div class="map-nav-icon-wrapper">
+                            <!-- Contacts Icon -->
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+                        </div>
+                        <span class="map-nav-label">Contacts</span>
+                    </a>
+                    <a href="#" class="map-nav-item active">
+                        <div class="map-nav-icon-wrapper">
+                            <!-- Encounters Icon -->
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>
+                        </div>
+                        <span class="map-nav-label">Encounters</span>
+                    </a>
+                    <a href="#" class="map-nav-item">
+                        <div class="map-nav-icon-wrapper">
+                            <!-- Profile Icon -->
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.39a2 2 0 0 0 .73 2.73l.15.08a2 2 0 0 1 1 1.74v.44a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2-2h.44a2 2 0 0 0 2 2v.18a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.44a2 2 0 0 1 1-1.74l-.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2-2h-.44a2 2 0 0 0-2-2V2z"/><circle cx="12" cy="12" r="3"/></svg>
+                        </div>
+                        <span class="map-nav-label">Profile</span>
+                    </a>
+                </div>
+            </div>
+
+            <!-- MEETUP MAGIC MODAL (Bottom-up modal for LLM planning) -->
+            <div id="meetupModal" class="modal-overlay">
+                <div class="modal-content">
+                    <h2 class="text-xl font-bold text-gray-800 mb-3" id="modalTitle">Meetup with [Friend Name]</h2>
+                    <p class="text-sm text-gray-500 mb-4">Tap the ✨ button to get a real-time meeting suggestion!</p>
+
+                    <button class="llm-button" id="meetupMagicBtn" onclick="generateMeetupIdea(this)">
+                        ✨ Generate Meetup Magic Idea
+                    </button>
+                    
+                    <div id="llmOutputArea" class="mt-4 overflow-y-auto flex-grow">
+                        <!-- LLM output will be injected here -->
+                    </div>
+
+                    <button class="llm-button mt-4 bg-red-500 hover:bg-red-600" onclick="closeModal('meetupModal')">
+                        Close
+                    </button>
+                </div>
+            </div>
+
+        </div>
+        
+        <!-- CONTACTS PERMISSION MODAL (Native-style central popup) -->
+        <div id="contacts-modal" class="modal-overlay">
+            <div class="native-modal-content">
+                <div class="modal-title">"Locome" Would Like to Access Your Contacts</div>
+                <div class="modal-body">
+                    Allow contact access to easily find and connect with your friends already using Locome.
+                </div>
+                <div class="modal-actions">
+                    <button onclick="handlePermissionResponse(false)">Don't Allow</button>
+                    <button onclick="handlePermissionResponse(true)">Allow</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // --- Mock Data ---
+        // Coordinates and store proximity data for the 480x680 viewBox
+        const storeLocations = [
+            { id: 1, name: 'Lifestyle', center: { x: 60, y: 85 } },
+            { id: 2, name: 'Nike', center: { x: 180, y: 85 } },
+            { id: 3, name: 'Titan', center: { x: 300, y: 85 } },
+            { id: 4, name: 'Adidas', center: { x: 420, y: 85 } },
+            
+            { id: 5, name: 'Zara', center: { x: 60, y: 255 } },
+            { id: 6, name: 'H&M', center: { x: 180, y: 255 } },
+            { id: 7, name: 'Puma', center: { x: 300, y: 255 } },
+            { id: 8, name: 'Levis', center: { x: 420, y: 255 } },
+
+            { id: 9, name: 'Cafe', center: { x: 60, y: 425 } },
+            { id: 10, name: 'Subway', center: { x: 180, y: 425 } },
+            { id: 11, name: 'Starbucks', center: { x: 300, y: 425 } },
+            { id: 12, name: 'KFC', center: { x: 420, y: 425 } },
+
+            { id: 13, name: 'Bank', center: { x: 60, y: 595 } },
+            { id: 14, name: 'Electronics', center: { x: 180, y: 595 } },
+            { id: 15, name: 'Gifts', center: { x: 300, y: 595 } },
+            { id: 16, name: 'Toys', center: { x: 420, y: 595 } },
+        ];
+        
+        const friendsData = [
+            { id: 1, name: 'Akshay', initials: 'A', status: '20m Nearby', away: false, x: 200, y: 150, color: '#FF7070', icon: '📍' }, 
+            { id: 2, name: 'Shravan', initials: 'S', status: '80m Away', away: true, x: 320, y: 450, color: '#BFA1FF', icon: '🏃' },
+            { id: 3, name: 'Harshit', initials: 'H', status: '100m Away', away: true, x: 380, y: 120, color: '#D5BEFF', icon: '⏳' },
+            { id: 4, name: 'Adhyayan', initials: 'Ad', status: 'Tadipar', unavailable: true, x: 100, y: 550, color: '#888888', icon: '🚫' } 
+        ];
+
+        // --- State Variables ---
+        let contactsAllowed = false; 
+        let currentFriend = null;
+
+        // --- DOM Elements ---
+        const permissionView = document.getElementById('permission-view');
+        const mapView = document.getElementById('map-view');
+        const getStartedBtn = document.getElementById('getStartedBtn');
+        const friendMapContainer = document.getElementById('friendMapContainer');
+        const meetupModal = document.getElementById('meetupModal');
+        const contactsModal = document.getElementById('contacts-modal');
+        const modalTitle = document.getElementById('modalTitle');
+        const llmOutputArea = document.getElementById('llmOutputArea');
+        const permissionMessage = document.getElementById('permissionMessage');
+
+
+        // --- View & Modal Handlers ---
+
+        function showView(viewId) {
+            permissionView.style.display = 'none';
+            mapView.style.display = 'none';
+
+            if (viewId === 'permission-view') {
+                permissionView.style.display = 'flex';
+                // Always clear map markers when returning to permission view
+                friendMapContainer.querySelectorAll('.friend-marker').forEach(marker => marker.remove());
+            } else if (viewId === 'map-view') {
+                mapView.style.display = 'flex';
+                setTimeout(renderFriendMarkers, 50); // Render markers only when map is visible
+            }
+        }
+        
+        function openModal(modalId, friend = null) {
+            const modal = document.getElementById(modalId);
+            if (!modal) return;
+            
+            if (modalId === 'meetupModal' && friend) {
+                 if (friend.unavailable) return;
+                currentFriend = friend;
+                modalTitle.textContent = `Meetup with ${friend.name}`;
+                llmOutputArea.innerHTML = ''; 
+                const btn = document.getElementById('meetupMagicBtn');
+                btn.disabled = false;
+                btn.textContent = '✨ Generate Meetup Magic Idea';
+                btn.classList.remove('opacity-50', 'cursor-not-allowed');
+            }
+            
+            modal.classList.add('open');
+        }
+
+        function closeModal(modalId) {
+            const modal = document.getElementById(modalId);
+            if (modal) modal.classList.remove('open');
+            if (modalId === 'meetupModal') currentFriend = null;
+        }
+
+        function handlePermissionResponse(allowed) {
+            closeModal('contacts-modal');
+            contactsAllowed = allowed;
+
+            if (allowed) {
+                permissionMessage.innerHTML = '<span class="text-green-600">✅ Contacts Allowed. Proceeding to Map.</span>';
+                setTimeout(() => {
+                    showView('map-view');
+                    permissionMessage.textContent = '';
+                }, 500);
+            } else {
+                permissionMessage.innerHTML = '❌ Contacts denied. Friends list will not be visible.';
+                // Stay on permission view
+            }
+        }
+
+        // --- Friend Marker Rendering ---
+
+        function renderFriendMarkers() {
+            // 1. Clear existing markers
+            friendMapContainer.querySelectorAll('.friend-marker').forEach(marker => marker.remove());
+
+            // 2. Only proceed if permission is granted
+            if (!contactsAllowed) {
+                // Optionally show a placeholder message on the map view if desired
+                console.log("Contacts not allowed, rendering no friend markers.");
+                return;
+            }
+
+            const mapWidth = friendMapContainer.offsetWidth;
+            const mapHeight = friendMapContainer.offsetHeight;
+            const viewBoxWidth = 480;
+            const viewBoxHeight = 680;
+
+            friendsData.forEach(friend => {
+                const marker = document.createElement('div');
+                let className = 'friend-marker';
+                if (friend.unavailable) {
+                    className += ' unavailable';
+                } else if (friend.away) {
+                    className += ' away';
+                }
+                marker.className = className;
+                marker.setAttribute('data-friend-id', friend.id);
+                // Open Meetup Modal only for available friends
+                if (!friend.unavailable) {
+                     marker.onclick = () => openModal('meetupModal', friend); 
+                }
+
+                // Position calculation
+                const screenX = (friend.x / viewBoxWidth) * mapWidth;
+                const screenY = (friend.y / viewBoxHeight) * mapHeight;
+
+                marker.style.left = `${screenX}px`; 
+                marker.style.top = `${screenY}px`;
+
+                // Avatar/Emoji
+                const avatar = document.createElement('div');
+                avatar.className = 'friend-avatar';
+                avatar.style.setProperty('--friend-color', friend.color); 
+                avatar.textContent = friend.icon; 
+                
+                // Info bubble
+                const info = document.createElement('div');
+                info.className = 'friend-info';
+
+                info.innerHTML = `
+                    <span class="friend-name">${friend.name}</span>
+                    <span class="friend-status">${friend.status}</span>
+                `;
+
+                marker.appendChild(info);
+                marker.appendChild(avatar); 
+                
+                friendMapContainer.appendChild(marker);
+            });
+        }
+
+
+        // --- Gemini API Functions (Unchanged) ---
+
+        const apiKey = ""; 
+        const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`;
+        const MAX_RETRIES = 5;
+
+        async function exponentialBackoff(fn, retries = 0) {
+            try {
+                return await fn();
+            } catch (error) {
+                if (retries < MAX_RETRIES) {
+                    const delay = Math.pow(2, retries) * 1000 + Math.random() * 1000;
+                    console.warn(`API call failed. Retrying in ${Math.round(delay / 1000)}s...`);
+                    await new Promise(resolve => setTimeout(resolve, delay));
+                    return exponentialBackoff(fn, retries + 1);
+                } else {
+                    console.error("API call failed after maximum retries.", error);
+                    throw new Error("Failed to connect to the planning service.");
+                }
+            }
+        }
+
+        async function callGeminiAPI(userQuery) {
+            const systemPrompt = "You are a friendly, helpful, and creative Meetup Planner for friends in a mall. Your task is to suggest a meeting point and a fun, relevant conversation starter or activity. Provide the output in a conversational tone, clearly labeling the Suggested Meeting Point and the Activity Idea.";
+
+            const payload = {
+                contents: [{ parts: [{ text: userQuery }] }],
+                tools: [{ "google_search": {} }],
+                systemInstruction: { parts: [{ text: systemPrompt }] },
+            };
+
+            const fn = async () => {
+                const response = await fetch(apiUrl, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                return response.json();
+            };
+
+            const result = await exponentialBackoff(fn);
+            const candidate = result.candidates?.[0];
+
+            if (candidate && candidate.content?.parts?.[0]?.text) {
+                return candidate.content.parts[0].text;
+            } else {
+                throw new Error("No valid response text received from the model or content was filtered.");
+            }
+        }
+
+        function findNearestStore(x, y) {
+            let nearest = null;
+            let minDistanceSq = Infinity;
+
+            storeLocations.forEach(store => {
+                const dx = store.center.x - x;
+                const dy = store.center.y - y;
+                const distanceSq = dx * dx + dy * dy;
+
+                if (distanceSq < minDistanceSq) {
+                    minDistanceSq = distanceSq;
+                    nearest = store;
+                }
+            });
+            return nearest ? nearest.name : "the nearest hallway";
+        }
+        
+        async function generateMeetupIdea(button) {
+            if (!currentFriend) return;
+
+            const friendLocation = findNearestStore(currentFriend.x, currentFriend.y);
+            const friendName = currentFriend.name;
+
+            const prompt = `My friend ${friendName} is currently located near the ${friendLocation} store in the mall. I want to meet up with them. Please suggest: 
+            1. A specific, good meeting point (e.g., inside the store, or a cafe nearby).
+            2. A creative conversation starter or activity idea that is relevant to the ${friendLocation} store or common mall activities.`;
+
+            llmOutputArea.innerHTML = `<div class="llm-loading">Planning magic... Please wait.</div>`;
+            button.disabled = true;
+            button.textContent = 'Planning...';
+            button.classList.add('opacity-50', 'cursor-not-allowed');
+
+            try {
+                const resultText = await callGeminiAPI(prompt);
+
+                llmOutputArea.innerHTML = `
+                    <div class="llm-card">
+                        <div class="llm-title">✨ Meetup Magic Result</div>
+                        <div class="llm-output">${resultText.replace(/\n/g, '<br>')}</div>
+                    </div>
+                `;
+                button.textContent = '✨ Generate Another Idea';
+                
+            } catch (error) {
+                console.error(error);
+                llmOutputArea.innerHTML = `
+                    <div class="llm-card bg-red-100 border border-red-400">
+                        <div class="llm-title text-red-600">Error!</div>
+                        <div class="llm-output text-red-800">
+                            Sorry, the Meetup Planner service is temporarily unavailable. Error: ${error.message}
+                        </div>
+                    </div>
+                `;
+                button.textContent = 'Try Again';
+            } finally {
+                button.disabled = false;
+                button.classList.remove('opacity-50', 'cursor-not-allowed');
+            }
+        }
+
+
+        // --- Event Listeners ---
+        getStartedBtn.addEventListener('click', () => {
+            // On click, show the native-style permission modal
+            openModal('contacts-modal');
+        });
+
+        // Initialize view
+        window.onload = () => {
+            showView('permission-view');
+        };
+
+    </script>
+</body>
+</html>

@@ -1,0 +1,631 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Scan Location - LOCOME</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Poppins', sans-serif;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(180deg, #FFFFFF 0%, #F1EDFF 33%, #D9CCFF 66%, #C1A4FF 100%);
+      padding: 20px;
+    }
+
+    .phone-wrapper {
+      width: 360px;
+      height: 780px;
+      border-radius: 40px;
+      background: linear-gradient(180deg, #A77BFF 0%, #8C5BFF 40%, #6C3BFF 100%);
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      border: 12px solid #1a1a1a;
+    }
+
+    .phone-wrapper::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 150px;
+      height: 30px;
+      background: #1a1a1a;
+      border-radius: 0 0 20px 20px;
+      z-index: 10;
+    }
+
+    .header {
+      padding: 50px 24px 20px;
+      position: relative;
+      z-index: 5;
+    }
+
+    .back-btn {
+      width: 36px;
+      height: 36px;
+      border-radius: 10px;
+      background: rgba(255, 255, 255, 0.2);
+      backdrop-filter: blur(6px);
+      border: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      text-decoration: none;
+      color: #0F1724;
+      font-size: 22px;
+      font-weight: 600;
+      margin-bottom: 20px;
+      transition: background 200ms ease;
+    }
+
+    .back-btn:active {
+      background: rgba(255, 255, 255, 0.3);
+    }
+
+    .title {
+      font-size: 24px;
+      font-weight: 700;
+      color: #0F1724;
+      letter-spacing: -0.5px;
+      text-align: center;
+    }
+
+    .content {
+      flex: 1;
+      padding: 24px 24px 28px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      overflow-y: auto;
+    }
+
+    .viewfinder-card {
+      background: #000000;
+      border-radius: 24px;
+      padding: 40px 24px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 280px;
+      position: relative;
+      overflow: hidden;
+      box-shadow: inset 0 0 40px rgba(207, 255, 226, 0.1);
+    }
+
+    .qr-placeholder {
+      width: 160px;
+      height: 160px;
+      border: 3px solid rgba(207, 255, 226, 0.5);
+      border-radius: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 70px;
+      margin-bottom: 20px;
+      position: relative;
+      box-shadow: 0 0 20px rgba(207, 255, 226, 0.3);
+    }
+
+    .qr-icon {
+      font-size: 50px;
+      color: rgba(207, 255, 226, 0.6);
+    }
+
+    .scan-line {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, #CFFFE2, transparent);
+      box-shadow: 0 0 10px #CFFFE2;
+      animation: scan 1200ms ease-in-out infinite;
+    }
+
+    @keyframes scan {
+      0%, 100% {
+        top: 0;
+        opacity: 0;
+      }
+      50% {
+        top: 50%;
+        opacity: 1;
+      }
+    }
+
+    .viewfinder-text {
+      font-size: 13px;
+      font-weight: 500;
+      color: rgba(207, 255, 226, 0.7);
+      text-align: center;
+      line-height: 1.5;
+    }
+
+    .detected-badge {
+      background: rgba(207, 255, 226, 0.35);
+      backdrop-filter: blur(6px);
+      border: 1.5px solid #CFFFE2;
+      border-radius: 20px;
+      padding: 10px 18px;
+      font-size: 12px;
+      font-weight: 500;
+      color: #0F1724;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      cursor: pointer;
+      transition: all 200ms ease;
+      margin-bottom: 12px;
+    }
+
+    .detected-badge:active {
+      transform: scale(0.97);
+      background: rgba(207, 255, 226, 0.5);
+    }
+
+    .action-buttons {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .primary-btn {
+      width: 100%;
+      height: 50px;
+      border-radius: 25px;
+      background: linear-gradient(90deg, #D5BEFF 0%, #BFA1FF 100%);
+      color: #0F1724;
+      font-size: 15px;
+      font-weight: 600;
+      border: none;
+      cursor: pointer;
+      font-family: 'Poppins', sans-serif;
+      box-shadow: 0 6px 16px rgba(191, 161, 255, 0.35);
+      transition: transform 200ms ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-decoration: none;
+    }
+
+    .primary-btn:active {
+      transform: scale(0.97);
+    }
+
+    .secondary-btn {
+      width: 100%;
+      height: 50px;
+      border-radius: 25px;
+      background: rgba(255, 255, 255, 0.15);
+      backdrop-filter: blur(6px);
+      border: 1.5px solid rgba(255, 255, 255, 0.3);
+      color: #0F1724;
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+      font-family: 'Poppins', sans-serif;
+      transition: all 200ms ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .secondary-btn:active {
+      background: rgba(255, 255, 255, 0.25);
+      transform: scale(0.97);
+    }
+
+    .dropdown-card {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: rgba(255, 255, 255, 0.15);
+      backdrop-filter: blur(20px);
+      border-radius: 30px 30px 0 0;
+      padding: 24px 20px 32px;
+      display: none;
+      animation: slideUp 350ms ease;
+      max-height: 480px;
+      overflow-y: auto;
+      z-index: 100;
+      box-shadow: 0 -10px 40px rgba(0, 0, 0, 0.3);
+    }
+
+    .dropdown-card.visible {
+      display: block;
+    }
+
+    @keyframes slideUp {
+      from {
+        opacity: 0;
+        transform: translateY(100%);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .dropdown-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.5);
+      backdrop-filter: blur(4px);
+      z-index: 99;
+      display: none;
+      animation: fadeIn 300ms ease;
+    }
+
+    .dropdown-overlay.visible {
+      display: block;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+      }
+      to {
+        opacity: 1;
+      }
+    }
+
+    .permission-popup {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 280px;
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(40px);
+      border-radius: 18px;
+      padding: 0;
+      z-index: 101;
+      display: none;
+      animation: popIn 300ms ease;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+    }
+
+    .permission-popup.visible {
+      display: block;
+    }
+
+    @keyframes popIn {
+      from {
+        opacity: 0;
+        transform: translate(-50%, -50%) scale(0.9);
+      }
+      to {
+        opacity: 1;
+        transform: translate(-50%, -50%) scale(1);
+      }
+    }
+
+    .permission-header {
+      padding: 20px 16px 16px;
+      text-align: center;
+    }
+
+    .permission-title {
+      font-size: 17px;
+      font-weight: 600;
+      color: #000000;
+      margin-bottom: 8px;
+      line-height: 1.3;
+    }
+
+    .permission-message {
+      font-size: 13px;
+      font-weight: 400;
+      color: rgba(0, 0, 0, 0.65);
+      line-height: 1.5;
+    }
+
+    .permission-buttons {
+      border-top: 0.5px solid rgba(0, 0, 0, 0.2);
+      display: flex;
+    }
+
+    .permission-btn {
+      flex: 1;
+      padding: 14px;
+      background: transparent;
+      border: none;
+      font-family: 'Poppins', sans-serif;
+      font-size: 17px;
+      font-weight: 400;
+      cursor: pointer;
+      color: #007AFF;
+      transition: background 200ms ease;
+    }
+
+    .permission-btn:first-child {
+      border-right: 0.5px solid rgba(0, 0, 0, 0.2);
+      color: rgba(0, 0, 0, 0.5);
+    }
+
+    .permission-btn:last-child {
+      font-weight: 600;
+    }
+
+    .permission-btn:active {
+      background: rgba(0, 0, 0, 0.05);
+    }
+
+    .dropdown-header {
+      text-align: center;
+      margin-bottom: 20px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .dropdown-title {
+      font-size: 18px;
+      font-weight: 600;
+      color: #0F1724;
+      margin-bottom: 4px;
+    }
+
+    .dropdown-subtitle {
+      font-size: 13px;
+      font-weight: 400;
+      color: rgba(15, 23, 36, 0.65);
+    }
+
+    .location-row {
+      padding: 16px 18px;
+      border-radius: 18px;
+      background: rgba(255, 255, 255, 0.15);
+      backdrop-filter: blur(6px);
+      margin-bottom: 12px;
+      cursor: pointer;
+      transition: all 200ms ease;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      border: 1.5px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .location-row:last-child {
+      margin-bottom: 0;
+    }
+
+    .location-row:active {
+      transform: scale(0.98);
+      background: linear-gradient(135deg, rgba(207, 255, 226, 0.35), rgba(213, 190, 255, 0.25));
+      border-color: rgba(207, 255, 226, 0.6);
+    }
+
+    .location-row.selected {
+      background: linear-gradient(135deg, rgba(207, 255, 226, 0.35), rgba(213, 190, 255, 0.25));
+      border: 1.5px solid rgba(207, 255, 226, 0.6);
+    }
+
+    .location-icon {
+      font-size: 24px;
+    }
+
+    .location-text {
+      flex: 1;
+    }
+
+    .location-name {
+      font-size: 15px;
+      font-weight: 600;
+      color: #0F1724;
+      margin-bottom: 3px;
+    }
+
+    .location-area {
+      font-size: 12px;
+      font-weight: 400;
+      color: rgba(15, 23, 36, 0.65);
+    }
+
+    .check-mark {
+      font-size: 20px;
+      color: #CFFFE2;
+      display: none;
+    }
+
+    .location-row.selected .check-mark {
+      display: block;
+    }
+
+    .confirm-btn {
+      display: none;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .scan-line {
+        animation: none;
+      }
+      * {
+        animation-duration: 0.01ms !important;
+        transition-duration: 0.01ms !important;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="phone-wrapper">
+    <div class="header">
+      <a href="login.html" class="back-btn" aria-label="Go back">‹</a>
+      <h1 class="title">Scan or Select Location</h1>
+    </div>
+
+    <div class="content">
+      <div class="detected-badge" id="detectedBadge">
+        📍 Detected: Infinity Mall, Andheri — Tap to confirm
+      </div>
+
+      <div class="viewfinder-card">
+        <div class="qr-placeholder">
+          <div class="scan-line"></div>
+          <div class="qr-icon">⊞</div>
+        </div>
+        <p class="viewfinder-text">Position QR code within frame<br>to scan automatically</p>
+      </div>
+
+      <div class="action-buttons">
+        <button class="primary-btn" id="scanBtn" aria-label="Scan QR code">
+          📱 Scan QR Code
+        </button>
+        <button class="secondary-btn" id="selectLocationBtn" aria-label="Select location manually">
+          📍 Select Location
+        </button>
+      </div>
+
+      <div class="dropdown-overlay" id="dropdownOverlay"></div>
+
+      <div class="permission-popup" id="permissionPopup">
+        <div class="permission-header">
+          <div class="permission-title">Allow "LOCOME" to access your location?</div>
+          <div class="permission-message">This lets LOCOME detect nearby malls and provide accurate navigation.</div>
+        </div>
+        <div class="permission-buttons">
+          <button class="permission-btn" id="denyBtn">Don't Allow</button>
+          <button class="permission-btn" id="allowBtn">Allow</button>
+        </div>
+      </div>
+
+      <div class="dropdown-card" id="dropdownCard">
+        <div class="dropdown-header">
+          <div class="dropdown-title">Select Your Location</div>
+          <div class="dropdown-subtitle">Choose a mall to get started</div>
+        </div>
+
+        <div class="location-row selected" data-location="infinity-mall">
+          <span class="location-icon">🏬</span>
+          <div class="location-text">
+            <div class="location-name">Infinity Mall</div>
+            <div class="location-area">Andheri, Mumbai</div>
+          </div>
+          <span class="check-mark">✓</span>
+        </div>
+
+        <div class="location-row" data-location="phoenix-market">
+          <span class="location-icon">🏢</span>
+          <div class="location-text">
+            <div class="location-name">Phoenix Market City</div>
+            <div class="location-area">Kurla, Mumbai</div>
+          </div>
+          <span class="check-mark">✓</span>
+        </div>
+
+        <div class="location-row" data-location="palladium">
+          <span class="location-icon">🏛️</span>
+          <div class="location-text">
+            <div class="location-name">Palladium Mall</div>
+            <div class="location-area">Lower Parel, Mumbai</div>
+          </div>
+          <span class="check-mark">✓</span>
+        </div>
+
+        <div class="location-row" data-location="custom">
+          <span class="location-icon">➕</span>
+          <div class="location-text">
+            <div class="location-name">Add Custom Location</div>
+            <div class="location-area">Enter manually</div>
+          </div>
+          <span class="check-mark">✓</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const scanBtn = document.getElementById('scanBtn');
+    const selectLocationBtn = document.getElementById('selectLocationBtn');
+    const dropdownCard = document.getElementById('dropdownCard');
+    const dropdownOverlay = document.getElementById('dropdownOverlay');
+    const locationRows = document.querySelectorAll('.location-row');
+    const detectedBadge = document.getElementById('detectedBadge');
+    const permissionPopup = document.getElementById('permissionPopup');
+    const allowBtn = document.getElementById('allowBtn');
+    const denyBtn = document.getElementById('denyBtn');
+
+    // Show permission popup on page load
+    window.addEventListener('load', () => {
+      setTimeout(() => {
+        permissionPopup.classList.add('visible');
+        dropdownOverlay.classList.add('visible');
+      }, 800);
+    });
+
+    // Allow permission - show detected badge
+    allowBtn.addEventListener('click', () => {
+      permissionPopup.classList.remove('visible');
+      dropdownOverlay.classList.remove('visible');
+      detectedBadge.style.display = 'flex';
+    });
+
+    // Deny permission - hide badge
+    denyBtn.addEventListener('click', () => {
+      permissionPopup.classList.remove('visible');
+      dropdownOverlay.classList.remove('visible');
+      detectedBadge.style.display = 'none';
+    });
+
+    // Scan QR - simulate successful scan
+    scanBtn.addEventListener('click', () => {
+      scanBtn.textContent = '✓ Scanning...';
+      setTimeout(() => {
+        window.location.href = 'home.html';
+      }, 800);
+    });
+
+    // Toggle dropdown popup
+    selectLocationBtn.addEventListener('click', () => {
+      dropdownCard.classList.add('visible');
+      dropdownOverlay.classList.add('visible');
+    });
+
+    // Close dropdown when clicking overlay
+    dropdownOverlay.addEventListener('click', () => {
+      dropdownCard.classList.remove('visible');
+      dropdownOverlay.classList.remove('visible');
+      permissionPopup.classList.remove('visible');
+    });
+
+    // Select location row - auto navigate to home
+    locationRows.forEach(row => {
+      row.addEventListener('click', () => {
+        locationRows.forEach(r => r.classList.remove('selected'));
+        row.classList.add('selected');
+        
+        // Auto navigate to home after brief delay
+        setTimeout(() => {
+          window.location.href = 'home.html';
+        }, 400);
+      });
+    });
+
+    // Detected badge click
+    detectedBadge.addEventListener('click', () => {
+      window.location.href = 'home.html';
+    });
+  </script>
+</body>
+</html>

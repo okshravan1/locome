@@ -1,0 +1,742 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login - LOCOME</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Poppins', sans-serif;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(180deg, #FFFFFF 0%, #F1EDFF 33%, #D9CCFF 66%, #C1A4FF 100%);
+      padding: 20px;
+    }
+
+    .phone-wrapper {
+      width: 360px;
+      height: 780px;
+      border-radius: 40px;
+      background: linear-gradient(180deg, #A77BFF 0%, #8C5BFF 40%, #6C3BFF 100%);
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      border: 12px solid #1a1a1a;
+    }
+
+    .phone-wrapper::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 150px;
+      height: 30px;
+      background: #1a1a1a;
+      border-radius: 0 0 20px 20px;
+      z-index: 10;
+    }
+
+    .header {
+      padding: 50px 24px 16px;
+      position: relative;
+      z-index: 5;
+    }
+
+    .back-btn {
+      width: 36px;
+      height: 36px;
+      border-radius: 10px;
+      background: rgba(255, 255, 255, 0.2);
+      backdrop-filter: blur(6px);
+      border: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      text-decoration: none;
+      color: #FFFFFF;
+      font-size: 22px;
+      font-weight: 600;
+      margin-bottom: 24px;
+      transition: background 200ms ease;
+    }
+
+    .back-btn:active {
+      background: rgba(255, 255, 255, 0.3);
+    }
+
+    .title {
+      font-size: 24px;
+      font-weight: 700;
+      color: #FFFFFF;
+      margin-bottom: 6px;
+      letter-spacing: -0.5px;
+    }
+
+    .subtitle {
+      font-size: 13px;
+      font-weight: 400;
+      color: rgba(255, 255, 255, 0.75);
+      line-height: 1.4;
+    }
+
+    .content {
+      flex: 1;
+      padding: 0 24px;
+      display: flex;
+      flex-direction: column;
+      overflow-y: auto;
+    }
+
+    .card {
+      background: rgba(255, 255, 255, 0.12);
+      backdrop-filter: blur(6px);
+      border-radius: 26px;
+      padding: 24px 20px;
+      margin-bottom: 16px;
+    }
+
+    .section {
+      display: block;
+    }
+
+    .section.hidden {
+      display: none;
+    }
+
+    .input-group {
+      margin-bottom: 18px;
+    }
+
+    .input-label {
+      font-size: 13px;
+      font-weight: 500;
+      color: rgba(255, 255, 255, 0.85);
+      margin-bottom: 8px;
+      display: block;
+    }
+
+    .text-input {
+      width: 100%;
+      background: rgba(255, 255, 255, 0.15);
+      backdrop-filter: blur(4px);
+      border-radius: 14px;
+      padding: 13px 14px;
+      font-size: 15px;
+      font-weight: 500;
+      color: #FFFFFF;
+      border: 1.5px solid rgba(255, 255, 255, 0.2);
+      font-family: 'Poppins', sans-serif;
+      outline: none;
+      transition: all 200ms ease;
+    }
+
+    .text-input::placeholder {
+      color: rgba(255, 255, 255, 0.4);
+    }
+
+    .text-input:focus {
+      border-color: #CFFFE2;
+      background: rgba(255, 255, 255, 0.2);
+    }
+
+    .avatar-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+
+    .avatar-option {
+      aspect-ratio: 1;
+      background: rgba(255, 255, 255, 0.15);
+      backdrop-filter: blur(4px);
+      border-radius: 14px;
+      border: 2px solid rgba(255, 255, 255, 0.2);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 32px;
+      cursor: pointer;
+      transition: all 200ms ease;
+    }
+
+    .avatar-option:hover {
+      background: rgba(255, 255, 255, 0.2);
+    }
+
+    .avatar-option.selected {
+      background: rgba(207, 255, 226, 0.25);
+      border-color: #CFFFE2;
+      transform: scale(1.05);
+      box-shadow: 0 0 0 3px rgba(207, 255, 226, 0.2);
+    }
+
+    .gender-options {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+
+    .gender-option {
+      flex: 1;
+      padding: 14px;
+      background: rgba(255, 255, 255, 0.15);
+      backdrop-filter: blur(4px);
+      border: 2px solid rgba(255, 255, 255, 0.2);
+      border-radius: 14px;
+      font-size: 14px;
+      font-weight: 600;
+      color: rgba(255, 255, 255, 0.85);
+      cursor: pointer;
+      font-family: 'Poppins', sans-serif;
+      transition: all 200ms ease;
+      text-align: center;
+    }
+
+    .gender-option:active {
+      transform: scale(0.97);
+    }
+
+    .gender-option.selected {
+      background: rgba(207, 255, 226, 0.25);
+      border-color: #CFFFE2;
+      color: #FFFFFF;
+    }
+
+    .input-row {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .country-code {
+      background: rgba(255, 255, 255, 0.15);
+      backdrop-filter: blur(4px);
+      border-radius: 14px;
+      padding: 12px 10px;
+      font-size: 14px;
+      font-weight: 600;
+      color: #FFFFFF;
+      border: 1.5px solid rgba(255, 255, 255, 0.2);
+      min-width: 55px;
+      text-align: center;
+    }
+
+    .phone-input {
+      flex: 1;
+      background: rgba(255, 255, 255, 0.15);
+      backdrop-filter: blur(4px);
+      border-radius: 14px;
+      padding: 12px 12px;
+      font-size: 14px;
+      font-weight: 500;
+      color: #FFFFFF;
+      border: 1.5px solid rgba(255, 255, 255, 0.2);
+      font-family: 'Poppins', sans-serif;
+      outline: none;
+      transition: all 200ms ease;
+    }
+
+    .phone-input::placeholder {
+      color: rgba(255, 255, 255, 0.4);
+    }
+
+    .phone-input:focus {
+      border-color: #CFFFE2;
+      background: rgba(255, 255, 255, 0.2);
+    }
+
+    .otp-label {
+      font-size: 13px;
+      font-weight: 500;
+      color: rgba(255, 255, 255, 0.85);
+      margin-bottom: 14px;
+      text-align: center;
+    }
+
+    .otp-boxes {
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+      margin-bottom: 20px;
+      position: relative;
+    }
+
+    .otp-box {
+      width: 52px;
+      height: 58px;
+      background: rgba(255, 255, 255, 0.15);
+      backdrop-filter: blur(4px);
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 22px;
+      font-weight: 600;
+      color: #FFFFFF;
+      border: 1.5px solid rgba(255, 255, 255, 0.2);
+      transition: all 200ms ease;
+    }
+
+    .otp-box.filled {
+      background: rgba(207, 255, 226, 0.25);
+      border-color: #CFFFE2;
+    }
+
+    .otp-box.active {
+      border-color: #CFFFE2;
+      transform: scale(1.05);
+      box-shadow: 0 0 0 3px rgba(207, 255, 226, 0.2);
+    }
+
+    .otp-input-hidden {
+      position: absolute;
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .otp-actions {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 18px;
+    }
+
+    .otp-action-btn {
+      flex: 1;
+      padding: 10px;
+      background: rgba(255, 255, 255, 0.15);
+      backdrop-filter: blur(4px);
+      border: 1.5px solid rgba(255, 255, 255, 0.2);
+      border-radius: 12px;
+      font-size: 12px;
+      font-weight: 500;
+      color: rgba(255, 255, 255, 0.85);
+      cursor: pointer;
+      font-family: 'Poppins', sans-serif;
+      transition: all 200ms ease;
+    }
+
+    .otp-action-btn:active {
+      background: rgba(255, 255, 255, 0.2);
+      transform: scale(0.97);
+    }
+
+    .otp-footer {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin-bottom: 18px;
+      font-size: 12px;
+      gap: 12px;
+    }
+
+    .resend-timer {
+      color: rgba(255, 255, 255, 0.7);
+      font-weight: 500;
+    }
+
+    .change-number {
+      color: #CFFFE2;
+      text-decoration: none;
+      font-weight: 600;
+      cursor: pointer;
+      transition: opacity 200ms ease;
+    }
+
+    .change-number:active {
+      opacity: 0.7;
+    }
+
+    .cta-btn {
+      width: 100%;
+      height: 48px;
+      border-radius: 24px;
+      background: linear-gradient(90deg, #D5BEFF 0%, #BFA1FF 100%);
+      color: #0F1724;
+      font-size: 15px;
+      font-weight: 600;
+      border: none;
+      cursor: pointer;
+      font-family: 'Poppins', sans-serif;
+      box-shadow: 0 6px 16px rgba(191, 161, 255, 0.35);
+      transition: transform 200ms ease;
+    }
+
+    .cta-btn:active {
+      transform: scale(0.97);
+    }
+
+    .cta-btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    .error-message {
+      color: #FF6B9D;
+      font-size: 12px;
+      font-weight: 500;
+      margin-top: 12px;
+      text-align: center;
+      display: none;
+    }
+
+    .error-message.visible {
+      display: block;
+      animation: shake 400ms ease;
+    }
+
+    @keyframes shake {
+      0%, 100% { transform: translateX(0); }
+      25% { transform: translateX(-8px); }
+      75% { transform: translateX(8px); }
+    }
+
+    .footer-links {
+      padding: 16px 24px 24px;
+      text-align: center;
+    }
+
+    .footer-text {
+      font-size: 11px;
+      color: rgba(255, 255, 255, 0.5);
+      line-height: 1.6;
+      margin-bottom: 8px;
+    }
+
+    .footer-links-row {
+      display: flex;
+      gap: 12px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .footer-link {
+      font-size: 11px;
+      color: rgba(255, 255, 255, 0.7);
+      text-decoration: none;
+      font-weight: 500;
+      transition: color 200ms ease;
+    }
+
+    .footer-link:active {
+      color: #CFFFE2;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      * {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="phone-wrapper">
+    <div class="header">
+      <a href="splash.html" class="back-btn" aria-label="Go back">‹</a>
+      <h1 class="title" id="pageTitle">Create Your Profile</h1>
+      <p class="subtitle" id="pageSubtitle">Tell us a bit about yourself</p>
+    </div>
+
+    <div class="content">
+      <div class="card">
+        <!-- All sections visible in one view -->
+        <div class="section" id="nameSection">
+          <div class="input-group">
+            <label class="input-label">Your Name</label>
+            <input 
+              type="text" 
+              class="text-input" 
+              id="nameInput"
+              placeholder="Enter your full name"
+              aria-label="Your name"
+            >
+          </div>
+        </div>
+
+        <div class="section" id="avatarSection">
+          <div class="input-group">
+            <label class="input-label">Choose Your Avatar</label>
+            <div class="avatar-grid">
+              <div class="avatar-option" data-avatar="😚">😚</div>
+              <div class="avatar-option" data-avatar="😎">😎</div>
+              <div class="avatar-option" data-avatar="😈">😈</div>
+              <div class="avatar-option" data-avatar="👻">👻</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="section" id="genderSection">
+          <div class="input-group">
+            <label class="input-label">Gender</label>
+            <div class="gender-options">
+              <button class="gender-option" data-gender="male">Male</button>
+              <button class="gender-option" data-gender="female">Female</button>
+              <button class="gender-option" data-gender="non-binary">Non-Binary</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="section" id="phoneSection">
+          <div class="input-group">
+            <label class="input-label">Phone Number</label>
+            <div class="input-row">
+              <div class="country-code">+91</div>
+              <input 
+                type="tel" 
+                class="phone-input" 
+                id="phoneInput"
+                placeholder="98765 43210"
+                maxlength="12"
+                aria-label="Phone number"
+              >
+            </div>
+          </div>
+          <button class="cta-btn" id="sendOtpBtn">Send OTP</button>
+        </div>
+
+        <div class="section hidden" id="otpSection">
+          <div class="otp-label">Enter 4-digit OTP</div>
+          <div class="otp-boxes" id="otpBoxes">
+            <div class="otp-box" data-index="0"></div>
+            <div class="otp-box" data-index="1"></div>
+            <div class="otp-box" data-index="2"></div>
+            <div class="otp-box" data-index="3"></div>
+            <input 
+              type="tel" 
+              class="otp-input-hidden" 
+              id="otpInput"
+              maxlength="4"
+              aria-label="Enter 4-digit OTP"
+              inputmode="numeric"
+            >
+          </div>
+          <div class="otp-actions">
+            <button class="otp-action-btn" id="resendSms">📱 Resend SMS</button>
+            <button class="otp-action-btn" id="sendWhatsapp">💬 Send via WhatsApp</button>
+          </div>
+          <div class="otp-footer">
+            <span class="resend-timer" id="resendTimer">Resend in 00:25</span>
+            <a href="#" class="change-number" id="changeNumber">Change number</a>
+          </div>
+          <button class="cta-btn" id="verifyBtn">Verify & Continue</button>
+          <div class="error-message" id="errorMessage">Invalid OTP. Please try again.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="footer-links">
+      <p class="footer-text">By continuing, you agree to our</p>
+      <div class="footer-links-row">
+        <a href="#" class="footer-link">Terms & Conditions</a>
+        <span style="color: rgba(255, 255, 255, 0.3);">•</span>
+        <a href="#" class="footer-link">Privacy Policy</a>
+        <span style="color: rgba(255, 255, 255, 0.3);">•</span>
+        <a href="#" class="footer-link">About Us</a>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // User data
+    const userData = {
+      name: '',
+      avatar: '',
+      gender: '',
+      phone: ''
+    };
+
+    // Elements
+    const nameInput = document.getElementById('nameInput');
+    const avatarOptions = document.querySelectorAll('.avatar-option');
+    const genderOptions = document.querySelectorAll('.gender-option');
+    const phoneInput = document.getElementById('phoneInput');
+    const sendOtpBtn = document.getElementById('sendOtpBtn');
+    const phoneSection = document.getElementById('phoneSection');
+    const otpSection = document.getElementById('otpSection');
+    const otpInput = document.getElementById('otpInput');
+    const otpBoxes = document.querySelectorAll('.otp-box');
+    const verifyBtn = document.getElementById('verifyBtn');
+    const changeNumber = document.getElementById('changeNumber');
+    const errorMessage = document.getElementById('errorMessage');
+    const resendTimer = document.getElementById('resendTimer');
+    const resendSms = document.getElementById('resendSms');
+    const sendWhatsapp = document.getElementById('sendWhatsapp');
+
+    // Avatar selection
+    avatarOptions.forEach(option => {
+      option.addEventListener('click', () => {
+        avatarOptions.forEach(o => o.classList.remove('selected'));
+        option.classList.add('selected');
+        userData.avatar = option.dataset.avatar;
+      });
+    });
+
+    // Gender selection
+    genderOptions.forEach(option => {
+      option.addEventListener('click', () => {
+        genderOptions.forEach(o => o.classList.remove('selected'));
+        option.classList.add('selected');
+        userData.gender = option.dataset.gender;
+      });
+    });
+
+    // Phone input formatting
+    phoneInput.addEventListener('input', (e) => {
+      let value = e.target.value.replace(/\D/g, '');
+      if (value.length > 5) {
+        value = value.slice(0, 5) + ' ' + value.slice(5, 10);
+      }
+      e.target.value = value;
+    });
+
+    // Send OTP
+    sendOtpBtn.addEventListener('click', () => {
+      userData.name = nameInput.value.trim();
+      
+      if (!userData.name) {
+        alert('Please enter your name');
+        nameInput.focus();
+        return;
+      }
+      
+      if (!userData.avatar) {
+        alert('Please select an avatar');
+        return;
+      }
+      
+      if (!userData.gender) {
+        alert('Please select your gender');
+        return;
+      }
+      
+      if (phoneInput.value.replace(/\s/g, '').length !== 10) {
+        alert('Please enter a valid 10-digit phone number');
+        phoneInput.focus();
+        return;
+      }
+      
+      userData.phone = phoneInput.value.replace(/\s/g, '');
+      
+      // Hide all form sections and show OTP
+      document.querySelectorAll('.section').forEach(s => s.classList.add('hidden'));
+      otpSection.classList.remove('hidden');
+      
+      setTimeout(() => {
+        otpInput.focus();
+      }, 100);
+      startResendTimer();
+    });
+
+    // OTP Input handling
+    otpInput.addEventListener('input', (e) => {
+      const value = e.target.value.replace(/\D/g, '');
+      e.target.value = value;
+      
+      otpBoxes.forEach((box, index) => {
+        box.textContent = value[index] || '';
+        box.classList.toggle('filled', !!value[index]);
+        box.classList.remove('active');
+      });
+
+      if (value.length < 4) {
+        otpBoxes[value.length].classList.add('active');
+      }
+
+      errorMessage.classList.remove('visible');
+    });
+
+    otpBoxes.forEach(box => {
+      box.addEventListener('click', () => {
+        otpInput.focus();
+      });
+    });
+
+    // Verify OTP
+    verifyBtn.addEventListener('click', () => {
+      if (otpInput.value.length === 4) {
+        if (otpInput.value === '1234') {
+          console.log('User Data:', userData);
+          window.location.href = 'scan.html';
+        } else {
+          errorMessage.classList.add('visible');
+          setTimeout(() => {
+            errorMessage.classList.remove('visible');
+          }, 3000);
+        }
+      } else {
+        errorMessage.textContent = 'Please enter complete OTP';
+        errorMessage.classList.add('visible');
+        setTimeout(() => {
+          errorMessage.classList.remove('visible');
+          errorMessage.textContent = 'Invalid OTP. Please try again.';
+        }, 3000);
+      }
+    });
+
+    // Change number
+    changeNumber.addEventListener('click', (e) => {
+      e.preventDefault();
+      otpSection.classList.add('hidden');
+      document.querySelectorAll('.section').forEach(s => s.classList.remove('hidden'));
+      otpInput.value = '';
+      otpBoxes.forEach(box => {
+        box.textContent = '';
+        box.classList.remove('filled', 'active');
+      });
+      errorMessage.classList.remove('visible');
+    });
+
+    // Resend SMS
+    resendSms.addEventListener('click', () => {
+      alert('OTP resent via SMS');
+      startResendTimer();
+    });
+
+    // Send WhatsApp
+    sendWhatsapp.addEventListener('click', () => {
+      alert('OTP sent via WhatsApp');
+      startResendTimer();
+    });
+
+    // Resend timer
+    let timerInterval;
+    function startResendTimer() {
+      clearInterval(timerInterval);
+      let seconds = 25;
+      resendSms.disabled = true;
+      sendWhatsapp.disabled = true;
+      
+      timerInterval = setInterval(() => {
+        seconds--;
+        const mins = Math.floor(seconds / 60);
+        const secs = seconds % 60;
+        resendTimer.textContent = `Resend in ${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+        
+        if (seconds <= 0) {
+          clearInterval(timerInterval);
+          resendTimer.textContent = 'Resend now';
+          resendSms.disabled = false;
+          sendWhatsapp.disabled = false;
+        }
+      }, 1000);
+    }
+  </script>
+</body>
+</html>
