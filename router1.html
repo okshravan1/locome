@@ -1,0 +1,1043 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Route - Infinity Mall</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(180deg, #FFFFFF 0%, #F1EDFF 25%, #D9CCFF 60%, #C1A4FF 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            overflow: hidden;
+        }
+
+        .phone-wrapper {
+            width: 360px;
+            height: 780px;
+            border-radius: 40px;
+            background: linear-gradient(180deg, #A77BFF 0%, #8C5BFF 40%, #6C3BFF 100%);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            border: 12px solid #1a1a1a;
+        }
+
+        .phone-content {
+            width: 100%;
+            height: 100%;
+            background: transparent;
+            overflow-y: hidden;
+            padding-top: 50px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .status-bar {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 50px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 20px;
+            color: #fff;
+            font-size: 13px;
+            font-weight: 500;
+            z-index: 99;
+        }
+
+        .header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 10px 20px 15px;
+        }
+
+        .back-btn {
+            width: 40px;
+            height: 40px;
+            background: rgba(255, 255, 255, 0.12);
+            backdrop-filter: blur(6px);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: none;
+            cursor: pointer;
+            color: #fff;
+            font-size: 20px;
+        }
+
+        .header-title {
+            color: #fff;
+            font-size: 18px;
+            font-weight: 600;
+        }
+
+        .progress-stats {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 20px;
+            margin: 8px 20px;
+            background: rgba(255, 255, 255, 0.12);
+            backdrop-filter: blur(6px);
+            border-radius: 20px;
+            flex-shrink: 0;
+        }
+
+        .stat-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .stat-label {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 11px;
+            font-weight: 500;
+        }
+
+        .stat-value {
+            color: #fff;
+            font-size: 16px;
+            font-weight: 700;
+        }
+
+        /* Direction Instruction Card */
+        .instruction-card {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 16px 20px;
+            margin: 8px 20px;
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(6px);
+            border-radius: 20px;
+            flex-shrink: 0;
+        }
+
+        .instruction-icon {
+            font-size: 36px;
+        }
+
+        .instruction-text {
+            flex: 1;
+        }
+
+        .instruction-title {
+            color: #fff;
+            font-size: 16px;
+            font-weight: 600;
+        }
+
+        .instruction-subtitle {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 12px;
+        }
+
+        .map-container {
+            position: relative;
+            width: 100%;
+            flex: 1;
+            padding: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        .map-wrapper {
+            width: 100%;
+            height: 100%;
+            transition: transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        .map-wrapper.rotated {
+            transform: rotate(-90deg);
+        }
+
+        .mall-map {
+            width: 100%;
+            height: 100%;
+            max-height: 100%;
+        }
+
+        .store-popup {
+            position: absolute;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #CFFFE2;
+            color: #0F1724;
+            padding: 12px 20px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 600;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+            opacity: 0;
+            z-index: 50;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        .store-popup.show {
+            opacity: 1;
+            transform: translateX(-50%) translateY(0);
+        }
+
+        .store-popup.hide {
+            opacity: 0;
+            transform: translateX(-50%) translateY(-15px);
+        }
+
+        .offer-badge {
+            background: #FF5252;
+            color: #fff;
+            padding: 3px 10px;
+            border-radius: 10px;
+            font-size: 11px;
+            font-weight: 700;
+        }
+
+        .controls {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            padding: 15px 20px;
+            flex-shrink: 0;
+        }
+
+        .lets-go-btn {
+            width: 100%;
+            background: #CFFFE2;
+            border: none;
+            color: #0F1724;
+            padding: 18px 10px;
+            border-radius: 25px;
+            font-size: 18px;
+            font-weight: 700;
+            cursor: pointer;
+            font-family: 'Poppins', sans-serif;
+            transition: all 0.3s ease;
+            box-shadow: 0 8px 25px rgba(207, 255, 226, 0.3);
+        }
+
+        .lets-go-btn:active {
+            transform: scale(0.97);
+        }
+
+        .lets-go-btn.tracking {
+            background: linear-gradient(90deg, #FFE066, #FFB800);
+        }
+
+        /* Debug Panel */
+        .debug-panel {
+            background: rgba(0, 0, 0, 0.5);
+            padding: 10px 15px;
+            margin: 0 20px 10px;
+            border-radius: 15px;
+            font-size: 10px;
+            font-family: monospace;
+        }
+
+        .debug-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 3px 0;
+            color: rgba(255,255,255,0.6);
+        }
+
+        .debug-value {
+            color: #CFFFE2;
+            font-weight: bold;
+        }
+
+        .bottom-nav {
+            position: relative;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 80px;
+            background: rgba(30, 30, 40, 0.95);
+            backdrop-filter: blur(10px);
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            padding: 0 20px 20px;
+            border-radius: 30px 30px 0 0;
+            flex-shrink: 0;
+        }
+
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 6px;
+            color: #8E8E93;
+            text-decoration: none;
+            font-size: 11px;
+            transition: all 0.3s ease;
+        }
+
+        .nav-item.active {
+            color: #BFA1FF;
+        }
+
+        .nav-icon {
+            width: 26px;
+            height: 26px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+        }
+
+        .arrival-modal {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(8px);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 200;
+            animation: fadeIn 0.4s ease;
+        }
+
+        .arrival-modal.show {
+            display: flex;
+        }
+
+        .modal-content {
+            background: #fff;
+            border-radius: 30px;
+            padding: 40px 30px;
+            margin: 0 30px;
+            text-align: center;
+            animation: slideUp 0.5s ease;
+        }
+
+        .success-icon {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, #CFFFE2 0%, #BFA1FF 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+            font-size: 40px;
+        }
+
+        .modal-title {
+            color: #0F1724;
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+
+        .modal-subtitle {
+            color: #666;
+            font-size: 15px;
+            margin-bottom: 30px;
+        }
+
+        .modal-btn {
+            width: 100%;
+            background: linear-gradient(90deg, #D5BEFF 0%, #BFA1FF 100%);
+            color: #0F1724;
+            border: none;
+            padding: 16px;
+            border-radius: 20px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            font-family: 'Poppins', sans-serif;
+            margin-bottom: 12px;
+            transition: all 0.3s ease;
+        }
+
+        .modal-btn:active {
+            transform: scale(0.98);
+        }
+
+        .coupon-box {
+            background: #F5F5F7;
+            border: 2px dashed #BFA1FF;
+            border-radius: 16px;
+            padding: 20px;
+            margin: 20px 0;
+            text-align: center;
+        }
+
+        .coupon-label {
+            color: #7C7C8A;
+            font-size: 12px;
+            font-weight: 500;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .coupon-code {
+            color: #0F1724;
+            font-size: 24px;
+            font-weight: 700;
+            letter-spacing: 2px;
+            margin-bottom: 12px;
+        }
+
+        .copy-btn {
+            background: linear-gradient(90deg, #D5BEFF 0%, #BFA1FF 100%);
+            color: #0F1724;
+            border: none;
+            padding: 10px 24px;
+            border-radius: 16px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            font-family: 'Poppins', sans-serif;
+            transition: all 0.3s ease;
+        }
+
+        .copy-btn.copied {
+            background: #CFFFE2;
+        }
+
+        .confetti {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            animation: confettiFall 2s ease-out forwards;
+            pointer-events: none;
+        }
+
+        @keyframes confettiFall {
+            0% {
+                transform: translateY(0) rotate(0deg);
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(600px) rotate(720deg);
+                opacity: 0;
+            }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes slideUp {
+            from {
+                transform: translateY(100px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        @keyframes avatarPulse {
+            0%, 100% { 
+                filter: drop-shadow(0 0 8px rgba(207, 255, 226, 0.6));
+            }
+            50% { 
+                filter: drop-shadow(0 0 16px rgba(207, 255, 226, 0.9));
+            }
+        }
+
+        .avatar-walking {
+            animation: avatarPulse 1s ease-in-out infinite;
+        }
+
+        @keyframes routeDash {
+            to {
+                stroke-dashoffset: -20;
+            }
+        }
+
+        .route-animated {
+            stroke-dasharray: 10, 10;
+            animation: routeDash 0.8s linear infinite;
+        }
+    </style>
+</head>
+<body>
+    <div class="phone-wrapper">
+        <div class="status-bar">
+            <span>9:41</span>
+            <span>📶 📡 🔋</span>
+        </div>
+
+        <div class="phone-content">
+            <div class="header">
+                <button class="back-btn" onclick="window.location.href='home.html'">←</button>
+                <div class="header-title">Route to Zara</div>
+                <div style="width: 40px;"></div>
+            </div>
+
+            <div class="progress-stats">
+                <div class="stat-item">
+                    <div class="stat-label">Steps</div>
+                    <div class="stat-value" id="stepsWalked">0/10</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-label">Distance</div>
+                    <div class="stat-value" id="distance">50m</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-label">Time</div>
+                    <div class="stat-value" id="timeLeft">1 min</div>
+                </div>
+            </div>
+
+            <!-- Direction Instruction -->
+            <div class="instruction-card">
+                <div class="instruction-icon" id="instructionIcon">⬆️</div>
+                <div class="instruction-text">
+                    <div class="instruction-title" id="instructionTitle">Walk Straight</div>
+                    <div class="instruction-subtitle" id="instructionSubtitle">5 steps, then turn left</div>
+                </div>
+            </div>
+
+            <div class="map-container">
+                <div class="store-popup" id="storePopup">
+                    <span id="popupIcon">🏪</span>
+                    <span id="popupText">Titan</span>
+                    <span class="offer-badge" id="popupOffer">20% OFF</span>
+                </div>
+                
+                <div class="map-wrapper" id="mapWrapper">
+                    <svg class="mall-map" viewBox="0 0 320 400" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet">
+                        <!-- Mall Boundary -->
+                        <rect x="10" y="10" width="300" height="380" fill="none" stroke="rgba(255,255,255,0.2)" stroke-width="2" rx="16"/>
+                        
+                        <!-- Corridors -->
+                        <rect x="140" y="180" width="40" height="200" fill="rgba(255,255,255,0.05)" rx="4"/>
+                        <rect x="20" y="140" width="160" height="40" fill="rgba(255,255,255,0.05)" rx="4"/>
+                        
+                        <!-- Start Point -->
+                        <rect x="125" y="355" width="70" height="25" fill="rgba(207,255,226,0.15)" stroke="#CFFFE2" stroke-width="2" rx="8"/>
+                        <text x="160" y="372" fill="#CFFFE2" font-size="10" text-anchor="middle" font-weight="600">📍 START</text>
+                        
+                        <!-- Turn Point Indicator -->
+                        <circle cx="160" cy="160" r="18" fill="rgba(255,200,0,0.1)" stroke="rgba(255,200,0,0.5)" stroke-width="2"/>
+                        <text x="160" y="166" fill="rgba(255,200,0,0.9)" font-size="14" text-anchor="middle">↰</text>
+                        
+                        <!-- ZARA - Destination -->
+                        <rect x="20" y="120" width="80" height="80" fill="rgba(207,255,226,0.15)" stroke="#CFFFE2" stroke-width="3" rx="12"/>
+                        <text x="60" y="158" fill="#CFFFE2" font-size="16" text-anchor="middle" font-weight="700">ZARA</text>
+                        <text x="60" y="178" fill="rgba(207,255,226,0.7)" font-size="9" text-anchor="middle">Destination</text>
+                        
+                        <!-- Other Stores -->
+                        <rect x="220" y="120" width="80" height="80" fill="rgba(255,215,0,0.08)" stroke="rgba(255,215,0,0.3)" stroke-width="1.5" rx="10"/>
+                        <text x="260" y="155" fill="rgba(255,215,0,0.8)" font-size="11" text-anchor="middle" font-weight="600">Titan</text>
+                        <text x="260" y="172" fill="rgba(255,215,0,0.6)" font-size="9" text-anchor="middle">20% OFF</text>
+                        
+                        <rect x="220" y="220" width="80" height="70" fill="rgba(255,255,255,0.05)" stroke="rgba(255,255,255,0.15)" stroke-width="1" rx="8"/>
+                        <text x="260" y="260" fill="rgba(255,255,255,0.5)" font-size="11" text-anchor="middle">H&M</text>
+                        
+                        <rect x="20" y="220" width="80" height="70" fill="rgba(255,255,255,0.05)" stroke="rgba(255,255,255,0.15)" stroke-width="1" rx="8"/>
+                        <text x="60" y="260" fill="rgba(255,255,255,0.5)" font-size="11" text-anchor="middle">Nike</text>
+                        
+                        <rect x="220" y="310" width="80" height="70" fill="rgba(255,255,255,0.05)" stroke="rgba(255,255,255,0.15)" stroke-width="1" rx="8"/>
+                        <text x="260" y="350" fill="rgba(255,255,255,0.5)" font-size="11" text-anchor="middle">Adidas</text>
+                        
+                        <rect x="20" y="310" width="80" height="70" fill="rgba(255,105,180,0.08)" stroke="rgba(255,105,180,0.3)" stroke-width="1.5" rx="8"/>
+                        <text x="60" y="345" fill="rgba(255,105,180,0.8)" font-size="10" text-anchor="middle" font-weight="600">Snitch</text>
+                        <text x="60" y="362" fill="rgba(255,105,180,0.6)" font-size="8" text-anchor="middle">20% OFF</text>
+
+                        <!-- Route Path -->
+                        <defs>
+                            <linearGradient id="routeGradient" x1="0%" y1="100%" x2="0%" y2="0%">
+                                <stop offset="0%" style="stop-color:#CFFFE2;stop-opacity:1" />
+                                <stop offset="100%" style="stop-color:#BFA1FF;stop-opacity:1" />
+                            </linearGradient>
+                            <filter id="glow">
+                                <feGaussianBlur stdDeviation="4" result="coloredBlur"/>
+                                <feMerge>
+                                    <feMergeNode in="coloredBlur"/>
+                                    <feMergeNode in="SourceGraphic"/>
+                                </feMerge>
+                            </filter>
+                        </defs>
+                        
+                        <!-- Route: Start → Up → Turn Left → Zara -->
+                        <path id="routePath" 
+                              d="M 160 350 L 160 160 L 60 160" 
+                              fill="none" 
+                              stroke="url(#routeGradient)" 
+                              stroke-width="6" 
+                              stroke-linecap="round" 
+                              stroke-linejoin="round"
+                              filter="url(#glow)"
+                              opacity="0.9"
+                              class="route-animated"/>
+
+                        <!-- Avatar -->
+                        <circle id="avatarMarker" cx="160" cy="350" r="14" fill="#CFFFE2" stroke="#fff" stroke-width="3" filter="url(#glow)"/>
+                        <text id="avatarText" x="160" y="355" fill="#0F1724" font-size="14" text-anchor="middle" font-weight="700">👤</text>
+                    </svg>
+                </div>
+            </div>
+
+            <!-- Debug Panel -->
+            <div class="debug-panel" id="debugPanel">
+                <div class="debug-row">
+                    <span>Motion</span>
+                    <span class="debug-value" id="dbgMotion">--</span>
+                </div>
+                <div class="debug-row">
+                    <span>Compass</span>
+                    <span class="debug-value" id="dbgCompass">--</span>
+                </div>
+                <div class="debug-row">
+                    <span>Turn</span>
+                    <span class="debug-value" id="dbgTurn">--</span>
+                </div>
+            </div>
+
+            <div class="controls">
+                <button class="lets-go-btn" id="letsGoBtn">🚀 Let's Go</button>
+            </div>
+
+            <div class="bottom-nav">
+                <a href="home.html" class="nav-item">
+                    <div class="nav-icon">🏠</div>
+                    <span>Home</span>
+                </a>
+                <a href="#" class="nav-item">
+                    <div class="nav-icon">🏪</div>
+                    <span>Stores</span>
+                </a>
+                <a href="route.html" class="nav-item active">
+                    <div class="nav-icon">🗺️</div>
+                    <span>Route</span>
+                </a>
+                <a href="#" class="nav-item">
+                    <div class="nav-icon">⭐</div>
+                    <span>Saved</span>
+                </a>
+            </div>
+
+            <!-- Arrival Modal -->
+            <div class="arrival-modal" id="arrivalModal">
+                <div class="modal-content">
+                    <div class="success-icon">🎉</div>
+                    <div class="modal-title">You've Arrived!</div>
+                    <div class="modal-subtitle">Welcome to Zara - Fashion & Style</div>
+                    
+                    <div class="coupon-box">
+                        <div class="coupon-label">Your Exclusive Coupon</div>
+                        <div class="coupon-code" id="couponCode">ZARA25</div>
+                        <button class="copy-btn" id="copyBtn">Copy Code</button>
+                    </div>
+                    
+                    <button class="modal-btn" onclick="location.reload()">Done</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ============ CONFIG ============
+        const CONFIG = {
+            TOTAL_STEPS: 10,
+            TURN_AT_STEP: 5,
+            
+            // Step Detection
+            ACCEL_THRESHOLD: 0.8,
+            DELTA_THRESHOLD: 2.0,
+            STEP_COOLDOWN: 320,
+            
+            // Turn Detection
+            TURN_THRESHOLD: 45,
+            
+            // Animation
+            SMOOTH_FACTOR: 0.12,
+        };
+
+        // ============ OFFERS ============
+        const OFFERS = [
+            { startStep: 2, endStep: 3, icon: '👗', name: 'Snitch', discount: '20% OFF' },
+            { startStep: 4, endStep: 5, icon: '⌚', name: 'Titan', discount: '20% OFF' },
+            { startStep: 8, endStep: 9, icon: '👗', name: 'ZARA', discount: 'Almost there!' },
+        ];
+
+        // ============ DOM ============
+        const avatar = document.getElementById('avatarMarker');
+        const avatarText = document.getElementById('avatarText');
+        const routePath = document.getElementById('routePath');
+        const mapWrapper = document.getElementById('mapWrapper');
+        const letsGoBtn = document.getElementById('letsGoBtn');
+        
+        const stepsEl = document.getElementById('stepsWalked');
+        const distanceEl = document.getElementById('distance');
+        const timeEl = document.getElementById('timeLeft');
+        
+        const instructionIcon = document.getElementById('instructionIcon');
+        const instructionTitle = document.getElementById('instructionTitle');
+        const instructionSubtitle = document.getElementById('instructionSubtitle');
+        
+        const storePopup = document.getElementById('storePopup');
+        const arrivalModal = document.getElementById('arrivalModal');
+        
+        const dbgMotion = document.getElementById('dbgMotion');
+        const dbgCompass = document.getElementById('dbgCompass');
+        const dbgTurn = document.getElementById('dbgTurn');
+
+        // ============ STATE ============
+        let state = {
+            steps: 0,
+            isTracking: false,
+            hasTurned: false,
+            lastStepTime: 0,
+            pathLength: 0,
+            
+            currentX: 160,
+            currentY: 350,
+            targetX: 160,
+            targetY: 350,
+            animId: null,
+            
+            lastAccel: { x: 0, y: 0, z: 0 },
+            initialHeading: null,
+            isWalking: false,
+            lastWalkTime: 0,
+        };
+
+        // ============ INIT ============
+        function init() {
+            state.pathLength = routePath.getTotalLength();
+        }
+
+        // ============ MAIN BUTTON ============
+        letsGoBtn.addEventListener('click', async () => {
+            if (state.isTracking) {
+                stopTracking();
+                return;
+            }
+            
+            // iOS Permission Request
+            if (typeof DeviceMotionEvent.requestPermission === 'function') {
+                try {
+                    const perm = await DeviceMotionEvent.requestPermission();
+                    if (perm !== 'granted') {
+                        alert('Motion permission needed!\n\nGo to Settings → Safari → Motion & Orientation Access');
+                        return;
+                    }
+                } catch (e) {
+                    console.error(e);
+                }
+            }
+            
+            if (typeof DeviceOrientationEvent.requestPermission === 'function') {
+                try {
+                    await DeviceOrientationEvent.requestPermission();
+                } catch (e) {}
+            }
+            
+            startTracking();
+        });
+
+        // ============ START/STOP ============
+        function startTracking() {
+            state.isTracking = true;
+            state.lastStepTime = Date.now();
+            state.initialHeading = null;
+            
+            letsGoBtn.textContent = '⏸️ Pause';
+            letsGoBtn.classList.add('tracking');
+            
+            avatar.classList.add('avatar-walking');
+            
+            window.addEventListener('devicemotion', handleMotion, true);
+            window.addEventListener('deviceorientation', handleOrientation, true);
+            
+            // Idle checker - hide offers when stopped
+            state.idleChecker = setInterval(checkIdle, 500);
+        }
+
+        function stopTracking() {
+            state.isTracking = false;
+            
+            letsGoBtn.textContent = '🚀 Let\'s Go';
+            letsGoBtn.classList.remove('tracking');
+            
+            avatar.classList.remove('avatar-walking');
+            
+            window.removeEventListener('devicemotion', handleMotion, true);
+            window.removeEventListener('deviceorientation', handleOrientation, true);
+            
+            if (state.idleChecker) clearInterval(state.idleChecker);
+            
+            hideOffer();
+        }
+
+        // ============ MOTION - STEP DETECTION ============
+        function handleMotion(event) {
+            if (!state.isTracking) return;
+            
+            const now = Date.now();
+            if (now - state.lastStepTime < CONFIG.STEP_COOLDOWN) return;
+            
+            let stepDetected = false;
+            let debugVal = '--';
+            
+            // Method 1: Pure acceleration
+            if (event.acceleration && event.acceleration.x !== null) {
+                const a = event.acceleration;
+                const mag = Math.sqrt(a.x*a.x + a.y*a.y + a.z*a.z);
+                debugVal = `A:${mag.toFixed(2)}`;
+                
+                if (mag > CONFIG.ACCEL_THRESHOLD) {
+                    stepDetected = true;
+                }
+            }
+            
+            // Method 2: Delta acceleration
+            if (!stepDetected && event.accelerationIncludingGravity) {
+                const g = event.accelerationIncludingGravity;
+                const dx = Math.abs((g.x||0) - state.lastAccel.x);
+                const dy = Math.abs((g.y||0) - state.lastAccel.y);
+                const dz = Math.abs((g.z||0) - state.lastAccel.z);
+                const delta = dx + dy + dz;
+                
+                state.lastAccel = { x: g.x||0, y: g.y||0, z: g.z||0 };
+                debugVal = `D:${delta.toFixed(2)}`;
+                
+                if (delta > CONFIG.DELTA_THRESHOLD) {
+                    stepDetected = true;
+                }
+            }
+            
+            dbgMotion.textContent = debugVal;
+            
+            if (stepDetected) {
+                registerStep();
+            }
+        }
+
+        // ============ ORIENTATION - DIRECTION ============
+        function handleOrientation(event) {
+            if (!state.isTracking) return;
+            
+            let heading = event.webkitCompassHeading || event.alpha || 0;
+            dbgCompass.textContent = `${Math.round(heading)}°`;
+            
+            if (state.initialHeading === null) {
+                state.initialHeading = heading;
+                return;
+            }
+            
+            let turn = heading - state.initialHeading;
+            if (turn > 180) turn -= 360;
+            if (turn < -180) turn += 360;
+            
+            dbgTurn.textContent = `${Math.round(turn)}°`;
+            
+            // Detect LEFT turn after step 5
+            if (!state.hasTurned && state.steps >= CONFIG.TURN_AT_STEP) {
+                if (turn < -CONFIG.TURN_THRESHOLD) {
+                    state.hasTurned = true;
+                    mapWrapper.classList.add('rotated');
+                    updateInstruction();
+                }
+            }
+        }
+
+        // ============ STEP REGISTRATION ============
+        function registerStep() {
+            if (state.steps >= CONFIG.TOTAL_STEPS) return;
+            
+            state.lastStepTime = Date.now();
+            state.lastWalkTime = Date.now();
+            state.isWalking = true;
+            state.steps++;
+            
+            // Move avatar
+            const progress = state.steps / CONFIG.TOTAL_STEPS;
+            const point = routePath.getPointAtLength(progress * state.pathLength);
+            animateTo(point.x, point.y);
+            
+            // Update UI
+            updateUI();
+            updateInstruction();
+            
+            // Show offer if walking
+            checkOffers();
+            
+            // Arrival
+            if (state.steps >= CONFIG.TOTAL_STEPS) {
+                setTimeout(() => {
+                    stopTracking();
+                    showArrival();
+                }, 500);
+            }
+        }
+
+        // ============ IDLE CHECK - Hide offers when stopped ============
+        function checkIdle() {
+            const now = Date.now();
+            if (now - state.lastWalkTime > 1500 && state.isWalking) {
+                state.isWalking = false;
+                hideOffer();
+            }
+        }
+
+        // ============ UI ============
+        function updateUI() {
+            stepsEl.textContent = `${state.steps}/${CONFIG.TOTAL_STEPS}`;
+            
+            const dist = Math.round(50 * (1 - state.steps / CONFIG.TOTAL_STEPS));
+            distanceEl.textContent = `${dist}m`;
+            
+            const time = Math.round(60 * (1 - state.steps / CONFIG.TOTAL_STEPS));
+            timeEl.textContent = time > 0 ? `${time}s` : '0s';
+        }
+
+        function updateInstruction() {
+            if (state.steps >= CONFIG.TOTAL_STEPS) {
+                instructionIcon.textContent = '🎉';
+                instructionTitle.textContent = 'You\'ve Arrived!';
+                instructionSubtitle.textContent = 'Welcome to Zara';
+            } else if (state.hasTurned || state.steps > CONFIG.TURN_AT_STEP) {
+                instructionIcon.textContent = '⬆️';
+                instructionTitle.textContent = 'Walk Straight';
+                instructionSubtitle.textContent = `${CONFIG.TOTAL_STEPS - state.steps} steps to Zara`;
+            } else if (state.steps === CONFIG.TURN_AT_STEP) {
+                instructionIcon.textContent = '↰';
+                instructionTitle.textContent = 'Turn Left';
+                instructionSubtitle.textContent = 'Then continue walking';
+            } else {
+                instructionIcon.textContent = '⬆️';
+                instructionTitle.textContent = 'Walk Straight';
+                instructionSubtitle.textContent = `${CONFIG.TURN_AT_STEP - state.steps} steps, then turn left`;
+            }
+        }
+
+        // ============ OFFERS ============
+        function checkOffers() {
+            if (!state.isWalking) {
+                hideOffer();
+                return;
+            }
+            
+            const offer = OFFERS.find(o => 
+                state.steps >= o.startStep && state.steps <= o.endStep
+            );
+            
+            if (offer) {
+                showOffer(offer);
+            } else {
+                hideOffer();
+            }
+        }
+
+        function showOffer(offer) {
+            document.getElementById('popupIcon').textContent = offer.icon;
+            document.getElementById('popupText').textContent = offer.name;
+            document.getElementById('popupOffer').textContent = offer.discount;
+            storePopup.classList.remove('hide');
+            storePopup.classList.add('show');
+        }
+
+        function hideOffer() {
+            storePopup.classList.remove('show');
+            storePopup.classList.add('hide');
+        }
+
+        // ============ AVATAR ANIMATION ============
+        function animateTo(x, y) {
+            state.targetX = x;
+            state.targetY = y;
+            if (!state.animId) animateFrame();
+        }
+
+        function animateFrame() {
+            state.currentX += (state.targetX - state.currentX) * CONFIG.SMOOTH_FACTOR;
+            state.currentY += (state.targetY - state.currentY) * CONFIG.SMOOTH_FACTOR;
+            
+            avatar.setAttribute('cx', state.currentX);
+            avatar.setAttribute('cy', state.currentY);
+            avatarText.setAttribute('x', state.currentX);
+            avatarText.setAttribute('y', state.currentY + 5);
+            
+            const dx = Math.abs(state.targetX - state.currentX);
+            const dy = Math.abs(state.targetY - state.currentY);
+            
+            if (dx > 0.5 || dy > 0.5) {
+                state.animId = requestAnimationFrame(animateFrame);
+            } else {
+                state.animId = null;
+            }
+        }
+
+        // ============ ARRIVAL ============
+        function showArrival() {
+            arrivalModal.classList.add('show');
+            createConfetti();
+        }
+
+        function createConfetti() {
+            const colors = ['#CFFFE2', '#BFA1FF', '#D5BEFF', '#A77BFF', '#FFC1E3'];
+            const container = document.querySelector('.phone-content');
+            
+            for (let i = 0; i < 30; i++) {
+                setTimeout(() => {
+                    const c = document.createElement('div');
+                    c.className = 'confetti';
+                    c.style.left = Math.random() * 100 + '%';
+                    c.style.top = '100px';
+                    c.style.background = colors[Math.floor(Math.random() * colors.length)];
+                    container.appendChild(c);
+                    setTimeout(() => c.remove(), 3000);
+                }, i * 50);
+            }
+        }
+
+        // ============ COPY COUPON ============
+        document.getElementById('copyBtn').addEventListener('click', function() {
+            navigator.clipboard.writeText('ZARA25').then(() => {
+                this.textContent = 'Copied! ✓';
+                this.classList.add('copied');
+                setTimeout(() => {
+                    this.textContent = 'Copy Code';
+                    this.classList.remove('copied');
+                }, 2000);
+            });
+        });
+
+        // ============ START ============
+        init();
+    </script>
+</body>
+</html>
