@@ -1,0 +1,991 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Route - Infinity Mall</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* General Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(180deg, #FFFFFF 0%, #F1EDFF 25%, #D9CCFF 60%, #C1A4FF 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            overflow: hidden;
+        }
+
+        /* Phone Mockup */
+        .phone-wrapper {
+            width: 360px;
+            height: 780px;
+            border-radius: 40px;
+            background: linear-gradient(180deg, #A77BFF 0%, #8C5BFF 40%, #6C3BFF 100%);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            border: 12px solid #1a1a1a;
+        }
+
+        .phone-content {
+            width: 100%;
+            height: 100%;
+            background: transparent;
+            overflow-y: hidden;
+            padding-top: 50px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .status-bar {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 50px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 20px;
+            color: #fff;
+            font-size: 13px;
+            font-weight: 500;
+            z-index: 99;
+        }
+
+        .header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 10px 20px 15px;
+        }
+
+        .back-btn {
+            width: 40px;
+            height: 40px;
+            background: rgba(255, 255, 255, 0.12);
+            backdrop-filter: blur(6px);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: none;
+            cursor: pointer;
+            color: #fff;
+            font-size: 20px;
+        }
+
+        .header-title {
+            color: #fff;
+            font-size: 18px;
+            font-weight: 600;
+        }
+
+        /* Stats and Instruction */
+        .progress-stats {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 20px;
+            margin: 8px 20px;
+            background: rgba(255, 255, 255, 0.12);
+            backdrop-filter: blur(6px);
+            border-radius: 20px;
+            flex-shrink: 0;
+        }
+
+        .stat-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .stat-label {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 11px;
+            font-weight: 500;
+        }
+
+        .stat-value {
+            color: #fff;
+            font-size: 16px;
+            font-weight: 700;
+        }
+
+        .instruction-card {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 16px 20px;
+            margin: 8px 20px;
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(6px);
+            border-radius: 20px;
+            flex-shrink: 0;
+        }
+
+        .instruction-icon {
+            font-size: 36px;
+        }
+
+        .instruction-text {
+            flex: 1;
+        }
+
+        .instruction-title {
+            color: #fff;
+            font-size: 16px;
+            font-weight: 600;
+        }
+
+        .instruction-subtitle {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 12px;
+        }
+
+        /* Map and Controls */
+        .map-container {
+            position: relative;
+            width: 100%;
+            flex: 1; /* Allow map to fill available space */
+            padding: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        .map-wrapper {
+            width: 100%;
+            height: 100%;
+            /* No rotation needed for single floor */
+        }
+
+        .mall-map {
+            width: 100%;
+            height: 100%;
+            max-height: 100%;
+            transform-origin: center center;
+            transition: transform 0.6s ease-in-out;
+        }
+
+        .store-popup {
+            position: absolute;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #CFFFE2;
+            color: #0F1724;
+            padding: 12px 20px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 600;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+            opacity: 0;
+            z-index: 50;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        .store-popup.show {
+            opacity: 1;
+            transform: translateX(-50%) translateY(0);
+        }
+
+        .store-popup.hide {
+            opacity: 0;
+            transform: translateX(-50%) translateY(-15px);
+        }
+
+        .offer-badge {
+            background: #FF5252;
+            color: #fff;
+            padding: 3px 10px;
+            border-radius: 10px;
+            font-size: 11px;
+            font-weight: 700;
+        }
+
+        .controls {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            padding: 15px 20px;
+            flex-shrink: 0;
+        }
+
+        .lets-go-btn {
+            width: 100%;
+            background: #CFFFE2;
+            border: none;
+            color: #0F1724;
+            padding: 18px 10px;
+            border-radius: 25px;
+            font-size: 18px;
+            font-weight: 700;
+            cursor: pointer;
+            font-family: 'Poppins', sans-serif;
+            transition: all 0.3s ease;
+            box-shadow: 0 8px 25px rgba(207, 255, 226, 0.3);
+        }
+
+        .lets-go-btn:active {
+            transform: scale(0.97);
+        }
+
+        .lets-go-btn.tracking {
+            background: linear-gradient(90deg, #FFE066, #FFB800);
+        }
+
+        /* Bottom Nav (unchanged) */
+        .bottom-nav {
+            position: relative;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 80px;
+            background: rgba(30, 30, 40, 0.95);
+            backdrop-filter: blur(10px);
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            padding: 0 20px 20px;
+            border-radius: 30px 30px 0 0;
+            flex-shrink: 0;
+        }
+
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 6px;
+            color: #8E8E93;
+            text-decoration: none;
+            font-size: 11px;
+            transition: all 0.3s ease;
+        }
+
+        .nav-item.active {
+            color: #BFA1FF;
+        }
+
+        .nav-icon {
+            width: 26px;
+            height: 26px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+        }
+
+        /* Modal and Animation (unchanged) */
+        .arrival-modal {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(8px);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 200;
+            animation: fadeIn 0.4s ease;
+        }
+
+        .arrival-modal.show {
+            display: flex;
+        }
+
+        .modal-content {
+            background: #fff;
+            border-radius: 30px;
+            padding: 40px 30px;
+            margin: 0 30px;
+            text-align: center;
+            animation: slideUp 0.5s ease;
+        }
+
+        .success-icon {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, #CFFFE2 0%, #BFA1FF 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+            font-size: 40px;
+        }
+
+        .modal-title {
+            color: #0F1724;
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+
+        .modal-subtitle {
+            color: #666;
+            font-size: 15px;
+            margin-bottom: 30px;
+        }
+
+        .modal-btn {
+            width: 100%;
+            background: linear-gradient(90deg, #D5BEFF 0%, #BFA1FF 100%);
+            color: #0F1724;
+            border: none;
+            padding: 16px;
+            border-radius: 20px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            font-family: 'Poppins', sans-serif;
+            margin-bottom: 12px;
+            transition: all 0.3s ease;
+        }
+
+        .coupon-box {
+            background: #F5F5F7;
+            border: 2px dashed #BFA1FF;
+            border-radius: 16px;
+            padding: 20px;
+            margin: 20px 0;
+            text-align: center;
+        }
+
+        .coupon-label {
+            color: #7C7C8A;
+            font-size: 12px;
+            font-weight: 500;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .coupon-code {
+            color: #0F1724;
+            font-size: 24px;
+            font-weight: 700;
+            letter-spacing: 2px;
+            margin-bottom: 12px;
+        }
+
+        .copy-btn {
+            background: linear-gradient(90deg, #D5BEFF 0%, #BFA1FF 100%);
+            color: #0F1724;
+            border: none;
+            padding: 10px 24px;
+            border-radius: 16px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            font-family: 'Poppins', sans-serif;
+            transition: all 0.3s ease;
+        }
+
+        .copy-btn.copied {
+            background: #CFFFE2;
+        }
+
+        .confetti {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            animation: confettiFall 2s ease-out forwards;
+            pointer-events: none;
+        }
+
+        @keyframes avatarPulse {
+            0%, 100% { 
+                filter: drop-shadow(0 0 8px rgba(207, 255, 226, 0.6));
+            }
+            50% { 
+                filter: drop-shadow(0 0 16px rgba(207, 255, 226, 0.9));
+            }
+        }
+
+        .avatar-walking {
+            animation: avatarPulse 1s ease-in-out infinite;
+        }
+
+        @keyframes routeDash {
+            to {
+                stroke-dashoffset: -20;
+            }
+        }
+
+        .route-animated {
+            stroke-dasharray: 10, 10;
+            animation: routeDash 0.8s linear infinite;
+        }
+    </style>
+</head>
+<body>
+    <div class="phone-wrapper">
+        <div class="status-bar">
+            <span>9:41</span>
+            <span>📶 📡 🔋</span>
+        </div>
+
+        <div class="phone-content">
+            <div class="header">
+                <button class="back-btn" onclick="window.location.href='home.html'">←</button>
+                <div class="header-title">Route to Zara</div>
+                <div style="width: 40px;"></div>
+            </div>
+
+            <div class="progress-stats">
+                <div class="stat-item">
+                    <div class="stat-label">Steps</div>
+                    <div class="stat-value" id="stepsWalked">0/20</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-label">Distance</div>
+                    <div class="stat-value" id="distance">100m</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-label">Time</div>
+                    <div class="stat-value" id="timeLeft">3 min</div>
+                </div>
+            </div>
+
+            <div class="instruction-card">
+                <div class="instruction-icon" id="instructionIcon">⬆️</div>
+                <div class="instruction-text">
+                    <div class="instruction-title" id="instructionTitle">Walk Straight</div>
+                    <div class="instruction-subtitle" id="instructionSubtitle">20 steps to Zara</div>
+                </div>
+            </div>
+
+            <div class="map-container">
+                <div class="store-popup" id="storePopup">
+                    <span id="popupIcon">🏪</span>
+                    <span id="popupText">Store Name</span>
+                    <span class="offer-badge" id="popupOffer">20% OFF</span>
+                </div>
+                
+                <div class="map-wrapper" id="mapWrapper">
+                    <svg class="mall-map" viewBox="0 0 360 700" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet">
+                        <rect x="10" y="10" width="340" height="680" fill="none" stroke="rgba(255,255,255,0.2)" stroke-width="2" rx="16"/>
+                        
+                        <rect x="160" y="10" width="40" height="680" fill="rgba(255,255,255,0.05)" rx="4"/> <rect x="10" y="280" width="340" height="40" fill="rgba(255,255,255,0.05)" rx="4"/> <rect x="10" y="480" width="340" height="40" fill="rgba(255,255,255,0.05)" rx="4"/> <rect x="20" y="20" width="60" height="60" fill="rgba(255,255,255,0.08)" rx="8"/><text x="50" y="55" fill="#fff" font-size="10" text-anchor="middle">Store A</text>
+                        <rect x="90" y="20" width="60" height="60" fill="rgba(255,255,255,0.08)" rx="8"/><text x="120" y="55" fill="#fff" font-size="10" text-anchor="middle">Store B</text>
+                        <rect x="210" y="20" width="60" height="60" fill="rgba(255,255,255,0.08)" rx="8"/><text x="240" y="55" fill="#fff" font-size="10" text-anchor="middle">Store C</text>
+                        <rect x="280" y="20" width="60" height="60" fill="rgba(255,255,255,0.08)" rx="8"/><text x="310" y="55" fill="#fff" font-size="10" text-anchor="middle">Store D</text>
+
+                        <rect x="20" y="90" width="60" height="60" fill="rgba(255,255,255,0.08)" rx="8"/><text x="50" y="125" fill="#fff" font-size="10" text-anchor="middle">Store E</text>
+                        <rect x="90" y="90" width="60" height="60" fill="rgba(255,255,255,0.08)" rx="8"/><text x="120" y="125" fill="#fff" font-size="10" text-anchor="middle">Store F</text>
+                        <rect x="210" y="90" width="60" height="60" fill="rgba(255,255,255,0.08)" rx="8"/><text x="240" y="125" fill="#fff" font-size="10" text-anchor="middle">Store G</text>
+                        <rect x="280" y="90" width="60" height="60" fill="rgba(255,255,255,0.08)" rx="8"/><text x="310" y="125" fill="#fff" font-size="10" text-anchor="middle">Store H</text>
+                        
+                        <rect x="20" y="160" width="60" height="60" fill="rgba(255,255,255,0.08)" rx="8"/><text x="50" y="195" fill="#fff" font-size="10" text-anchor="middle">Store I</text>
+                        <rect x="90" y="160" width="60" height="60" fill="rgba(255,255,255,0.08)" rx="8"/><text x="120" y="195" fill="#fff" font-size="10" text-anchor="middle">Store J</text>
+                        <rect x="210" y="160" width="60" height="60" fill="rgba(255,255,255,0.08)" rx="8"/><text x="240" y="195" fill="#fff" font-size="10" text-anchor="middle">Store K</text>
+                        <rect x="280" y="160" width="60" height="60" fill="rgba(255,255,255,0.08)" rx="8"/><text x="310" y="195" fill="#fff" font-size="10" text-anchor="middle">Store L</text>
+
+                        <rect x="20" y="230" width="60" height="40" fill="rgba(255,255,255,0.08)" rx="8"/><text x="50" y="255" fill="#fff" font-size="10" text-anchor="middle">Store M</text>
+                        <rect x="90" y="230" width="60" height="40" fill="rgba(255,255,255,0.08)" rx="8"/><text x="120" y="255" fill="#fff" font-size="10" text-anchor="middle">Store N</text>
+                        <rect x="210" y="230" width="60" height="40" fill="rgba(255,255,255,0.08)" rx="8"/><text x="240" y="255" fill="#fff" font-size="10" text-anchor="middle">Store O</text>
+                        <rect x="280" y="230" width="60" height="40" fill="rgba(255,255,255,0.08)" rx="8"/><text x="310" y="255" fill="#fff" font-size="10" text-anchor="middle">Store P</text>
+                        
+                        <rect x="20" y="330" width="80" height="60" fill="rgba(255,165,0,0.1)" stroke="rgba(255,165,0,0.4)" rx="8"/><text x="60" y="365" fill="orange" font-size="10" text-anchor="middle">Haldiram</text>
+                        <rect x="110" y="330" width="40" height="60" fill="rgba(255,255,255,0.08)" rx="8"/><text x="130" y="365" fill="#fff" font-size="10" text-anchor="middle">Store Q</text>
+                        <rect x="210" y="330" width="40" height="60" fill="rgba(255,255,255,0.08)" rx="8"/><text x="230" y="365" fill="#fff" font-size="10" text-anchor="middle">Store R</text>
+                        <rect x="260" y="330" width="80" height="60" fill="rgba(0,255,255,0.1)" stroke="rgba(0,255,255,0.4)" rx="8"/><text x="300" y="365" fill="#0ff" font-size="10" text-anchor="middle">GameZone</text>
+                        
+                        <rect x="20" y="400" width="60" height="70" fill="rgba(255,255,255,0.08)" rx="8"/><text x="50" y="435" fill="#fff" font-size="10" text-anchor="middle">Store S</text>
+                        <rect x="90" y="400" width="60" height="70" fill="rgba(255,255,255,0.08)" rx="8"/><text x="120" y="435" fill="#fff" font-size="10" text-anchor="middle">Store T</text>
+                        <rect x="210" y="400" width="60" height="70" fill="rgba(255,255,255,0.08)" rx="8"/><text x="240" y="435" fill="#fff" font-size="10" text-anchor="middle">Store U</text>
+                        <rect x="280" y="400" width="60" height="70" fill="rgba(255,255,255,0.08)" rx="8"/><text x="310" y="435" fill="#fff" font-size="10" text-anchor="middle">Store V</text>
+
+                        <rect x="20" y="530" width="60" height="70" fill="rgba(255,105,180,0.1)" stroke="rgba(255,105,180,0.4)" rx="8"/><text x="50" y="565" fill="pink" font-size="10" text-anchor="middle">Snitch</text>
+                        <rect x="90" y="530" width="60" height="70" fill="rgba(255,255,255,0.08)" rx="8"/><text x="120" y="565" fill="#fff" font-size="10" text-anchor="middle">Store W</text>
+                        <rect x="210" y="530" width="60" height="70" fill="rgba(255,215,0,0.1)" stroke="rgba(255,215,0,0.4)" rx="8"/><text x="240" y="565" fill="yellow" font-size="10" text-anchor="middle">Titan</text>
+                        <rect x="280" y="530" width="60" height="70" fill="rgba(255,255,255,0.08)" rx="8"/><text x="310" y="565" fill="#fff" font-size="10" text-anchor="middle">Store X</text>
+
+                        <rect x="20" y="610" width="60" height="70" fill="rgba(0,128,0,0.1)" stroke="rgba(0,128,0,0.4)" rx="8"/><text x="50" y="645" fill="green" font-size="10" text-anchor="middle">Starbucks</text>
+                        <rect x="90" y="610" width="60" height="70" fill="rgba(255,255,255,0.08)" rx="8"/><text x="120" y="645" fill="#fff" font-size="10" text-anchor="middle">Store Y</text>
+                        <rect x="210" y="610" width="60" height="70" fill="rgba(255,255,255,0.08)" rx="8"/><text x="240" y="645" fill="#fff" font-size="10" text-anchor="middle">Store Z</text>
+                        <rect x="280" y="610" width="60" height="70" fill="rgba(255,255,255,0.08)" rx="8"/><text x="310" y="645" fill="#fff" font-size="10" text-anchor="middle">Store AA</text>
+
+                        <rect x="170" y="630" width="20" height="60" fill="rgba(207,255,226,0.15)" stroke="#CFFFE2" stroke-width="2" rx="4"/>
+                        <text x="180" y="670" fill="#CFFFE2" font-size="10" text-anchor="middle" font-weight="600">📍 GATE</text>
+                        
+                        <rect x="90" y="10" width="80" height="70" fill="rgba(207,255,226,0.15)" stroke="#CFFFE2" stroke-width="3" rx="12"/>
+                        <text x="130" y="40" fill="#CFFFE2" font-size="16" text-anchor="middle" font-weight="700">ZARA</text>
+                        <text x="130" y="60" fill="rgba(207,255,226,0.7)" font-size="9" text-anchor="middle">Destination</text>
+
+                        <defs>
+                            <linearGradient id="routeGradient" x1="0%" y1="100%" x2="0%" y2="0%">
+                                <stop offset="0%" style="stop-color:#CFFFE2;stop-opacity:1" />
+                                <stop offset="100%" style="stop-color:#BFA1FF;stop-opacity:1" />
+                            </linearGradient>
+                            <filter id="glow">
+                                <feGaussianBlur stdDeviation="4" result="coloredBlur"/>
+                                <feMerge>
+                                    <feMergeNode in="coloredBlur"/>
+                                    <feMergeNode in="SourceGraphic"/>
+                                </feMerge>
+                            </filter>
+                        </defs>
+                        
+                        <path id="routePath" 
+                              d="M 180 650 L 180 500 L 320 500 L 320 150 L 170 150 L 170 80 L 130 80" 
+                              fill="none" 
+                              stroke="url(#routeGradient)" 
+                              stroke-width="6" 
+                              stroke-linecap="round" 
+                              stroke-linejoin="round"
+                              filter="url(#glow)"
+                              opacity="0.9"
+                              class="route-animated"/>
+
+                        <circle id="avatarMarker" cx="180" cy="650" r="14" fill="#CFFFE2" stroke="#fff" stroke-width="3" filter="url(#glow)"/>
+                        <text id="avatarText" x="180" y="655" fill="#0F1724" font-size="14" text-anchor="middle" font-weight="700">👤</text>
+                    </svg>
+                </div>
+            </div>
+
+            <div class="controls">
+                <button class="lets-go-btn" id="letsGoBtn">🚀 Let's Go</button>
+            </div>
+            
+            <div class="bottom-nav">
+                <a href="home.html" class="nav-item">
+                    <div class="nav-icon">🏠</div>
+                    <span>Home</span>
+                </a>
+                <a href="#" class="nav-item">
+                    <div class="nav-icon">🏪</div>
+                    <span>Stores</span>
+                </a>
+                <a href="route.html" class="nav-item active">
+                    <div class="nav-icon">🗺️</div>
+                    <span>Route</span>
+                </a>
+                <a href="#" class="nav-item">
+                    <div class="nav-icon">⭐</div>
+                    <span>Saved</span>
+                </a>
+            </div>
+
+            <div class="arrival-modal" id="arrivalModal">
+                <div class="modal-content">
+                    <div class="success-icon">🎉</div>
+                    <div class="modal-title">You've Arrived!</div>
+                    <div class="modal-subtitle">Welcome to Zara - Fashion & Style</div>
+                    
+                    <div class="coupon-box">
+                        <div class="coupon-label">Your Exclusive Coupon</div>
+                        <div class="coupon-code" id="couponCode">ZARA25</div>
+                        <button class="copy-btn" id="copyBtn">Copy Code</button>
+                    </div>
+                    
+                    <button class="modal-btn" onclick="location.reload()">Done</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ============ CONFIG (Simplified for single-floor, smooth motion) ============
+        const CONFIG = {
+            TOTAL_STEPS: 20, // Increased to 20 steps
+            
+            // Step Detection (Keep settings low for easy simulated testing)
+            ACCEL_THRESHOLD: 0.8,
+            DELTA_THRESHOLD: 2.0,
+            STEP_COOLDOWN: 320,
+            
+            // Animation (Smooth Google Maps style movement)
+            SMOOTH_FACTOR: 0.08, // Slightly more aggressive smoothing for less jerkiness
+        };
+
+        // --- NEW ROUTE CONFIG ---
+        const TOTAL_STEPS = CONFIG.TOTAL_STEPS;
+        // Path: Gate (180, 650) -> (180, 500) -> (320, 500) -> (320, 150) -> (170, 150) -> (170, 80) -> Zara (130, 80)
+        const MALL_ROUTE_D = "M 180 650 L 180 500 L 320 500 L 320 150 L 170 150 L 170 80 L 130 80"; 
+        
+        // ============ OFFERS (6 offer popups along the 20-step route) ============
+        const OFFERS = [
+            { startStep: 3, endStep: 5, icon: '🍔', name: 'Haldiram', discount: '25% OFF' },
+            { startStep: 6, endStep: 8, icon: '🎮', name: 'GameZone', discount: 'Flat 10% OFF' }, 
+            { startStep: 9, endStep: 11, icon: '👟', name: 'Snitch', discount: '20% OFF' },
+            { startStep: 12, endStep: 14, icon: '⌚', name: 'Titan', discount: 'New Collection' },
+            { startStep: 15, endStep: 17, icon: '🥤', name: 'Starbucks', discount: 'Free Upgrade' },
+            { startStep: 18, endStep: 20, icon: '👗', name: 'ZARA', discount: 'Almost there!' },
+        ];
+
+        // ============ DOM ============
+        const avatar = document.getElementById('avatarMarker');
+        const avatarText = document.getElementById('avatarText');
+        const routePath = document.getElementById('routePath');
+        const letsGoBtn = document.getElementById('letsGoBtn');
+        
+        const stepsEl = document.getElementById('stepsWalked');
+        const distanceEl = document.getElementById('distance');
+        const timeEl = document.getElementById('timeLeft');
+        
+        const instructionIcon = document.getElementById('instructionIcon');
+        const instructionTitle = document.getElementById('instructionTitle');
+        const instructionSubtitle = document.getElementById('instructionSubtitle');
+        
+        const storePopup = document.getElementById('storePopup');
+        const arrivalModal = document.getElementById('arrivalModal');
+
+        // ============ STATE ============
+        let state = {
+            steps: 0,
+            isTracking: false,
+            lastStepTime: 0,
+            pathLength: 0,
+            
+            currentX: 180,
+            currentY: 650,
+            targetX: 180,
+            targetY: 650,
+            animId: null,
+            
+            lastAccel: { x: 0, y: 0, z: 0 },
+            isWalking: false,
+            lastWalkTime: 0,
+        };
+
+        // Helper function to set avatar position
+        function moveAvatar(x, y) {
+            avatar.setAttribute('cx', x);
+            avatar.setAttribute('cy', y);
+            avatarText.setAttribute('x', x);
+            avatarText.setAttribute('y', y + 5);
+            state.currentX = x;
+            state.currentY = y;
+            state.targetX = x;
+            state.targetY = y;
+        }
+
+        // ============ INIT/RESET ============
+        function resetState() {
+            stopTracking();
+            
+            state.steps = 0;
+            state.pathLength = routePath.getTotalLength(); 
+
+            // Move avatar back to start (180, 650)
+            const startPoint = routePath.getPointAtLength(0);
+            moveAvatar(startPoint.x, startPoint.y);
+
+            // Update UI
+            letsGoBtn.textContent = '🚀 Let\'s Go';
+            letsGoBtn.disabled = false;
+            updateUI();
+            updateInstruction();
+            hideOffer();
+        }
+
+        function init() {
+            // Set the new path and calculate length once
+            routePath.setAttribute('d', MALL_ROUTE_D);
+            state.pathLength = routePath.getTotalLength();
+            
+            resetState();
+        }
+
+        // ============ MAIN BUTTON ============
+        letsGoBtn.addEventListener('click', async () => {
+            if (state.isTracking) {
+                stopTracking();
+                return;
+            }
+            
+            // --- iOS Permission Request (Kept for functionality) ---
+            if (typeof DeviceMotionEvent.requestPermission === 'function') {
+                try {
+                    const perm = await DeviceMotionEvent.requestPermission();
+                    if (perm !== 'granted') {
+                        alert('Motion permission needed!\n\nGo to Settings → Safari → Motion & Orientation Access');
+                        return;
+                    }
+                } catch (e) {
+                    console.error(e);
+                }
+            }
+            
+            if (typeof DeviceOrientationEvent.requestPermission === 'function') {
+                try {
+                    await DeviceOrientationEvent.requestPermission();
+                } catch (e) {}
+            }
+            
+            startTracking();
+        });
+
+        // ============ START/STOP ============
+        function startTracking() {
+            state.isTracking = true;
+            state.lastStepTime = Date.now();
+            
+            letsGoBtn.textContent = '⏸️ Pause';
+            letsGoBtn.classList.add('tracking');
+            avatar.classList.add('avatar-walking');
+            
+            window.addEventListener('devicemotion', handleMotion, true);
+            
+            state.idleChecker = setInterval(checkIdle, 500);
+        }
+
+        function stopTracking() {
+            state.isTracking = false;
+            
+            if (state.steps < TOTAL_STEPS) {
+                 letsGoBtn.textContent = '🚀 Let\'s Go';
+            }
+            letsGoBtn.classList.remove('tracking');
+            
+            avatar.classList.remove('avatar-walking');
+            
+            window.removeEventListener('devicemotion', handleMotion, true);
+            
+            if (state.idleChecker) clearInterval(state.idleChecker);
+            
+            hideOffer();
+        }
+        
+        // ============ MOTION - STEP DETECTION (Simplified, no orientation logic needed) ============
+        function handleMotion(event) {
+            if (!state.isTracking) return;
+            
+            const now = Date.now();
+            if (now - state.lastStepTime < CONFIG.STEP_COOLDOWN) return;
+            
+            let stepDetected = false;
+            
+            // Using Delta acceleration (better for step detection simulation)
+            if (event.accelerationIncludingGravity) {
+                const g = event.accelerationIncludingGravity;
+                const dx = Math.abs((g.x||0) - state.lastAccel.x);
+                const dy = Math.abs((g.y||0) - state.lastAccel.y);
+                const dz = Math.abs((g.z||0) - state.lastAccel.z);
+                const delta = dx + dy + dz;
+                
+                state.lastAccel = { x: g.x||0, y: g.y||0, z: g.z||0 };
+                
+                if (delta > CONFIG.DELTA_THRESHOLD) {
+                    stepDetected = true;
+                }
+            }
+            
+            if (stepDetected) {
+                registerStep();
+            }
+        }
+        
+        // Removed handleOrientation
+
+        // ============ STEP REGISTRATION (Simplified for single route) ============
+        function registerStep() {
+            
+            // Check for arrival
+            if (state.steps >= TOTAL_STEPS) {
+                setTimeout(() => {
+                    stopTracking();
+                    showArrival();
+                }, 500);
+                return;
+            }
+            
+            state.lastStepTime = Date.now();
+            state.lastWalkTime = Date.now();
+            state.isWalking = true;
+            state.steps++;
+            
+            // Move avatar smoothly along the path
+            const progress = state.steps / TOTAL_STEPS;
+            const currentLength = state.pathLength * progress; 
+            
+            const point = routePath.getPointAtLength(currentLength);
+            
+            animateTo(point.x, point.y);
+            
+            // Update UI & check for offers
+            updateUI();
+            updateInstruction();
+            checkOffers();
+        }
+
+        // ============ IDLE CHECK - Hide offers when stopped ============
+        function checkIdle() {
+            const now = Date.now();
+            if (now - state.lastWalkTime > 1500 && state.isWalking) {
+                state.isWalking = false;
+                hideOffer();
+            }
+        }
+
+        // ============ UI ============
+        function updateUI() {
+            const stepsCompleted = state.steps;
+            const stepsRemaining = TOTAL_STEPS - stepsCompleted;
+
+            stepsEl.textContent = `${stepsCompleted}/${TOTAL_STEPS}`;
+            
+            // Distance/Time calculation scaled to 20 steps (e.g., 5m per step = 100m total)
+            const dist = Math.round(100 * (stepsRemaining / TOTAL_STEPS));
+            distanceEl.textContent = `${dist}m`;
+            
+            const time = Math.round(180 * (stepsRemaining / TOTAL_STEPS)); // 3 minutes total
+            timeEl.textContent = time > 0 ? `${Math.ceil(time/60)} min` : '0 min';
+        }
+
+        function updateInstruction() {
+            const stepsRemaining = TOTAL_STEPS - state.steps;
+            const currentProgress = state.steps / TOTAL_STEPS;
+            
+            if (state.steps >= TOTAL_STEPS) {
+                instructionIcon.textContent = '🎉';
+                instructionTitle.textContent = 'You\'ve Arrived!';
+                instructionSubtitle.textContent = 'Welcome to Zara - Your Final Destination';
+                return;
+            }
+            
+            let instruction = {
+                icon: '⬆️',
+                title: 'Walk Straight',
+                subtitle: `${stepsRemaining} steps left to Zara`,
+            };
+            
+            if (currentProgress > 0.35 && currentProgress < 0.65) {
+                instruction.icon = '➡️';
+                instruction.title = 'Turn Right';
+                instruction.subtitle = `Follow the path around the GameZone`;
+            } else if (currentProgress >= 0.65 && currentProgress < 0.9) {
+                instruction.icon = '⬆️';
+                instruction.title = 'Walk Up Long Corridor';
+                instruction.subtitle = `Past Titan, ${stepsRemaining} steps left`;
+            } else if (currentProgress >= 0.9) {
+                instruction.icon = '🪧';
+                instruction.title = 'Almost There!';
+                instruction.subtitle = `Final steps to Zara`;
+            }
+            
+            instructionIcon.textContent = instruction.icon;
+            instructionTitle.textContent = instruction.title;
+            instructionSubtitle.textContent = instruction.subtitle;
+        }
+
+        // ============ OFFERS ============
+        function checkOffers() {
+            if (!state.isWalking) {
+                hideOffer();
+                return;
+            }
+            
+            const offer = OFFERS.find(o => 
+                state.steps >= o.startStep && state.steps <= o.endStep
+            );
+            
+            if (offer) {
+                showOffer(offer);
+            } else {
+                hideOffer();
+            }
+        }
+
+        function showOffer(offer) {
+            document.getElementById('popupIcon').textContent = offer.icon;
+            document.getElementById('popupText').textContent = offer.name;
+            document.getElementById('popupOffer').textContent = offer.discount;
+            storePopup.classList.remove('hide');
+            storePopup.classList.add('show');
+        }
+
+        function hideOffer() {
+            storePopup.classList.remove('show');
+            storePopup.classList.add('hide');
+        }
+
+        // ============ AVATAR ANIMATION (Kept smooth logic) ============
+        function animateTo(x, y) {
+            state.targetX = x;
+            state.targetY = y;
+            if (!state.animId) animateFrame();
+        }
+
+        function animateFrame() {
+            state.currentX += (state.targetX - state.currentX) * CONFIG.SMOOTH_FACTOR;
+            state.currentY += (state.targetY - state.currentY) * CONFIG.SMOOTH_FACTOR;
+            
+            avatar.setAttribute('cx', state.currentX);
+            avatar.setAttribute('cy', state.currentY);
+            avatarText.setAttribute('x', state.currentX);
+            avatarText.setAttribute('y', state.currentY + 5);
+            
+            const dx = Math.abs(state.targetX - state.currentX);
+            const dy = Math.abs(state.targetY - state.currentY);
+            
+            if (dx > 0.5 || dy > 0.5) {
+                state.animId = requestAnimationFrame(animateFrame);
+            } else {
+                state.animId = null;
+            }
+        }
+
+        // ============ ARRIVAL ============
+        function showArrival() {
+            arrivalModal.classList.add('show');
+            createConfetti();
+        }
+
+        function createConfetti() {
+            const colors = ['#CFFFE2', '#BFA1FF', '#D5BEFF', '#A77BFF', '#FFC1E3'];
+            const container = document.querySelector('.phone-content');
+            
+            for (let i = 0; i < 30; i++) {
+                setTimeout(() => {
+                    const c = document.createElement('div');
+                    c.className = 'confetti';
+                    c.style.left = Math.random() * 100 + '%';
+                    c.style.top = '100px';
+                    c.style.background = colors[Math.floor(Math.random() * colors.length)];
+                    container.appendChild(c);
+                    setTimeout(() => c.remove(), 3000);
+                }, i * 50);
+            }
+        }
+
+        // ============ COPY COUPON ============
+        document.getElementById('copyBtn').addEventListener('click', function() {
+            navigator.clipboard.writeText('ZARA25').then(() => {
+                this.textContent = 'Copied! ✓';
+                this.classList.add('copied');
+                setTimeout(() => {
+                    this.textContent = 'Copy Code';
+                    this.classList.remove('copied');
+                }, 2000);
+            });
+        });
+
+        // ============ START ============
+        init();
+    </script>
+</body>
+</html>
