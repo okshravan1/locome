@@ -1,0 +1,987 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Route - Infinity Mall</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* General Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(180deg, #FFFFFF 0%, #F1EDFF 25%, #D9CCFF 60%, #C1A4FF 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            overflow: hidden;
+        }
+
+        /* Phone Mockup */
+        .phone-wrapper {
+            width: 360px;
+            height: 780px;
+            border-radius: 40px;
+            background: linear-gradient(180deg, #A77BFF 0%, #8C5BFF 40%, #6C3BFF 100%);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            border: 12px solid #1a1a1a;
+        }
+
+        .phone-content {
+            width: 100%;
+            height: 100%;
+            background: transparent;
+            overflow-y: hidden;
+            padding-top: 50px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .status-bar {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 50px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 20px;
+            color: #fff;
+            font-size: 13px;
+            font-weight: 500;
+            z-index: 99;
+        }
+
+        .header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 10px 20px 15px;
+        }
+
+        .back-btn {
+            width: 40px;
+            height: 40px;
+            background: rgba(255, 255, 255, 0.12);
+            backdrop-filter: blur(6px);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: none;
+            cursor: pointer;
+            color: #fff;
+            font-size: 20px;
+        }
+
+        .header-title {
+            color: #fff;
+            font-size: 18px;
+            font-weight: 600;
+        }
+
+        /* Stats Bar */
+        .progress-stats {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 20px;
+            margin: 0 20px 8px; 
+            background: rgba(255, 255, 255, 0.12);
+            backdrop-filter: blur(6px);
+            border-radius: 20px;
+            flex-shrink: 0;
+        }
+
+        .stat-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .stat-label {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 11px;
+            font-weight: 500;
+        }
+
+        .stat-value {
+            color: #fff;
+            font-size: 16px;
+            font-weight: 700;
+        }
+
+        /* NEW CONTAINER for Instruction and Offer cards (side-by-side) */
+        .top-navigation-widgets {
+            display: flex;
+            gap: 8px; 
+            padding: 8px 20px; 
+            flex-shrink: 0;
+        }
+
+        /* Section 1: Navigation Instruction (Compact) */
+        .instruction-card {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 12px 15px; 
+            margin: 0; 
+            min-height: 65px; 
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(6px);
+            border-radius: 20px;
+            flex-shrink: 0;
+        }
+
+        .instruction-icon {
+            font-size: 28px; 
+        }
+
+        .instruction-text {
+            flex: 1;
+        }
+
+        .instruction-title {
+            color: #fff;
+            font-size: 14px; 
+            font-weight: 600;
+        }
+
+        .instruction-subtitle {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 10px; 
+        }
+        
+        /* Section 2: Offer Card (Dynamic, Compact, aligned) */
+        .offer-card {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+            padding: 0 15px; 
+            margin: 0; 
+            background: linear-gradient(90deg, #FFB800 0%, #FFE066 100%);
+            border-radius: 20px;
+            flex-shrink: 0;
+            opacity: 0;
+            height: 0;
+            overflow: hidden;
+            transition: all 0.4s ease-in-out;
+            min-height: 65px; 
+        }
+
+        .offer-card.show {
+            opacity: 1;
+            height: 65px; 
+            padding: 12px 15px; 
+        }
+
+        .offer-card .offer-icon {
+            font-size: 28px;
+            flex-shrink: 0;
+        }
+
+        .offer-card .offer-text {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .offer-card .offer-title {
+            color: #0F1724;
+            font-size: 14px;
+            font-weight: 700;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .offer-card .offer-subtitle {
+            color: #475569;
+            font-size: 10px;
+            font-weight: 500;
+        }
+        
+        .offer-card .offer-badge {
+            background: #0F1724;
+            color: #FFE066;
+            padding: 2px 6px; 
+            border-radius: 10px;
+            font-size: 9px; 
+            font-weight: 700;
+            align-self: flex-start;
+            flex-shrink: 0;
+        }
+
+        /* Map and Controls (Maximised for the full width) */
+        .map-container {
+            position: relative;
+            width: 100%;
+            flex: 1; 
+            padding: 0 5px; 
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        .map-wrapper {
+            width: 100%;
+            height: 100%;
+            max-height: 100%;
+            transform-origin: center center;
+            transition: transform 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        .map-wrapper.rotated {
+            transform: rotate(-90deg); 
+        }
+        
+        .mall-map {
+            width: 100%;
+            height: 100%;
+            max-height: 100%;
+        }
+
+        .controls {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            padding: 15px 20px;
+            flex-shrink: 0;
+        }
+        
+        .lets-go-btn {
+            width: 100%;
+            background: #CFFFE2;
+            border: none;
+            color: #0F1724;
+            padding: 18px 10px;
+            border-radius: 25px;
+            font-size: 18px;
+            font-weight: 700;
+            cursor: pointer;
+            font-family: 'Poppins', sans-serif;
+            transition: all 0.3s ease;
+            box-shadow: 0 8px 25px rgba(207, 255, 226, 0.3);
+        }
+
+        .lets-go-btn:active {
+            transform: scale(0.97);
+        }
+
+        .lets-go-btn.tracking {
+            background: linear-gradient(90deg, #FFE066, #FFB800);
+        }
+        
+        .lets-go-btn.free-roam {
+             background: linear-gradient(90deg, #BFA1FF, #8C5BFF);
+             color: #fff;
+             box-shadow: 0 8px 25px rgba(180, 150, 255, 0.3);
+        }
+
+        .bottom-nav {
+            position: relative;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 80px;
+            background: rgba(30, 30, 40, 0.95);
+            backdrop-filter: blur(10px);
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            padding: 0 20px 20px;
+            border-radius: 30px 30px 0 0;
+            flex-shrink: 0;
+        }
+        
+        .arrival-modal {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(8px);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 200;
+            animation: fadeIn 0.4s ease;
+        }
+        
+        .arrival-modal.show {
+            display: flex;
+        }
+
+        .coupon-box {
+            background: #F5F5F7;
+            border: 2px dashed #BFA1FF;
+            border-radius: 16px;
+            padding: 20px;
+            margin: 20px 0;
+            text-align: center;
+        }
+        
+        .coupon-code {
+            color: #0F1724;
+            font-size: 24px;
+            font-weight: 700;
+            letter-spacing: 2px;
+            margin-bottom: 12px;
+        }
+        
+        .copy-btn {
+            background: linear-gradient(90deg, #D5BEFF 0%, #BFA1FF 100%);
+            color: #0F1724;
+            border: none;
+            padding: 10px 24px;
+            border-radius: 16px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            font-family: 'Poppins', sans-serif;
+            transition: all 0.3s ease;
+        }
+        
+        .copy-btn.copied {
+            background: #CFFFE2;
+        }
+        
+        @keyframes avatarPulse {
+            0%, 100% { 
+                filter: drop-shadow(0 0 8px rgba(207, 255, 226, 0.6));
+            }
+            50% { 
+                filter: drop-shadow(0 0 16px rgba(207, 255, 226, 0.9));
+            }
+        }
+
+        .avatar-walking {
+            animation: avatarPulse 1s ease-in-out infinite;
+        }
+
+        @keyframes routeDash {
+            to {
+                stroke-dashoffset: -20;
+            }
+        }
+
+        .route-animated {
+            stroke-dasharray: 10, 10;
+            animation: routeDash 0.8s linear infinite;
+        }
+    </style>
+</head>
+<body>
+    <div class="phone-wrapper">
+        <div class="status-bar">
+            <span>9:41</span>
+            <span>📶 📡 🔋</span>
+        </div>
+
+        <div class="phone-content">
+            <div class="header">
+                <button class="back-btn" onclick="window.location.href='home.html'">←</button>
+                <div class="header-title">Route to Zara</div>
+                <div style="width: 40px;"></div>
+            </div>
+
+            <div class="progress-stats">
+                <div class="stat-item">
+                    <div class="stat-label">Steps</div>
+                    <div class="stat-value" id="stepsWalked">0/40</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-label">Distance</div>
+                    <div class="stat-value" id="distance">200m</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-label">Time</div>
+                    <div class="stat-value" id="timeLeft">5 min</div>
+                </div>
+            </div>
+            
+            <div class="top-navigation-widgets">
+                <div class="instruction-card">
+                    <div class="instruction-icon" id="instructionIcon">⬆️</div>
+                    <div class="instruction-text">
+                        <div class="instruction-title" id="instructionTitle">Walk Straight</div>
+                        <div class="instruction-subtitle" id="instructionSubtitle">20 steps to next turn</div>
+                    </div>
+                </div>
+                
+                <div class="offer-card" id="offerCard">
+                    <div class="offer-icon" id="offerIcon"></div>
+                    <div class="offer-text">
+                        <div class="offer-title" id="offerTitle"></div>
+                        <div class="offer-subtitle" id="offerSubtitle"></div>
+                    </div>
+                    <span class="offer-badge" id="offerBadge"></span>
+                </div>
+            </div>
+            <div class="map-container">
+                
+                <div class="map-wrapper" id="mapWrapper">
+                    <svg class="mall-map" viewBox="0 0 350 700" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet">
+                        <rect x="5" y="5" width="340" height="690" fill="rgba(255,255,255,0.05)" stroke="rgba(255,255,255,0.2)" stroke-width="2" rx="16"/>
+                        
+                        <rect x="25" y="25" width="40" height="650" fill="rgba(0,0,0,0.1)"/> 
+                        <rect x="285" y="25" width="40" height="650" fill="rgba(0,0,0,0.1)"/> 
+                        <rect x="25" y="305" width="300" height="40" fill="rgba(0,0,0,0.1)"/> 
+                        <rect x="145" y="25" width="60" height="650" fill="rgba(0,0,0,0.1)"/> 
+                        
+                        <rect x="65" y="25" width="80" height="100" fill="rgba(207,255,226,0.15)" stroke="#CFFFE2" stroke-width="3" rx="12"/>
+                        <text x="105" y="65" fill="#CFFFE2" font-size="18" text-anchor="middle" font-weight="700">ZARA</text>
+                        <text x="105" y="85" fill="rgba(207,255,226,0.7)" font-size="10" text-anchor="middle">DESTINATION</text>
+
+                        <rect x="205" y="25" width="80" height="100" fill="rgba(255,255,255,0.08)" rx="8"/>
+                        <text x="245" y="65" fill="#fff" font-size="10" text-anchor="middle">Cafe Nero</text>
+                        
+                        <rect x="65" y="135" width="80" height="50" fill="rgba(255,105,180,0.1)" stroke="rgba(255,105,180,0.4)" rx="8"/>
+                        <text x="105" y="165" fill="pink" font-size="10" text-anchor="middle">H&M</text>
+                        <rect x="65" y="195" width="80" height="100" fill="rgba(255,255,255,0.08)" rx="8"/>
+                        <text x="105" y="235" fill="#fff" font-size="10" text-anchor="middle">Elevator</text>
+                        
+                        <rect x="205" y="135" width="80" height="70" fill="rgba(0,255,255,0.1)" stroke="rgba(0,255,255,0.4)" rx="8"/>
+                        <text x="245" y="165" fill="#0ff" font-size="10" text-anchor="middle">GameZone</text>
+                        <rect x="205" y="215" width="80" height="70" fill="rgba(255,255,255,0.08)" rx="8"/>
+                        <text x="245" y="245" fill="#fff" font-size="10" text-anchor="middle">Rest Area</text>
+
+                        <rect x="65" y="355" width="80" height="70" fill="rgba(255,255,255,0.08)" rx="8"/>
+                        <text x="105" y="385" fill="#fff" font-size="10" text-anchor="middle">Store G</text>
+                        
+                        <rect x="65" y="605" width="80" height="70" fill="rgba(255,165,0,0.1)" stroke="rgba(255,165,0,0.4)" rx="8"/>
+                        <text x="105" y="635" fill="orange" font-size="10" text-anchor="middle">Haldiram</text>
+                        
+                        <rect x="205" y="585" width="80" height="70" fill="rgba(255,215,0,0.1)" stroke="rgba(255,215,0,0.4)" rx="8"/>
+                        <text x="245" y="615" fill="yellow" font-size="10" text-anchor="middle">Titan</text>
+
+                        <rect x="155" y="625" width="40" height="50" fill="rgba(207,255,226,0.15)" stroke="#CFFFE2" stroke-width="2" rx="4"/>
+                        <text x="175" y="655" fill="#CFFFE2" font-size="10" text-anchor="middle" font-weight="600">📍 START</text>
+                        
+                        <defs>
+                            <linearGradient id="routeGradient" x1="0%" y1="100%" x2="0%" y2="0%">
+                                <stop offset="0%" style="stop-color:#CFFFE2;stop-opacity:1" />
+                                <stop offset="100%" style="stop-color:#BFA1FF;stop-opacity:1" />
+                            </linearGradient>
+                            <filter id="glow">
+                                <feGaussianBlur stdDeviation="4" result="coloredBlur"/>
+                                <feMerge>
+                                    <feMergeNode in="coloredBlur"/>
+                                    <feMergeNode in="SourceGraphic"/>
+                                </feMerge>
+                            </filter>
+                        </defs>
+                        
+                        <path id="routePath" 
+                              d="M 175 650 L 175 325 L 105 325 L 105 75" 
+                              fill="none" 
+                              stroke="url(#routeGradient)" 
+                              stroke-width="6" 
+                              stroke-linecap="round" 
+                              stroke-linejoin="round"
+                              filter="url(#glow)"
+                              opacity="0.9"
+                              class="route-animated"/>
+
+                        <circle id="avatarMarker" cx="175" cy="650" r="14" fill="#CFFFE2" stroke="#fff" stroke-width="3" filter="url(#glow)"/>
+                        <text id="avatarText" x="175" y="655" fill="#0F1724" font-size="14" text-anchor="middle" font-weight="700">👤</text>
+                    </svg>
+                </div>
+            </div>
+            
+            <div class="controls">
+                <button class="lets-go-btn" id="letsGoBtn">🚀 Enable Tracking</button>
+            </div>
+            
+            <div class="bottom-nav">
+                </div>
+
+            <div class="arrival-modal" id="arrivalModal">
+                <div class="modal-content">
+                    <div class="success-icon">🎉</div>
+                    <div class="modal-title">You've Arrived!</div>
+                    <div class="modal-subtitle">Welcome to Zara - Fashion & Style</div>
+                    
+                    <div class="coupon-box">
+                        <div class="coupon-label">Your Exclusive Coupon</div>
+                        <div class="coupon-code" id="couponCode">ZARA25</div>
+                        <button class="copy-btn" id="copyBtn">Copy Code</button>
+                    </div>
+                    
+                    <button class="modal-btn" onclick="endRouteAndStartFreeRoam()">Done</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ============ CONFIGURATION ============
+        const CONFIG = {
+            TOTAL_STEPS: 40, 
+            TURN1_STEP: 20,  // Mandatory stop and turn detection point
+            
+            // Sensor Settings
+            DELTA_THRESHOLD: 2.0, // Minimum change in acceleration to register a step
+            STEP_COOLDOWN: 320,   // Cooldown period between steps (ms)
+            TURN_THRESHOLD: 45,   // Degrees of rotation required to confirm a turn
+            
+            // Animation
+            SMOOTH_FACTOR: 0.08,  // Smoothness of avatar movement
+        };
+
+        // --- ROUTE & OFFER DATA ---
+        // Path: Start (175, 650) -> Turn 1 (175, 325) -> Turn 2 (105, 325) -> End (105, 75)
+        const MALL_ROUTE_D = "M 175 650 L 175 325 L 105 325 L 105 75"; 
+        
+        const OFFERS = [
+            { startStep: 5, endStep: 10, icon: '🍔', name: 'Haldiram', discount: '25% OFF' }, 
+            { startStep: 15, endStep: 20, icon: '👟', name: 'H&M', discount: 'New Arrivals' },
+            { startStep: 25, endStep: 30, icon: '🎮', name: 'GameZone', discount: 'Flat 10% OFF' },
+            { startStep: 35, endStep: 40, icon: '👗', name: 'ZARA', discount: 'Almost there!' },
+        ];
+
+        // ============ DOM ELEMENTS ============
+        const avatar = document.getElementById('avatarMarker');
+        const avatarText = document.getElementById('avatarText');
+        const routePath = document.getElementById('routePath');
+        const mapWrapper = document.getElementById('mapWrapper');
+        const letsGoBtn = document.getElementById('letsGoBtn');
+        const stepsEl = document.getElementById('stepsWalked');
+        const distanceEl = document.getElementById('distance');
+        const timeEl = document.getElementById('timeLeft');
+        const instructionIcon = document.getElementById('instructionIcon');
+        const instructionTitle = document.getElementById('instructionTitle');
+        const instructionSubtitle = document.getElementById('instructionSubtitle');
+        const offerCard = document.getElementById('offerCard');
+        const offerIcon = document.getElementById('offerIcon');
+        const offerTitle = document.getElementById('offerTitle');
+        const offerSubtitle = document.getElementById('offerSubtitle');
+        const offerBadge = document.getElementById('offerBadge');
+        const arrivalModal = document.getElementById('arrivalModal');
+
+        // ============ STATE MANAGEMENT ============
+        let state = {
+            steps: 0,
+            isTracking: false,    // Overall tracking status (can be paused/resumed)
+            isStarted: false,     // True after the first step is detected
+            isWalking: false,     // True only during active step detection (stops after 1.5s idle)
+            
+            lastStepTime: 0,
+            pathLength: 0,
+            
+            currentX: 175, 
+            currentY: 650, 
+            targetX: 175,
+            targetY: 650,
+            animId: null,
+            
+            lastAccel: { x: 0, y: 0, z: 0 },
+            lastWalkTime: 0,
+
+            initialHeading: null, 
+            hasTurned1: false,     // Tracks if the required turn has been executed
+        };
+
+        // ============ INITIALIZATION / RESET ============
+
+        function moveAvatar(x, y) {
+            avatar.setAttribute('cx', x);
+            avatar.setAttribute('cy', y);
+            avatarText.setAttribute('x', x);
+            avatarText.setAttribute('y', y + 5);
+            state.currentX = x;
+            state.currentY = y;
+            state.targetX = x; // Lock target to current position when manually set
+            state.targetY = y;
+        }
+        
+        function resetState() {
+            stopMotionListeners();
+            
+            state.steps = 0;
+            state.isTracking = false;
+            state.isStarted = false; 
+            state.isFreeRoam = false; 
+            state.hasTurned1 = false;
+            state.initialHeading = null;
+            mapWrapper.classList.remove('rotated');
+            
+            routePath.setAttribute('d', MALL_ROUTE_D);
+            state.pathLength = routePath.getTotalLength(); 
+
+            const startPoint = routePath.getPointAtLength(0);
+            moveAvatar(startPoint.x, startPoint.y);
+
+            letsGoBtn.textContent = '🚀 Enable Tracking';
+            letsGoBtn.classList.remove('tracking', 'free-roam');
+            letsGoBtn.disabled = false;
+            avatar.classList.remove('avatar-walking');
+            updateUI();
+            updateInstruction();
+            hideOffer();
+            routePath.style.opacity = 0.9;
+            routePath.classList.add('route-animated');
+        }
+
+        function init() {
+            resetState();
+        }
+
+        // ============ JOURNEY CONTROL ============
+        function startJourney() {
+            state.isStarted = true;
+            state.isTracking = true;
+            letsGoBtn.textContent = '⏸️ Pause';
+            letsGoBtn.disabled = false; 
+            letsGoBtn.classList.remove('tracking', 'free-roam');
+            avatar.classList.add('avatar-walking');
+            registerStep(); // Register the very first step
+        }
+
+        function pauseJourney() {
+            state.isTracking = false;
+            letsGoBtn.textContent = '▶️ Resume';
+            avatar.classList.remove('avatar-walking');
+            hideOffer();
+        }
+        
+        function resumeJourney() {
+            letsGoBtn.textContent = '⏸️ Pause';
+            state.isTracking = true;
+            avatar.classList.add('avatar-walking');
+        }
+        
+        window.endRouteAndStartFreeRoam = function() {
+            arrivalModal.classList.remove('show');
+            state.isFreeRoam = true;
+            resumeJourney(); 
+            // In a real app, movement would now switch to compass/accelerometer driven free movement
+            // For this demo, we just stop the guided path animation and update the UI.
+            letsGoBtn.textContent = '📍 Free Roam Active';
+            letsGoBtn.classList.add('free-roam');
+            letsGoBtn.disabled = true; 
+            updateUI();
+            updateInstruction();
+            routePath.style.opacity = 0.2;
+            routePath.classList.remove('route-animated');
+        }
+
+
+        // ============ SENSOR LISTENERS ============
+
+        function startMotionListeners() {
+            // Check for modern DeviceMotionEvent permission on iOS
+            if (typeof DeviceMotionEvent.requestPermission === 'function') {
+                DeviceMotionEvent.requestPermission().then(permissionState => {
+                    if (permissionState === 'granted') {
+                        window.addEventListener('devicemotion', handleMotion, true);
+                        window.addEventListener('deviceorientation', handleOrientation, true);
+                    } else {
+                        alert('Motion permission denied. Cannot track movement.');
+                    }
+                }).catch(console.error);
+            } else {
+                // For non-iOS/older browsers
+                window.addEventListener('devicemotion', handleMotion, true);
+                window.addEventListener('deviceorientation', handleOrientation, true);
+            }
+            state.idleChecker = setInterval(checkIdle, 500);
+        }
+        
+        function stopMotionListeners() {
+            window.removeEventListener('devicemotion', handleMotion, true);
+            window.removeEventListener('deviceorientation', handleOrientation, true);
+            if (state.idleChecker) clearInterval(state.idleChecker);
+        }
+
+        // ============ STEP DETECTION (Motion) ============
+        function handleMotion(event) {
+            
+            if (!state.isTracking && !state.isStarted) return; 
+
+            // --- STOP: If at the turn point and turn not taken ---
+            if (state.isStarted && state.steps === CONFIG.TURN1_STEP && !state.hasTurned1) {
+                state.lastWalkTime = Date.now(); 
+                return; 
+            }
+            
+            const now = Date.now();
+            if (now - state.lastStepTime < CONFIG.STEP_COOLDOWN) return;
+            
+            let stepDetected = false;
+            
+            if (event.accelerationIncludingGravity) {
+                const g = event.accelerationIncludingGravity;
+                const dx = Math.abs((g.x||0) - state.lastAccel.x);
+                const dy = Math.abs((g.y||0) - state.lastAccel.y);
+                const dz = Math.abs((g.z||0) - state.lastAccel.z);
+                const delta = dx + dy + dz;
+                
+                state.lastAccel = { x: g.x||0, y: g.y||0, z: g.z||0 };
+                
+                if (delta > CONFIG.DELTA_THRESHOLD) {
+                    stepDetected = true;
+                }
+            }
+            
+            if (stepDetected) {
+                // If the first step is detected, but tracking hasn't officially started (after button press)
+                if (!state.isStarted) {
+                    startJourney();
+                } else if (state.isTracking) {
+                    registerStep();
+                }
+            }
+        }
+
+        // ============ TURN DETECTION (Orientation) ============
+        function handleOrientation(event) {
+            if (!state.isStarted || !state.isTracking || state.isFreeRoam) return; 
+
+            // 1. Capture initial heading when the journey starts
+            if (state.initialHeading === null) {
+                state.initialHeading = event.webkitCompassHeading || event.alpha || 0;
+                return;
+            }
+
+            // 2. Check for Turn 1 when at the correct step
+            if (state.steps === CONFIG.TURN1_STEP && !state.hasTurned1) {
+                let heading = event.webkitCompassHeading || event.alpha || 0;
+                
+                let turn = heading - state.initialHeading;
+                if (turn > 180) turn -= 360;
+                if (turn < -180) turn += 360;
+                
+                // We require a LEFT turn (negative change in heading)
+                if (turn < -CONFIG.TURN_THRESHOLD) {
+                    state.hasTurned1 = true;
+                    mapWrapper.classList.add('rotated'); 
+                    updateInstruction(); 
+                    // Update the lastStepTime to immediately allow movement to continue
+                    state.lastStepTime = Date.now(); 
+                }
+            }
+        }
+        
+        // ============ STEP REGISTRATION (Movement) ============
+        function registerStep() {
+            
+            if (state.steps >= CONFIG.TOTAL_STEPS) {
+                setTimeout(() => {
+                    pauseJourney();
+                    showArrival(); 
+                }, 500);
+                return;
+            }
+
+            state.steps++;
+            state.lastStepTime = Date.now();
+            state.lastWalkTime = Date.now();
+            state.isWalking = true;
+            
+            // Calculate new position along the fixed path
+            const progress = state.steps / CONFIG.TOTAL_STEPS;
+            const currentLength = state.pathLength * progress; 
+            
+            const point = routePath.getPointAtLength(currentLength);
+            
+            animateTo(point.x, point.y);
+            
+            updateUI();
+            updateInstruction();
+            checkOffers();
+        }
+
+        // ============ IDLE CHECK (Stop/Pause) ============
+        function checkIdle() {
+            const now = Date.now();
+            // If idle for 1.5s and was previously walking
+            if (now - state.lastWalkTime > 1500 && state.isWalking) {
+                state.isWalking = false;
+                avatar.classList.remove('avatar-walking');
+                
+                // Only hide the offer if we are not actively waiting for a mandatory turn
+                if (state.steps !== CONFIG.TURN1_STEP || state.hasTurned1) {
+                    hideOffer();
+                }
+            } else if (state.isWalking && state.isTracking) {
+                // If moving and tracking, ensure avatar is animated
+                avatar.classList.add('avatar-walking');
+            }
+        }
+
+        // ============ UI UPDATES ============
+        function updateUI() {
+            const stepsCompleted = state.steps;
+            const stepsRemaining = CONFIG.TOTAL_STEPS - stepsCompleted;
+
+            stepsEl.textContent = `${stepsCompleted}/${CONFIG.TOTAL_STEPS}`;
+            
+            const dist = Math.round(200 * (stepsRemaining / CONFIG.TOTAL_STEPS));
+            distanceEl.textContent = `${dist}m`;
+            
+            const time = Math.round(300 * (stepsRemaining / CONFIG.TOTAL_STEPS));
+            timeEl.textContent = time > 0 ? `${Math.ceil(time/60)} min` : '0 min';
+        }
+
+        function updateInstruction() {
+            
+            if (!state.isStarted) {
+                instructionIcon.textContent = '👇';
+                instructionTitle.textContent = 'Start Tracking';
+                instructionSubtitle.textContent = 'Tap button or begin walking';
+                return;
+            }
+            
+            if (state.steps >= CONFIG.TOTAL_STEPS) {
+                instructionIcon.textContent = '🎉';
+                instructionTitle.textContent = 'Arrived!';
+                instructionSubtitle.textContent = 'Welcome to Zara!';
+                return;
+            }
+            
+            const stepsRemaining = CONFIG.TOTAL_STEPS - state.steps;
+            
+            // --- Logic for mandatory turn ---
+            if (state.steps < CONFIG.TURN1_STEP) {
+                // First straight segment
+                const stepsToTurn = CONFIG.TURN1_STEP - state.steps;
+                instructionIcon.textContent = '⬆️';
+                instructionTitle.textContent = 'Walk Straight';
+                instructionSubtitle.textContent = `${stepsToTurn} steps to next hallway`;
+            } else if (state.steps === CONFIG.TURN1_STEP && !state.hasTurned1) {
+                // Turn required, STOP movement and wait for orientation change
+                instructionIcon.textContent = '↩️';
+                instructionTitle.textContent = 'Turn Left NOW';
+                instructionSubtitle.textContent = 'Rotate device 90° to the left';
+            } else if (state.steps >= CONFIG.TURN1_STEP && state.hasTurned1) {
+                // Segment after the turn
+                const stepsToDest = CONFIG.TOTAL_STEPS - state.steps;
+                if (stepsToDest <= 5) {
+                    instructionIcon.textContent = '🪧';
+                    instructionTitle.textContent = 'Destination Ahead';
+                    instructionSubtitle.textContent = `Zara is near!`;
+                } else {
+                    instructionIcon.textContent = '⬆️';
+                    instructionTitle.textContent = 'Continue Straight';
+                    instructionSubtitle.textContent = `${stepsToDest} steps left`;
+                }
+            }
+        }
+
+        function checkOffers() {
+            if (!state.isWalking || !state.isTracking) { 
+                hideOffer();
+                return;
+            }
+            
+            const offer = OFFERS.find(o => 
+                state.steps >= o.startStep && state.steps <= o.endStep
+            );
+            
+            if (offer) {
+                showOffer(offer);
+            } else {
+                hideOffer();
+            }
+        }
+
+        function showOffer(offer) {
+            offerIcon.textContent = offer.icon;
+            offerTitle.textContent = offer.name;
+            offerSubtitle.textContent = "Nearby Offer";
+            offerBadge.textContent = offer.discount;
+            offerCard.classList.add('show');
+        }
+
+        function hideOffer() {
+            offerCard.classList.remove('show');
+        }
+
+        // ============ AVATAR ANIMATION ============
+        function animateTo(x, y) {
+            state.targetX = x;
+            state.targetY = y;
+            if (!state.animId) animateFrame();
+        }
+
+        function animateFrame() {
+            state.currentX += (state.targetX - state.currentX) * CONFIG.SMOOTH_FACTOR;
+            state.currentY += (state.targetY - state.currentY) * CONFIG.SMOOTH_FACTOR;
+            
+            avatar.setAttribute('cx', state.currentX);
+            avatar.setAttribute('cy', state.currentY);
+            avatarText.setAttribute('x', state.currentX);
+            avatarText.setAttribute('y', state.currentY + 5);
+            
+            const dx = Math.abs(state.targetX - state.currentX);
+            const dy = Math.abs(state.targetY - state.currentY);
+            
+            if (dx > 0.5 || dy > 0.5) {
+                state.animId = requestAnimationFrame(animateFrame);
+            } else {
+                state.animId = null;
+            }
+        }
+        
+        // ============ MODAL / BUTTONS ============
+        function showArrival() {
+            pauseJourney(); 
+            arrivalModal.classList.add('show');
+        }
+        
+        document.getElementById('copyBtn').addEventListener('click', function() {
+            navigator.clipboard.writeText('ZARA25').then(() => {
+                this.textContent = 'Copied! ✓';
+                this.classList.add('copied');
+                setTimeout(() => {
+                    this.textContent = 'Copy Code';
+                    this.classList.remove('copied');
+                }, 2000);
+            });
+        });
+
+        // ============ MAIN BUTTON ACTION ============
+        letsGoBtn.addEventListener('click', () => {
+            if (state.isStarted) {
+                if (state.isTracking) {
+                    pauseJourney();
+                } else {
+                    resumeJourney();
+                }
+                return;
+            }
+
+            // Initial click starts the listening/waiting process
+            startMotionListeners();
+            letsGoBtn.textContent = '🚶 Waiting for walk...';
+            letsGoBtn.classList.add('tracking');
+            letsGoBtn.disabled = true; // Button disabled while waiting for first step
+            updateInstruction();
+        });
+
+
+        // ============ START APPLICATION ============
+        init();
+    </script>
+</body>
+</html>
