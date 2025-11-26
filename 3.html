@@ -1,0 +1,1091 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Route - Infinity Mall</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* General Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(180deg, #FFFFFF 0%, #F1EDFF 25%, #D9CCFF 60%, #C1A4FF 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            overflow: hidden;
+        }
+
+        /* Phone Mockup */
+        .phone-wrapper {
+            width: 360px;
+            height: 780px;
+            border-radius: 40px;
+            background: linear-gradient(180deg, #A77BFF 0%, #8C5BFF 40%, #6C3BFF 100%);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            border: 12px solid #1a1a1a;
+        }
+
+        .phone-content {
+            width: 100%;
+            height: 100%;
+            background: transparent;
+            overflow-y: hidden;
+            padding-top: 50px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .status-bar {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 50px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 20px;
+            color: #fff;
+            font-size: 13px;
+            font-weight: 500;
+            z-index: 99;
+        }
+
+        .header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 10px 20px 15px;
+        }
+
+        .back-btn {
+            width: 40px;
+            height: 40px;
+            background: rgba(255, 255, 255, 0.12);
+            backdrop-filter: blur(6px);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: none;
+            cursor: pointer;
+            color: #fff;
+            font-size: 20px;
+        }
+
+        .header-title {
+            color: #fff;
+            font-size: 18px;
+            font-weight: 600;
+        }
+
+        /* Stats and Instruction */
+        .progress-stats {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 20px;
+            margin: 0 20px 8px; /* Adjusted margin for better spacing */
+            background: rgba(255, 255, 255, 0.12);
+            backdrop-filter: blur(6px);
+            border-radius: 20px;
+            flex-shrink: 0;
+        }
+
+        .stat-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .stat-label {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 11px;
+            font-weight: 500;
+        }
+
+        .stat-value {
+            color: #fff;
+            font-size: 16px;
+            font-weight: 700;
+        }
+
+        /* NEW CONTAINER for Instruction and Offer cards (side-by-side) */
+        .top-navigation-widgets {
+            display: flex;
+            gap: 8px; 
+            padding: 8px 20px; 
+            flex-shrink: 0;
+        }
+
+        /* Section 1: Navigation Instruction (Made smaller) */
+        .instruction-card {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 12px 15px; /* Reduced padding */
+            margin: 0; /* Removed old margin */
+            min-height: 65px; /* Fixed smaller height */
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(6px);
+            border-radius: 20px;
+            flex-shrink: 0;
+        }
+
+        .instruction-icon {
+            font-size: 28px; /* Smaller icon */
+        }
+
+        .instruction-text {
+            flex: 1;
+        }
+
+        .instruction-title {
+            color: #fff;
+            font-size: 14px; /* Smaller title */
+            font-weight: 600;
+        }
+
+        .instruction-subtitle {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 10px; /* Smaller subtitle */
+        }
+        
+        /* Section 2: Offer Card (Dynamic, Made smaller and aligned) */
+        .offer-card {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+            padding: 0 15px; /* Padding adjusted for collapsed state */
+            margin: 0; /* Margin adjusted for collapsed state */
+            background: linear-gradient(90deg, #FFB800 0%, #FFE066 100%);
+            border-radius: 20px;
+            flex-shrink: 0;
+            opacity: 0;
+            height: 0;
+            overflow: hidden;
+            transition: all 0.4s ease-in-out;
+            min-height: 65px; /* Fixed height for animation target */
+        }
+
+        .offer-card.show {
+            opacity: 1;
+            height: 65px; /* Match min-height for animation */
+            padding: 12px 15px; /* Applied padding when shown */
+        }
+
+        .offer-card .offer-icon {
+            font-size: 28px;
+            flex-shrink: 0;
+        }
+
+        .offer-card .offer-text {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .offer-card .offer-title {
+            color: #0F1724;
+            font-size: 14px;
+            font-weight: 700;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .offer-card .offer-subtitle {
+            color: #475569;
+            font-size: 10px;
+            font-weight: 500;
+        }
+        
+        .offer-card .offer-badge {
+            background: #0F1724;
+            color: #FFE066;
+            padding: 2px 6px; /* Smaller padding */
+            border-radius: 10px;
+            font-size: 9px; /* Smaller font */
+            font-weight: 700;
+            align-self: flex-start;
+            flex-shrink: 0;
+        }
+
+        /* Map and Controls (Maximised for the full width) */
+        .map-container {
+            position: relative;
+            width: 100%;
+            flex: 1; 
+            padding: 0 5px; /* Tiny side padding if needed, but 0 is preferred to fill */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        /* ... (rest of CSS remains the same for map wrapper and controls) ... */
+        .map-wrapper {
+            width: 100%;
+            height: 100%;
+            max-height: 100%;
+            transform-origin: center center;
+            transition: transform 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        .map-wrapper.rotated {
+            transform: rotate(-90deg); /* Apply a left turn rotation */
+        }
+        
+        .mall-map {
+            width: 100%;
+            height: 100%;
+            max-height: 100%;
+        }
+
+        .controls {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            padding: 15px 20px;
+            flex-shrink: 0;
+        }
+        
+        /* ... (styles for lets-go-btn, bottom-nav, and modal remain the same) ... */
+
+        .lets-go-btn {
+            width: 100%;
+            background: #CFFFE2;
+            border: none;
+            color: #0F1724;
+            padding: 18px 10px;
+            border-radius: 25px;
+            font-size: 18px;
+            font-weight: 700;
+            cursor: pointer;
+            font-family: 'Poppins', sans-serif;
+            transition: all 0.3s ease;
+            box-shadow: 0 8px 25px rgba(207, 255, 226, 0.3);
+        }
+
+        .lets-go-btn:active {
+            transform: scale(0.97);
+        }
+
+        .lets-go-btn.tracking {
+            background: linear-gradient(90deg, #FFE066, #FFB800);
+        }
+        
+        /* Free Roam Button Style */
+        .lets-go-btn.free-roam {
+             background: linear-gradient(90deg, #BFA1FF, #8C5BFF);
+             color: #fff;
+             box-shadow: 0 8px 25px rgba(180, 150, 255, 0.3);
+        }
+
+        .bottom-nav {
+            position: relative;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 80px;
+            background: rgba(30, 30, 40, 0.95);
+            backdrop-filter: blur(10px);
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            padding: 0 20px 20px;
+            border-radius: 30px 30px 0 0;
+            flex-shrink: 0;
+        }
+        
+        /* ... (modal and animation styles remain the same) ... */
+        
+        .arrival-modal {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(8px);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 200;
+            animation: fadeIn 0.4s ease;
+        }
+        
+        .arrival-modal.show {
+            display: flex;
+        }
+
+
+        @keyframes avatarPulse {
+            0%, 100% { 
+                filter: drop-shadow(0 0 8px rgba(207, 255, 226, 0.6));
+            }
+            50% { 
+                filter: drop-shadow(0 0 16px rgba(207, 255, 226, 0.9));
+            }
+        }
+
+        .avatar-walking {
+            animation: avatarPulse 1s ease-in-out infinite;
+        }
+
+        @keyframes routeDash {
+            to {
+                stroke-dashoffset: -20;
+            }
+        }
+
+        .route-animated {
+            stroke-dasharray: 10, 10;
+            animation: routeDash 0.8s linear infinite;
+        }
+    </style>
+</head>
+<body>
+    <div class="phone-wrapper">
+        <div class="status-bar">
+            <span>9:41</span>
+            <span>📶 📡 🔋</span>
+        </div>
+
+        <div class="phone-content">
+            <div class="header">
+                <button class="back-btn" onclick="window.location.href='home.html'">←</button>
+                <div class="header-title">Route to Zara</div>
+                <div style="width: 40px;"></div>
+            </div>
+
+            <div class="progress-stats">
+                <div class="stat-item">
+                    <div class="stat-label">Steps</div>
+                    <div class="stat-value" id="stepsWalked">0/20</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-label">Distance</div>
+                    <div class="stat-value" id="distance">100m</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-label">Time</div>
+                    <div class="stat-value" id="timeLeft">3 min</div>
+                </div>
+            </div>
+            
+            <div class="top-navigation-widgets">
+                <div class="instruction-card">
+                    <div class="instruction-icon" id="instructionIcon">⬆️</div>
+                    <div class="instruction-text">
+                        <div class="instruction-title" id="instructionTitle">Walk Straight</div>
+                        <div class="instruction-subtitle" id="instructionSubtitle">20 steps to Zara</div>
+                    </div>
+                </div>
+                
+                <div class="offer-card" id="offerCard">
+                    <div class="offer-icon" id="offerIcon"></div>
+                    <div class="offer-text">
+                        <div class="offer-title" id="offerTitle"></div>
+                        <div class="offer-subtitle" id="offerSubtitle"></div>
+                    </div>
+                    <span class="offer-badge" id="offerBadge"></span>
+                </div>
+            </div>
+            <div class="map-container">
+                
+                <div class="map-wrapper" id="mapWrapper">
+                    <svg class="mall-map" viewBox="0 0 360 700" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet">
+                        <rect x="5" y="5" width="350" height="690" fill="none" stroke="rgba(255,255,255,0.2)" stroke-width="2" rx="16"/>
+                        
+                        <rect x="160" y="10" width="40" height="680" fill="rgba(255,255,255,0.05)" rx="4"/> <rect x="10" y="280" width="340" height="40" fill="rgba(255,255,255,0.05)" rx="4"/> <rect x="10" y="480" width="340" height="40" fill="rgba(255,255,255,0.05)" rx="4"/> <rect x="20" y="20" width="60" height="60" fill="rgba(255,255,255,0.08)" rx="8"/><text x="50" y="55" fill="#fff" font-size="10" text-anchor="middle">Store A</text>
+                        <rect x="90" y="10" width="80" height="70" fill="rgba(207,255,226,0.15)" stroke="#CFFFE2" stroke-width="3" rx="12"/>
+                        <text x="130" y="40" fill="#CFFFE2" font-size="16" text-anchor="middle" font-weight="700">ZARA</text>
+                        <text x="130" y="60" fill="rgba(207,255,226,0.7)" font-size="9" text-anchor="middle">Destination</text>
+                        <rect x="210" y="20" width="60" height="60" fill="rgba(255,255,255,0.08)" rx="8"/><text x="240" y="55" fill="#fff" font-size="10" text-anchor="middle">Store C</text>
+                        <rect x="280" y="20" width="60" height="60" fill="rgba(255,255,255,0.08)" rx="8"/><text x="310" y="55" fill="#fff" font-size="10" text-anchor="middle">Store D</text>
+
+                        <rect x="20" y="90" width="60" height="60" fill="rgba(255,255,255,0.08)" rx="8"/><text x="50" y="125" fill="#fff" font-size="10" text-anchor="middle">Store E</text>
+                        <rect x="90" y="90" width="60" height="60" fill="rgba(255,255,255,0.08)" rx="8"/><text x="120" y="125" fill="#fff" font-size="10" text-anchor="middle">Store F</text>
+                        <rect x="210" y="90" width="60" height="60" fill="rgba(255,255,255,0.08)" rx="8"/><text x="240" y="125" fill="#fff" font-size="10" text-anchor="middle">Store G</text>
+                        <rect x="280" y="90" width="60" height="60" fill="rgba(255,255,255,0.08)" rx="8"/><text x="310" y="125" fill="#fff" font-size="10" text-anchor="middle">Store H</text>
+                        
+                        <rect x="20" y="230" width="60" height="40" fill="rgba(255,105,180,0.1)" stroke="rgba(255,105,180,0.4)" rx="8"/><text x="50" y="255" fill="pink" font-size="10" text-anchor="middle">Snitch</text>
+                        <rect x="280" y="230" width="60" height="40" fill="rgba(255,215,0,0.1)" stroke="rgba(255,215,0,0.4)" rx="8"/><text x="310" y="255" fill="yellow" font-size="10" text-anchor="middle">Titan</text>
+
+                        <rect x="20" y="330" width="80" height="60" fill="rgba(255,165,0,0.1)" stroke="rgba(255,165,0,0.4)" rx="8"/><text x="60" y="365" fill="orange" font-size="10" text-anchor="middle">Haldiram</text>
+                        <rect x="260" y="330" width="80" height="60" fill="rgba(0,255,255,0.1)" stroke="rgba(0,255,255,0.4)" rx="8"/><text x="300" y="365" fill="#0ff" font-size="10" text-anchor="middle">GameZone</text>
+                        
+                        <rect x="20" y="400" width="60" height="70" fill="rgba(255,255,255,0.08)" rx="8"/><text x="50" y="435" fill="#fff" font-size="10" text-anchor="middle">Store S</text>
+                        <rect x="90" y="400" width="60" height="70" fill="rgba(255,255,255,0.08)" rx="8"/><text x="120" y="435" fill="#fff" font-size="10" text-anchor="middle">Store T</text>
+                        <rect x="210" y="400" width="60" height="70" fill="rgba(255,255,255,0.08)" rx="8"/><text x="240" y="435" fill="#fff" font-size="10" text-anchor="middle">Store U</text>
+                        <rect x="280" y="400" width="60" height="70" fill="rgba(255,255,255,0.08)" rx="8"/><text x="310" y="435" fill="#fff" font-size="10" text-anchor="middle">Store V</text>
+
+                        <rect x="90" y="530" width="60" height="70" fill="rgba(255,255,255,0.08)" rx="8"/><text x="120" y="565" fill="#fff" font-size="10" text-anchor="middle">Store W</text>
+                        <rect x="210" y="530" width="60" height="70" fill="rgba(255,255,255,0.08)" rx="8"/><text x="240" y="565" fill="#fff" font-size="10" text-anchor="middle">Store X</text>
+                        <rect x="280" y="530" width="60" height="70" fill="rgba(255,255,255,0.08)" rx="8"/><text x="310" y="565" fill="#fff" font-size="10" text-anchor="middle">Store Y</text>
+
+                        <rect x="20" y="610" width="60" height="70" fill="rgba(0,128,0,0.1)" stroke="rgba(0,128,0,0.4)" rx="8"/><text x="50" y="645" fill="green" font-size="10" text-anchor="middle">Starbucks</text>
+                        <rect x="90" y="610" width="60" height="70" fill="rgba(255,255,255,0.08)" rx="8"/><text x="120" y="645" fill="#fff" font-size="10" text-anchor="middle">Store Z</text>
+                        <rect x="210" y="610" width="60" height="70" fill="rgba(255,255,255,0.08)" rx="8"/><text x="240" y="645" fill="#fff" font-size="10" text-anchor="middle">Store AA</text>
+                        <rect x="280" y="610" width="60" height="70" fill="rgba(255,255,255,0.08)" rx="8"/><text x="310" y="645" fill="#fff" font-size="10" text-anchor="middle">Store BB</text>
+
+
+                        <rect x="170" y="630" width="20" height="60" fill="rgba(207,255,226,0.15)" stroke="#CFFFE2" stroke-width="2" rx="4"/>
+                        <text x="180" y="670" fill="#CFFFE2" font-size="10" text-anchor="middle" font-weight="600">📍 START</text>
+                        
+                        <defs>
+                            <linearGradient id="routeGradient" x1="0%" y1="100%" x2="0%" y2="0%">
+                                <stop offset="0%" style="stop-color:#CFFFE2;stop-opacity:1" />
+                                <stop offset="100%" style="stop-color:#BFA1FF;stop-opacity:1" />
+                            </linearGradient>
+                            <filter id="glow">
+                                <feGaussianBlur stdDeviation="4" result="coloredBlur"/>
+                                <feMerge>
+                                    <feMergeNode in="coloredBlur"/>
+                                    <feMergeNode in="SourceGraphic"/>
+                                </feMerge>
+                            </filter>
+                        </defs>
+                        
+                        <path id="routePath" 
+                              d="M 180 650 L 180 290 L 130 290 L 130 80" 
+                              fill="none" 
+                              stroke="url(#routeGradient)" 
+                              stroke-width="6" 
+                              stroke-linecap="round" 
+                              stroke-linejoin="round"
+                              filter="url(#glow)"
+                              opacity="0.9"
+                              class="route-animated"/>
+
+                        <circle id="avatarMarker" cx="180" cy="650" r="14" fill="#CFFFE2" stroke="#fff" stroke-width="3" filter="url(#glow)"/>
+                        <text id="avatarText" x="180" y="655" fill="#0F1724" font-size="14" text-anchor="middle" font-weight="700">👤</text>
+                    </svg>
+                </div>
+            </div>
+            
+            <div class="controls">
+                <button class="lets-go-btn" id="letsGoBtn">🚀 Enable Tracking</button>
+            </div>
+            
+            <div class="bottom-nav">
+                <a href="home.html" class="nav-item">
+                    <div class="nav-icon">🏠</div>
+                    <span>Home</span>
+                </a>
+                <a href="#" class="nav-item">
+                    <div class="nav-icon">🏪</div>
+                    <span>Stores</span>
+                </a>
+                <a href="route.html" class="nav-item active">
+                    <div class="nav-icon">🗺️</div>
+                    <span>Route</span>
+                </a>
+                <a href="#" class="nav-item">
+                    <div class="nav-icon">⭐</div>
+                    <span>Saved</span>
+                </a>
+            </div>
+
+            <div class="arrival-modal" id="arrivalModal">
+                <div class="modal-content">
+                    <div class="success-icon">🎉</div>
+                    <div class="modal-title">You've Arrived!</div>
+                    <div class="modal-subtitle">Welcome to Zara - Fashion & Style</div>
+                    
+                    <div class="coupon-box">
+                        <div class="coupon-label">Your Exclusive Coupon</div>
+                        <div class="coupon-code" id="couponCode">ZARA25</div>
+                        <button class="copy-btn" id="copyBtn">Copy Code</button>
+                    </div>
+                    
+                    <button class="modal-btn" onclick="endRouteAndStartFreeRoam()">Done</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ============ CONFIG (Simplified for single-floor, smooth motion) ============
+        const CONFIG = {
+            TOTAL_STEPS: 20, // 10 steps straight + 10 steps after turn
+            TURN_STEP: 10,   // The step after which the turn is required
+            
+            // Step Detection
+            ACCEL_THRESHOLD: 0.8,
+            DELTA_THRESHOLD: 2.0,
+            STEP_COOLDOWN: 320,
+            
+            // Turn Detection
+            TURN_THRESHOLD: 45, // Required degrees of turn to trigger map rotation
+            
+            // Animation
+            SMOOTH_FACTOR: 0.08,
+            
+            // Free Roam
+            FREE_ROAM_STEP_SIZE: 6, // Pixels to move per step in free roam
+            FREE_ROAM_BOUNDARIES: { minX: 50, minY: 50, maxX: 310, maxY: 650 }
+        };
+
+        // --- ROUTE CONFIG ---
+        const TOTAL_STEPS = CONFIG.TOTAL_STEPS;
+        // Path: Gate (180, 650) -> Turn Point (180, 290) -> Turn Left -> Zara (130, 80)
+        const MALL_ROUTE_D = "M 180 650 L 180 290 L 130 290 L 130 80"; 
+        
+        // ============ OFFERS (Aligned with 20 steps) ============
+        const OFFERS = [
+            { startStep: 3, endStep: 5, icon: '🍔', name: 'Haldiram', discount: '25% OFF' }, // Straight
+            { startStep: 6, endStep: 9, icon: '🎮', name: 'GameZone', discount: 'Flat 10% OFF' }, // Near Turn
+            { startStep: 12, endStep: 14, icon: '👟', name: 'Snitch', discount: '20% OFF' }, // After turn
+            { startStep: 15, endStep: 17, icon: '⌚', name: 'Titan', discount: 'New Collection' }, // Middle of second segment
+            { startStep: 18, endStep: 20, icon: '👗', name: 'ZARA', discount: 'Almost there!' }, // Near destination
+        ];
+
+        // ============ DOM ============
+        const avatar = document.getElementById('avatarMarker');
+        const avatarText = document.getElementById('avatarText');
+        const routePath = document.getElementById('routePath');
+        const mapWrapper = document.getElementById('mapWrapper');
+        const letsGoBtn = document.getElementById('letsGoBtn');
+        
+        const stepsEl = document.getElementById('stepsWalked');
+        const distanceEl = document.getElementById('distance');
+        const timeEl = document.getElementById('timeLeft');
+        
+        // Navigation Instruction Elements
+        const instructionIcon = document.getElementById('instructionIcon');
+        const instructionTitle = document.getElementById('instructionTitle');
+        const instructionSubtitle = document.getElementById('instructionSubtitle');
+        
+        // Offer Card Elements
+        const offerCard = document.getElementById('offerCard');
+        const offerIcon = document.getElementById('offerIcon');
+        const offerTitle = document.getElementById('offerTitle');
+        const offerSubtitle = document.getElementById('offerSubtitle');
+        const offerBadge = document.getElementById('offerBadge');
+        
+        const arrivalModal = document.getElementById('arrivalModal');
+
+        // ============ STATE ============
+        let state = {
+            steps: 0,
+            isTracking: false,  
+            isStarted: false,   
+            isFreeRoam: false,  // State for unguided movement
+            lastStepTime: 0,
+            pathLength: 0,
+            
+            currentX: 130, 
+            currentY: 80, 
+            targetX: 130,
+            targetY: 80,
+            animId: null,
+            
+            lastAccel: { x: 0, y: 0, z: 0 },
+            isWalking: false,
+            lastWalkTime: 0,
+
+            initialHeading: null, 
+            hasTurned: false,     
+            turnPointLength: 0, 
+        };
+
+        // Helper function to set avatar position
+        function moveAvatar(x, y) {
+            avatar.setAttribute('cx', x);
+            avatar.setAttribute('cy', y);
+            avatarText.setAttribute('x', x);
+            avatarText.setAttribute('y', y + 5);
+            state.currentX = x;
+            state.currentY = y;
+            state.targetX = x;
+            state.targetY = y;
+        }
+
+        // ============ INIT/RESET ============
+        function resetState() {
+            stopMotionListeners();
+            
+            state.steps = 0;
+            state.isTracking = false;
+            state.isStarted = false; 
+            state.isFreeRoam = false; // Reset free roam state
+            state.hasTurned = false;
+            state.initialHeading = null;
+            mapWrapper.classList.remove('rotated');
+            
+            // Calculate path lengths
+            routePath.setAttribute('d', MALL_ROUTE_D);
+            state.pathLength = routePath.getTotalLength(); 
+            state.turnPointLength = state.pathLength * (CONFIG.TURN_STEP / TOTAL_STEPS);
+
+            // Move avatar back to start (180, 650)
+            const startPoint = routePath.getPointAtLength(0);
+            moveAvatar(startPoint.x, startPoint.y);
+
+            // Update UI
+            letsGoBtn.textContent = '🚀 Enable Tracking';
+            letsGoBtn.classList.remove('tracking', 'free-roam');
+            letsGoBtn.disabled = false;
+            updateUI();
+            updateInstruction();
+            hideOffer();
+        }
+
+        function init() {
+            resetState();
+        }
+
+        // ============ MAIN BUTTON ============
+        letsGoBtn.addEventListener('click', async () => {
+            if (state.isFreeRoam) return; // Ignore clicks in free roam mode
+            
+            if (state.isStarted) {
+                // Pause/Resume logic for after the journey has started
+                if (state.isTracking) {
+                    pauseJourney();
+                } else {
+                    resumeJourney();
+                }
+                return;
+            }
+
+            // --- Initial State: Enable Sensors and wait for walk ---
+            
+            // --- iOS Permission Request (Kept for functionality) ---
+            if (typeof DeviceMotionEvent.requestPermission === 'function') {
+                try {
+                    const perm = await DeviceMotionEvent.requestPermission();
+                    if (perm !== 'granted') {
+                        alert('Motion permission needed!\n\nGo to Settings → Safari → Motion & Orientation Access');
+                        return;
+                    }
+                } catch (e) {
+                    console.error(e);
+                }
+            }
+            
+            if (typeof DeviceOrientationEvent.requestPermission === 'function') {
+                try {
+                    await DeviceOrientationEvent.requestPermission();
+                } catch (e) {}
+            }
+            
+            startMotionListeners();
+            letsGoBtn.textContent = '🚶 Waiting for first step...';
+            letsGoBtn.classList.add('tracking');
+            letsGoBtn.disabled = true; // Disable button while waiting for the first step
+            updateInstruction();
+        });
+
+        // ============ LISTENERS ============
+
+        function startMotionListeners() {
+            window.addEventListener('devicem otion', handleMotion, true);
+            window.addEventListener('deviceorientation', handleOrientation, true);
+            state.idleChecker = setInterval(checkIdle, 500);
+        }
+        
+        function stopMotionListeners() {
+            window.removeEventListener('devicemotion', handleMotion, true);
+            window.removeEventListener('deviceorientation', handleOrientation, true);
+            if (state.idleChecker) clearInterval(state.idleChecker);
+        }
+
+        // ============ JOURNEY CONTROL ============
+
+        function startJourney() {
+            state.isStarted = true;
+            state.isTracking = true;
+            letsGoBtn.textContent = '⏸️ Pause';
+            letsGoBtn.disabled = false; // Enable button now for pausing
+            letsGoBtn.classList.remove('tracking', 'free-roam');
+            avatar.classList.add('avatar-walking');
+            
+            // Initial step registration
+            registerStep();
+        }
+
+        function pauseJourney() {
+            state.isTracking = false;
+            letsGoBtn.textContent = '▶️ Resume';
+            avatar.classList.remove('avatar-walking');
+            hideOffer();
+        }
+        
+        function resumeJourney() {
+            if(state.isFreeRoam) {
+                 letsGoBtn.textContent = '📍 Free Roam Active';
+                 letsGoBtn.classList.add('free-roam');
+                 letsGoBtn.disabled = true; // Lock the button in free roam
+            } else {
+                letsGoBtn.textContent = '⏸️ Pause';
+            }
+            state.isTracking = true;
+            avatar.classList.add('avatar-walking');
+        }
+        
+        // ============ MOTION - STEP DETECTION ============
+        function handleMotion(event) {
+            
+            // --- Phase 1: Waiting for first step to start journey ---
+            if (!state.isStarted) {
+                let firstStepDetected = false;
+                
+                if (event.accelerationIncludingGravity) {
+                    const g = event.accelerationIncludingGravity;
+                    const dx = Math.abs((g.x||0) - state.lastAccel.x);
+                    const dy = Math.abs((g.y||0) - state.lastAccel.y);
+                    const dz = Math.abs((g.z||0) - state.lastAccel.z);
+                    const delta = dx + dy + dz;
+                    state.lastAccel = { x: g.x||0, y: g.y||0, z: g.z||0 };
+                    
+                    if (delta > CONFIG.DELTA_THRESHOLD) {
+                        firstStepDetected = true;
+                    }
+                }
+                
+                if (firstStepDetected) {
+                    startJourney();
+                    return; 
+                } else {
+                    return; 
+                }
+            }
+            
+            // --- Phase 2: Normal Tracking (including Free Roam) ---
+
+            if (!state.isTracking) return; 
+            
+            // Allow movement immediately in Free Roam mode
+            if (!state.isFreeRoam) {
+                // STOP movement if we reached the turn point and haven't turned yet (Routing Mode Only)
+                if (state.steps >= CONFIG.TURN_STEP && !state.hasTurned) {
+                    state.lastWalkTime = Date.now(); 
+                    return;
+                }
+            }
+            
+            const now = Date.now();
+            if (now - state.lastStepTime < CONFIG.STEP_COOLDOWN) return;
+            
+            let stepDetected = false;
+            
+            if (event.accelerationIncludingGravity) {
+                const g = event.accelerationIncludingGravity;
+                const dx = Math.abs((g.x||0) - state.lastAccel.x);
+                const dy = Math.abs((g.y||0) - state.lastAccel.y);
+                const dz = Math.abs((g.z||0) - state.lastAccel.z);
+                const delta = dx + dy + dz;
+                
+                state.lastAccel = { x: g.x||0, y: g.y||0, z: g.z||0 };
+                
+                if (delta > CONFIG.DELTA_THRESHOLD) {
+                    stepDetected = true;
+                }
+            }
+            
+            if (stepDetected) {
+                registerStep();
+            }
+        }
+
+        // ============ ORIENTATION - TURN DETECTION ============
+        function handleOrientation(event) {
+            // Only capture initial heading once during routing
+            if (state.initialHeading === null && state.isStarted && !state.isFreeRoam) {
+                state.initialHeading = event.webkitCompassHeading || event.alpha || 0;
+                return;
+            }
+
+            if (!state.isStarted || !state.isTracking || state.isFreeRoam) return; // Ignore in free roam
+
+            // Only check for turns if we are at the turn point and haven't turned yet
+            if (state.steps >= CONFIG.TURN_STEP && !state.hasTurned) {
+                
+                let heading = event.webkitCompassHeading || event.alpha || 0;
+                
+                let turn = heading - state.initialHeading;
+                if (turn > 180) turn -= 360;
+                if (turn < -180) turn += 360;
+                
+                // We require a LEFT turn (negative change in heading)
+                if (turn < -CONFIG.TURN_THRESHOLD) {
+                    state.hasTurned = true;
+                    mapWrapper.classList.add('rotated'); // Rotate the map
+                    updateInstruction(); 
+                }
+            }
+        }
+        
+        // ============ STEP REGISTRATION (Modified) ============
+        function registerStep() {
+            
+            state.lastStepTime = Date.now();
+            state.lastWalkTime = Date.now();
+            state.isWalking = true;
+            
+            // --- NEW FREE ROAM MOVEMENT ---
+            if (state.isFreeRoam) {
+                // Get current device rotation to simulate movement direction
+                // If we had the actual heading, we'd use that. Here we simulate random but contained movement.
+                let step = CONFIG.FREE_ROAM_STEP_SIZE;
+                
+                // Simulate general movement within the map boundaries
+                let randomX = Math.random() * 2 - 1; // -1 to 1
+                let randomY = Math.random() * 2 - 1; // -1 to 1
+
+                let newX = state.currentX + randomX * step;
+                let newY = state.currentY + randomY * step;
+
+                // Simple boundary check
+                const bounds = CONFIG.FREE_ROAM_BOUNDARIES;
+                newX = Math.max(bounds.minX, Math.min(bounds.maxX, newX));
+                newY = Math.max(bounds.minY, Math.min(bounds.maxY, newY));
+
+                animateTo(newX, newY);
+                
+                // Check if moving near a store in free roam mode
+                // (Note: Offer check is disabled in checkOffers for simplicity, but can be re-enabled here)
+
+                return; 
+            }
+            // --- END FREE ROAM MOVEMENT ---
+
+            // --- ROUTING MOVEMENT (Original Logic) ---
+
+            // Final Step Check
+            if (state.steps >= TOTAL_STEPS) {
+                setTimeout(() => {
+                    pauseJourney();
+                    showArrival(); // This now shows the modal
+                }, 500);
+                return;
+            }
+
+            state.steps++;
+            
+            // Determine progress based on current step
+            const progress = state.steps / TOTAL_STEPS;
+            const currentLength = state.pathLength * progress; 
+            
+            const point = routePath.getPointAtLength(currentLength);
+            
+            animateTo(point.x, point.y);
+            
+            // Update UI & check for offers
+            updateUI();
+            updateInstruction();
+            checkOffers();
+        }
+
+        // ============ IDLE CHECK - Hide offers when stopped ============
+        function checkIdle() {
+            const now = Date.now();
+            // If idle for 1.5s and was walking
+            if (now - state.lastWalkTime > 1500 && state.isWalking) {
+                state.isWalking = false;
+                // Only hide offer if steps are still moving (i.e. not stuck waiting for turn)
+                if (state.steps < CONFIG.TURN_STEP || state.hasTurned || state.isFreeRoam) {
+                    hideOffer();
+                }
+            }
+        }
+
+        // ============ UI ============
+        function updateUI() {
+            const stepsCompleted = state.steps;
+            const stepsRemaining = TOTAL_STEPS - stepsCompleted;
+
+            stepsEl.textContent = `${stepsCompleted}/${TOTAL_STEPS}`;
+            
+            // Distance/Time calculation scaled to 20 steps
+            const dist = Math.round(100 * (stepsRemaining / TOTAL_STEPS));
+            distanceEl.textContent = `${dist}m`;
+            
+            const time = Math.round(180 * (stepsRemaining / TOTAL_STEPS));
+            timeEl.textContent = time > 0 ? `${Math.ceil(time/60)} min` : '0 min';
+            
+            if (state.isFreeRoam) {
+                // Update UI for free roam mode
+                stepsEl.textContent = '∞';
+                distanceEl.textContent = 'Mall';
+                timeEl.textContent = 'Explore';
+            }
+        }
+
+        // ============ INSTRUCTION (Section 1) ============
+        function updateInstruction() {
+            
+            if (state.isFreeRoam) {
+                instructionIcon.textContent = '🚶';
+                instructionTitle.textContent = 'Free Roam';
+                instructionSubtitle.textContent = 'Destination Reached';
+                return;
+            }
+            
+            if (!state.isStarted) {
+                instructionIcon.textContent = '👇';
+                instructionTitle.textContent = 'Start Tracking';
+                instructionSubtitle.textContent = 'Tap to begin journey';
+                return;
+            }
+            
+            if (state.steps >= TOTAL_STEPS) {
+                instructionIcon.textContent = '🎉';
+                instructionTitle.textContent = 'Arrived!';
+                instructionSubtitle.textContent = 'Tap Done to explore';
+                return;
+            }
+            
+            const stepsRemaining = TOTAL_STEPS - state.steps;
+            
+            // --- Logic for mandatory turn ---
+            if (state.steps < CONFIG.TURN_STEP) {
+                // Straight segment
+                const stepsToTurn = CONFIG.TURN_STEP - state.steps;
+                instructionIcon.textContent = '⬆️';
+                instructionTitle.textContent = 'Walk Straight';
+                instructionSubtitle.textContent = `${stepsToTurn} steps left`;
+            } else if (state.steps === CONFIG.TURN_STEP && !state.hasTurned) {
+                // Turn required, wait for orientation change
+                instructionIcon.textContent = '↩️';
+                instructionTitle.textContent = 'Turn Left NOW';
+                instructionSubtitle.textContent = 'Rotate device 90°';
+            } else if (state.steps >= CONFIG.TURN_STEP && state.hasTurned) {
+                // Segment after the turn
+                const stepsToDest = TOTAL_STEPS - state.steps;
+                if (stepsToDest <= 3) {
+                    instructionIcon.textContent = '🪧';
+                    instructionTitle.textContent = 'Destination Ahead';
+                    instructionSubtitle.textContent = `Zara is near!`;
+                } else {
+                    instructionIcon.textContent = '⬆️';
+                    instructionTitle.textContent = 'Continue Straight';
+                    instructionSubtitle.textContent = `${stepsToDest} steps left`;
+                }
+            }
+        }
+
+        // ============ OFFERS (Section 2) ============
+        function checkOffers() {
+            // Do not show offers if paused, or if waiting for the required turn, or in free roam
+            if (!state.isWalking || state.isFreeRoam) { 
+                hideOffer();
+                return;
+            }
+            
+            const offer = OFFERS.find(o => 
+                state.steps >= o.startStep && state.steps <= o.endStep
+            );
+            
+            if (offer) {
+                showOffer(offer);
+            } else {
+                hideOffer();
+            }
+        }
+
+        function showOffer(offer) {
+            offerIcon.textContent = offer.icon;
+            offerTitle.textContent = offer.name;
+            offerSubtitle.textContent = "Nearby Offer";
+            offerBadge.textContent = offer.discount;
+            
+            offerCard.classList.add('show');
+        }
+
+        function hideOffer() {
+            offerCard.classList.remove('show');
+        }
+
+        // ============ AVATAR ANIMATION ============
+        function animateTo(x, y) {
+            state.targetX = x;
+            state.targetY = y;
+            if (!state.animId) animateFrame();
+        }
+
+        function animateFrame() {
+            state.currentX += (state.targetX - state.currentX) * CONFIG.SMOOTH_FACTOR;
+            state.currentY += (state.targetY - state.currentY) * CONFIG.SMOOTH_FACTOR;
+            
+            avatar.setAttribute('cx', state.currentX);
+            avatar.setAttribute('cy', state.currentY);
+            avatarText.setAttribute('x', state.currentX);
+            avatarText.setAttribute('y', state.currentY + 5);
+            
+            const dx = Math.abs(state.targetX - state.currentX);
+            const dy = Math.abs(state.targetY - state.currentY);
+            
+            if (dx > 0.5 || dy > 0.5) {
+                state.animId = requestAnimationFrame(animateFrame);
+            } else {
+                state.animId = null;
+            }
+        }
+
+        // ============ ARRIVAL & FREE ROAM TRANSITION ============
+        
+        function showArrival() {
+            pauseJourney(); 
+            arrivalModal.classList.add('show');
+        }
+        
+        // Function to switch to free roam mode
+        window.endRouteAndStartFreeRoam = function() {
+            // 1. Hide modal
+            arrivalModal.classList.remove('show');
+
+            // 2. Set new state
+            state.isFreeRoam = true;
+
+            // 3. Resume tracking for movement
+            resumeJourney(); 
+            
+            // 4. Update UI
+            updateUI();
+            updateInstruction();
+            
+            // 5. Hide the route path visually
+            routePath.style.opacity = 0.2;
+            routePath.classList.remove('route-animated');
+        }
+
+
+        // ============ COUPON COPY ============
+        document.getElementById('copyBtn').addEventListener('click', function() {
+            navigator.clipboard.writeText('ZARA25').then(() => {
+                this.textContent = 'Copied! ✓';
+                this.classList.add('copied');
+                setTimeout(() => {
+                    this.textContent = 'Copy Code';
+                    this.classList.remove('copied');
+                }, 2000);
+            });
+        });
+
+        // ============ START ============
+        init();
+    </script>
+</body>
+</html>
