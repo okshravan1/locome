@@ -1,0 +1,989 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Route - Infinity Mall</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(180deg, #FFFFFF 0%, #F1EDFF 25%, #D9CCFF 60%, #C1A4FF 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            overflow: hidden;
+        }
+
+        .phone-wrapper {
+            width: 360px;
+            height: 780px;
+            border-radius: 40px;
+            background: linear-gradient(180deg, #A77BFF 0%, #8C5BFF 40%, #6C3BFF 100%);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            border: 12px solid #1a1a1a;
+        }
+
+        .phone-content {
+            width: 100%;
+            height: 100%;
+            background: transparent;
+            overflow-y: hidden;
+            padding-top: 50px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .status-bar {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 50px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 20px;
+            color: #fff;
+            font-size: 13px;
+            font-weight: 500;
+            z-index: 99;
+        }
+
+        .header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 10px 20px 12px;
+        }
+
+        .back-btn {
+            width: 40px;
+            height: 40px;
+            background: rgba(255, 255, 255, 0.12);
+            backdrop-filter: blur(6px);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: none;
+            cursor: pointer;
+            color: #fff;
+            font-size: 20px;
+        }
+
+        .header-title {
+            color: #fff;
+            font-size: 18px;
+            font-weight: 600;
+        }
+
+        .floor-badge {
+            background: rgba(207, 255, 226, 0.2);
+            color: #CFFFE2;
+            padding: 5px 12px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: 600;
+        }
+
+        .progress-stats {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 20px;
+            margin: 6px 20px;
+            background: rgba(255, 255, 255, 0.12);
+            backdrop-filter: blur(6px);
+            border-radius: 20px;
+            flex-shrink: 0;
+        }
+
+        .stat-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .stat-label {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 11px;
+            font-weight: 500;
+        }
+
+        .stat-value {
+            color: #fff;
+            font-size: 16px;
+            font-weight: 700;
+        }
+
+        .map-container {
+            position: relative;
+            width: 100%;
+            flex: 1;
+            padding: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            min-height: 0;
+        }
+
+        .mall-map {
+            width: 100%;
+            height: 100%;
+            max-height: 100%;
+        }
+
+        .store-popup {
+            position: absolute;
+            top: 15px;
+            left: 50%;
+            transform: translateX(-50%) translateY(-20px);
+            background: linear-gradient(135deg, #CFFFE2 0%, #A8F5C8 100%);
+            color: #0F1724;
+            padding: 12px 20px;
+            border-radius: 18px;
+            font-size: 14px;
+            font-weight: 600;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.25);
+            opacity: 0;
+            z-index: 50;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            white-space: nowrap;
+            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+            pointer-events: none;
+        }
+
+        .store-popup.show {
+            opacity: 1;
+            transform: translateX(-50%) translateY(0);
+        }
+
+        .offer-tag {
+            background: #FF5252;
+            color: #fff;
+            padding: 4px 10px;
+            border-radius: 10px;
+            font-size: 11px;
+            font-weight: 700;
+        }
+
+        .controls {
+            padding: 12px 20px 16px;
+            flex-shrink: 0;
+        }
+
+        .lets-go-btn {
+            width: 100%;
+            background: #CFFFE2;
+            border: none;
+            color: #0F1724;
+            padding: 18px;
+            border-radius: 25px;
+            font-size: 18px;
+            font-weight: 700;
+            cursor: pointer;
+            font-family: 'Poppins', sans-serif;
+            transition: all 0.3s ease;
+            box-shadow: 0 8px 25px rgba(207, 255, 226, 0.3);
+        }
+
+        .lets-go-btn:active {
+            transform: scale(0.97);
+        }
+
+        .lets-go-btn.tracking {
+            background: linear-gradient(90deg, #FFE066, #FFB800);
+        }
+
+        .bottom-nav {
+            height: 75px;
+            background: rgba(30, 30, 40, 0.95);
+            backdrop-filter: blur(10px);
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            padding: 0 20px 18px;
+            border-radius: 28px 28px 0 0;
+            flex-shrink: 0;
+        }
+
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 5px;
+            color: #8E8E93;
+            text-decoration: none;
+            font-size: 10px;
+        }
+
+        .nav-item.active {
+            color: #BFA1FF;
+        }
+
+        .nav-icon {
+            font-size: 22px;
+        }
+
+        /* Arrival Modal */
+        .arrival-modal {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.75);
+            backdrop-filter: blur(10px);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 200;
+        }
+
+        .arrival-modal.show {
+            display: flex;
+        }
+
+        .modal-content {
+            background: #fff;
+            border-radius: 30px;
+            padding: 35px 28px;
+            margin: 0 25px;
+            text-align: center;
+            animation: slideUp 0.5s ease;
+        }
+
+        .success-icon {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, #CFFFE2 0%, #BFA1FF 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 18px;
+            font-size: 38px;
+        }
+
+        .modal-title {
+            color: #0F1724;
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .modal-subtitle {
+            color: #666;
+            font-size: 14px;
+            margin-bottom: 25px;
+        }
+
+        .coupon-box {
+            background: #F5F5F7;
+            border: 2px dashed #BFA1FF;
+            border-radius: 16px;
+            padding: 18px;
+            margin-bottom: 20px;
+        }
+
+        .coupon-label {
+            color: #7C7C8A;
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 6px;
+        }
+
+        .coupon-code {
+            color: #0F1724;
+            font-size: 26px;
+            font-weight: 700;
+            letter-spacing: 3px;
+            margin-bottom: 10px;
+        }
+
+        .copy-btn {
+            background: linear-gradient(90deg, #D5BEFF 0%, #BFA1FF 100%);
+            color: #0F1724;
+            border: none;
+            padding: 10px 24px;
+            border-radius: 14px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        .copy-btn.copied {
+            background: #CFFFE2;
+        }
+
+        .modal-btn {
+            width: 100%;
+            background: linear-gradient(90deg, #D5BEFF 0%, #BFA1FF 100%);
+            color: #0F1724;
+            border: none;
+            padding: 16px;
+            border-radius: 18px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        .confetti {
+            position: absolute;
+            border-radius: 50%;
+            animation: confettiFall 2.5s ease-out forwards;
+            pointer-events: none;
+        }
+
+        @keyframes confettiFall {
+            0% { transform: translateY(0) rotate(0deg); opacity: 1; }
+            100% { transform: translateY(650px) rotate(720deg); opacity: 0; }
+        }
+
+        @keyframes slideUp {
+            from { transform: translateY(80px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        @keyframes avatarPulse {
+            0%, 100% { filter: drop-shadow(0 0 8px rgba(207, 255, 226, 0.6)); }
+            50% { filter: drop-shadow(0 0 18px rgba(207, 255, 226, 1)); }
+        }
+
+        .avatar-walking {
+            animation: avatarPulse 0.8s ease-in-out infinite;
+        }
+
+        @keyframes routeDash {
+            to { stroke-dashoffset: -24; }
+        }
+
+        .route-animated {
+            stroke-dasharray: 12, 12;
+            animation: routeDash 1s linear infinite;
+        }
+    </style>
+</head>
+<body>
+    <div class="phone-wrapper">
+        <div class="status-bar">
+            <span>9:41</span>
+            <span>📶 📡 🔋</span>
+        </div>
+
+        <div class="phone-content">
+            <div class="header">
+                <button class="back-btn">←</button>
+                <div class="header-title">Route to KFC</div>
+                <div class="floor-badge">Ground Floor</div>
+            </div>
+
+            <div class="progress-stats">
+                <div class="stat-item">
+                    <div class="stat-label">Steps</div>
+                    <div class="stat-value" id="stepsWalked">0/18</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-label">Distance</div>
+                    <div class="stat-value" id="distance">150m</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-label">Time</div>
+                    <div class="stat-value" id="timeLeft">2:30</div>
+                </div>
+            </div>
+
+            <div class="map-container">
+                <!-- Offer Popup -->
+                <div class="store-popup" id="storePopup">
+                    <span id="popupIcon">🏪</span>
+                    <span id="popupName">Store</span>
+                    <span class="offer-tag" id="popupOffer">20% OFF</span>
+                </div>
+
+                <svg class="mall-map" viewBox="0 0 320 480" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet">
+                    <!-- Mall Boundary -->
+                    <rect x="8" y="8" width="304" height="464" fill="rgba(255,255,255,0.03)" stroke="rgba(255,255,255,0.25)" stroke-width="2" rx="14"/>
+                    
+                    <!-- Main Corridors -->
+                    <rect x="145" y="25" width="30" height="430" fill="rgba(255,255,255,0.05)" rx="4"/>
+                    <rect x="18" y="95" width="284" height="22" fill="rgba(255,255,255,0.04)" rx="4"/>
+                    <rect x="18" y="195" width="284" height="22" fill="rgba(255,255,255,0.04)" rx="4"/>
+                    <rect x="18" y="295" width="284" height="22" fill="rgba(255,255,255,0.04)" rx="4"/>
+                    <rect x="18" y="395" width="284" height="22" fill="rgba(255,255,255,0.04)" rx="4"/>
+
+                    <!-- ========== MAIN GATE ========== -->
+                    <rect x="125" y="438" width="70" height="26" fill="rgba(207,255,226,0.15)" stroke="#CFFFE2" stroke-width="2" rx="8"/>
+                    <text x="160" y="456" fill="#CFFFE2" font-size="9" text-anchor="middle" font-weight="700">🚪 MAIN GATE</text>
+
+                    <!-- ========== ROW 1 (Top) ========== -->
+                    <rect x="18" y="25" width="55" height="60" fill="rgba(255,255,255,0.06)" stroke="rgba(255,255,255,0.2)" stroke-width="1.5" rx="8"/>
+                    <text x="45" y="58" fill="rgba(255,255,255,0.7)" font-size="9" text-anchor="middle">Zara</text>
+
+                    <rect x="80" y="25" width="55" height="60" fill="rgba(255,255,255,0.06)" stroke="rgba(255,255,255,0.2)" stroke-width="1.5" rx="8"/>
+                    <text x="107" y="58" fill="rgba(255,255,255,0.7)" font-size="9" text-anchor="middle">H&M</text>
+
+                    <rect x="185" y="25" width="55" height="60" fill="rgba(255,255,255,0.06)" stroke="rgba(255,255,255,0.2)" stroke-width="1.5" rx="8"/>
+                    <text x="212" y="58" fill="rgba(255,255,255,0.7)" font-size="9" text-anchor="middle">Nike</text>
+
+                    <rect x="247" y="25" width="55" height="60" fill="rgba(255,255,255,0.06)" stroke="rgba(255,255,255,0.2)" stroke-width="1.5" rx="8"/>
+                    <text x="274" y="58" fill="rgba(255,255,255,0.7)" font-size="9" text-anchor="middle">Adidas</text>
+
+                    <!-- ========== ROW 2 - With Titan Offer ========== -->
+                    <rect x="18" y="125" width="55" height="60" fill="rgba(255,215,0,0.1)" stroke="rgba(255,215,0,0.5)" stroke-width="2" rx="8"/>
+                    <text x="45" y="152" fill="rgba(255,215,0,0.9)" font-size="9" text-anchor="middle" font-weight="600">⌚ Titan</text>
+                    <text x="45" y="168" fill="rgba(255,215,0,0.7)" font-size="8" text-anchor="middle">20% OFF</text>
+
+                    <rect x="80" y="125" width="55" height="60" fill="rgba(255,105,180,0.1)" stroke="rgba(255,105,180,0.5)" stroke-width="2" rx="8"/>
+                    <text x="107" y="152" fill="rgba(255,105,180,0.9)" font-size="9" text-anchor="middle" font-weight="600">👕 Snitch</text>
+                    <text x="107" y="168" fill="rgba(255,105,180,0.7)" font-size="8" text-anchor="middle">20% OFF</text>
+
+                    <rect x="185" y="125" width="55" height="60" fill="rgba(255,255,255,0.06)" stroke="rgba(255,255,255,0.2)" stroke-width="1.5" rx="8"/>
+                    <text x="212" y="158" fill="rgba(255,255,255,0.7)" font-size="9" text-anchor="middle">Puma</text>
+
+                    <rect x="247" y="125" width="55" height="60" fill="rgba(255,255,255,0.06)" stroke="rgba(255,255,255,0.2)" stroke-width="1.5" rx="8"/>
+                    <text x="274" y="158" fill="rgba(255,255,255,0.7)" font-size="8" text-anchor="middle">Pantaloons</text>
+
+                    <!-- ========== ROW 3 - With GameZone ========== -->
+                    <rect x="18" y="225" width="55" height="60" fill="rgba(255,255,255,0.06)" stroke="rgba(255,255,255,0.2)" stroke-width="1.5" rx="8"/>
+                    <text x="45" y="258" fill="rgba(255,255,255,0.7)" font-size="9" text-anchor="middle">Sephora</text>
+
+                    <rect x="80" y="225" width="55" height="60" fill="rgba(255,68,68,0.12)" stroke="rgba(255,68,68,0.5)" stroke-width="2" rx="8"/>
+                    <text x="107" y="250" fill="rgba(255,68,68,0.9)" font-size="8" text-anchor="middle" font-weight="600">🎮 GameZone</text>
+                    <text x="107" y="266" fill="rgba(255,68,68,0.8)" font-size="9" text-anchor="middle" font-weight="700">60% OFF</text>
+
+                    <rect x="185" y="225" width="55" height="60" fill="rgba(255,255,255,0.06)" stroke="rgba(255,255,255,0.2)" stroke-width="1.5" rx="8"/>
+                    <text x="212" y="258" fill="rgba(255,255,255,0.7)" font-size="9" text-anchor="middle">Croma</text>
+
+                    <rect x="247" y="225" width="55" height="60" fill="rgba(255,255,255,0.06)" stroke="rgba(255,255,255,0.2)" stroke-width="1.5" rx="8"/>
+                    <text x="274" y="258" fill="rgba(255,255,255,0.7)" font-size="8" text-anchor="middle">Samsung</text>
+
+                    <!-- ========== ROW 4 - Food Court ========== -->
+                    <rect x="18" y="325" width="55" height="60" fill="rgba(255,99,71,0.12)" stroke="rgba(255,99,71,0.5)" stroke-width="2" rx="8"/>
+                    <text x="45" y="350" fill="rgba(255,99,71,0.9)" font-size="8" text-anchor="middle" font-weight="600">🍛 Haldiram</text>
+                    <text x="45" y="366" fill="rgba(255,99,71,0.8)" font-size="9" text-anchor="middle" font-weight="700">80% OFF</text>
+
+                    <rect x="80" y="325" width="55" height="60" fill="rgba(255,182,193,0.1)" stroke="rgba(255,182,193,0.5)" stroke-width="2" rx="8"/>
+                    <text x="107" y="350" fill="rgba(255,182,193,0.9)" font-size="8" text-anchor="middle" font-weight="600">🍦 Baskin</text>
+                    <text x="107" y="366" fill="rgba(255,182,193,0.7)" font-size="8" text-anchor="middle">15% OFF</text>
+
+                    <rect x="185" y="325" width="55" height="60" fill="rgba(255,165,0,0.1)" stroke="rgba(255,165,0,0.5)" stroke-width="2" rx="8"/>
+                    <text x="212" y="350" fill="rgba(255,165,0,0.9)" font-size="8" text-anchor="middle" font-weight="600">🍕 Pizza Hut</text>
+                    <text x="212" y="366" fill="rgba(255,165,0,0.7)" font-size="8" text-anchor="middle">30% OFF</text>
+
+                    <!-- KFC - DESTINATION -->
+                    <rect x="247" y="325" width="55" height="60" fill="rgba(207,255,226,0.2)" stroke="#CFFFE2" stroke-width="3" rx="8"/>
+                    <text x="274" y="352" fill="#CFFFE2" font-size="12" text-anchor="middle" font-weight="700">🍗 KFC</text>
+                    <text x="274" y="370" fill="rgba(207,255,226,0.7)" font-size="8" text-anchor="middle">Destination</text>
+
+                    <!-- ========== Utility Spots ========== -->
+                    <rect x="18" y="95" width="28" height="22" fill="rgba(255,255,255,0.04)" stroke="rgba(255,255,255,0.1)" rx="4"/>
+                    <text x="32" y="110" fill="rgba(255,255,255,0.4)" font-size="7" text-anchor="middle">ATM</text>
+
+                    <rect x="274" y="95" width="28" height="22" fill="rgba(255,255,255,0.04)" stroke="rgba(255,255,255,0.1)" rx="4"/>
+                    <text x="288" y="110" fill="rgba(255,255,255,0.4)" font-size="7" text-anchor="middle">Lift</text>
+
+                    <rect x="18" y="195" width="28" height="22" fill="rgba(255,255,255,0.04)" stroke="rgba(255,255,255,0.1)" rx="4"/>
+                    <text x="32" y="210" fill="rgba(255,255,255,0.4)" font-size="7" text-anchor="middle">WC</text>
+
+                    <rect x="274" y="195" width="28" height="22" fill="rgba(255,255,255,0.04)" stroke="rgba(255,255,255,0.1)" rx="4"/>
+                    <text x="288" y="210" fill="rgba(255,255,255,0.4)" font-size="7" text-anchor="middle">Info</text>
+
+                    <rect x="18" y="295" width="28" height="22" fill="rgba(255,255,255,0.04)" stroke="rgba(255,255,255,0.1)" rx="4"/>
+                    <text x="32" y="310" fill="rgba(255,255,255,0.4)" font-size="6" text-anchor="middle">Stairs</text>
+
+                    <rect x="274" y="295" width="28" height="22" fill="rgba(255,255,255,0.04)" stroke="rgba(255,255,255,0.1)" rx="4"/>
+                    <text x="288" y="310" fill="rgba(255,255,255,0.4)" font-size="7" text-anchor="middle">Exit</text>
+
+                    <rect x="18" y="395" width="45" height="22" fill="rgba(255,255,255,0.04)" stroke="rgba(255,255,255,0.1)" rx="4"/>
+                    <text x="40" y="410" fill="rgba(255,255,255,0.4)" font-size="6" text-anchor="middle">Parking →</text>
+
+                    <rect x="257" y="395" width="45" height="22" fill="rgba(255,255,255,0.04)" stroke="rgba(255,255,255,0.1)" rx="4"/>
+                    <text x="279" y="410" fill="rgba(255,255,255,0.4)" font-size="6" text-anchor="middle">← Restroom</text>
+
+                    <!-- ========== Route Path ========== -->
+                    <defs>
+                        <linearGradient id="routeGradient" x1="0%" y1="100%" x2="100%" y2="0%">
+                            <stop offset="0%" stop-color="#CFFFE2"/>
+                            <stop offset="50%" stop-color="#BFA1FF"/>
+                            <stop offset="100%" stop-color="#D5BEFF"/>
+                        </linearGradient>
+                        <filter id="glow">
+                            <feGaussianBlur stdDeviation="4" result="blur"/>
+                            <feMerge>
+                                <feMergeNode in="blur"/>
+                                <feMergeNode in="SourceGraphic"/>
+                            </feMerge>
+                        </filter>
+                    </defs>
+
+                    <!-- Route: Main Gate → Up → Right turns → KFC -->
+                    <path id="routePath" 
+                          d="M 160 430
+                             L 160 405
+                             L 160 355
+                             L 160 305
+                             L 160 255
+                             L 160 205
+                             L 160 155
+                             L 160 105
+                             L 212 105
+                             L 274 105
+                             L 274 155
+                             L 274 205
+                             L 274 255
+                             L 274 305
+                             L 274 355"
+                          fill="none"
+                          stroke="url(#routeGradient)"
+                          stroke-width="6"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          filter="url(#glow)"
+                          class="route-animated"/>
+
+                    <!-- Start Label -->
+                    <text id="startLabel" x="160" y="420" fill="rgba(255,255,255,0.6)" font-size="8" text-anchor="middle">📍 Start Here</text>
+
+                    <!-- Avatar -->
+                    <circle id="avatar" cx="160" cy="430" r="12" fill="#CFFFE2" stroke="#fff" stroke-width="3" filter="url(#glow)"/>
+                    <text id="avatarEmoji" x="160" y="434" fill="#0F1724" font-size="12" text-anchor="middle">👤</text>
+                </svg>
+            </div>
+
+            <div class="controls">
+                <button class="lets-go-btn" id="letsGoBtn">🚀 Let's Go</button>
+            </div>
+
+            <div class="bottom-nav">
+                <a href="#" class="nav-item">
+                    <div class="nav-icon">🏠</div>
+                    <span>Home</span>
+                </a>
+                <a href="#" class="nav-item">
+                    <div class="nav-icon">🏪</div>
+                    <span>Stores</span>
+                </a>
+                <a href="#" class="nav-item active">
+                    <div class="nav-icon">🗺️</div>
+                    <span>Route</span>
+                </a>
+                <a href="#" class="nav-item">
+                    <div class="nav-icon">⭐</div>
+                    <span>Saved</span>
+                </a>
+            </div>
+
+            <!-- Arrival Modal -->
+            <div class="arrival-modal" id="arrivalModal">
+                <div class="modal-content">
+                    <div class="success-icon">🍗</div>
+                    <div class="modal-title">You've Arrived!</div>
+                    <div class="modal-subtitle">Welcome to KFC - Finger Lickin' Good!</div>
+                    <div class="coupon-box">
+                        <div class="coupon-label">Your Reward</div>
+                        <div class="coupon-code">KFC30OFF</div>
+                        <button class="copy-btn" id="copyBtn">Copy Code</button>
+                    </div>
+                    <button class="modal-btn" onclick="location.reload()">Done</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // =============================================
+        // CONFIGURATION
+        // =============================================
+        const CONFIG = {
+            TOTAL_STEPS: 18,
+            TOTAL_DISTANCE: 150,
+            TOTAL_TIME: 150, // seconds
+            
+            // Step detection thresholds
+            ACCEL_THRESHOLD: 0.8,
+            DELTA_THRESHOLD: 2.0,
+            STEP_COOLDOWN: 320,
+            
+            // Animation
+            SMOOTH_FACTOR: 0.12,
+            
+            // Idle detection
+            IDLE_TIMEOUT: 1500,
+        };
+
+        // =============================================
+        // OFFERS - Only show while walking
+        // =============================================
+        const OFFERS = [
+            { startStep: 2, endStep: 4, icon: '⌚', name: 'Titan', discount: '20% OFF', color: '#FFD700' },
+            { startStep: 5, endStep: 7, icon: '👕', name: 'Snitch', discount: '20% OFF', color: '#FF69B4' },
+            { startStep: 8, endStep: 10, icon: '🎮', name: 'GameZone', discount: '60% OFF', color: '#FF4444' },
+            { startStep: 11, endStep: 13, icon: '🍛', name: 'Haldiram', discount: '80% OFF', color: '#FF6347' },
+            { startStep: 14, endStep: 15, icon: '🍦', name: 'Baskin Robbins', discount: '15% OFF', color: '#FFB6C1' },
+            { startStep: 16, endStep: 17, icon: '🍕', name: 'Pizza Hut', discount: '30% OFF', color: '#FFA500' },
+        ];
+
+        // =============================================
+        // DOM ELEMENTS
+        // =============================================
+        const avatar = document.getElementById('avatar');
+        const avatarEmoji = document.getElementById('avatarEmoji');
+        const routePath = document.getElementById('routePath');
+        const startLabel = document.getElementById('startLabel');
+        const letsGoBtn = document.getElementById('letsGoBtn');
+        
+        const stepsEl = document.getElementById('stepsWalked');
+        const distanceEl = document.getElementById('distance');
+        const timeEl = document.getElementById('timeLeft');
+        
+        const storePopup = document.getElementById('storePopup');
+        const popupIcon = document.getElementById('popupIcon');
+        const popupName = document.getElementById('popupName');
+        const popupOffer = document.getElementById('popupOffer');
+        
+        const arrivalModal = document.getElementById('arrivalModal');
+        const copyBtn = document.getElementById('copyBtn');
+
+        // =============================================
+        // STATE
+        // =============================================
+        let state = {
+            steps: 0,
+            isTracking: false,
+            isWalking: false,
+            lastStepTime: 0,
+            lastWalkTime: 0,
+            pathLength: 0,
+            
+            // Smooth animation
+            currentX: 160,
+            currentY: 430,
+            targetX: 160,
+            targetY: 430,
+            animId: null,
+            
+            // Motion detection
+            lastAccel: { x: 0, y: 0, z: 0 },
+            
+            // Idle checker
+            idleChecker: null,
+        };
+
+        // =============================================
+        // INIT
+        // =============================================
+        function init() {
+            state.pathLength = routePath.getTotalLength();
+            updateStats();
+        }
+
+        // =============================================
+        // MAIN BUTTON
+        // =============================================
+        letsGoBtn.addEventListener('click', async () => {
+            if (state.isTracking) {
+                stopTracking();
+                return;
+            }
+            
+            // Request iOS permissions
+            try {
+                if (typeof DeviceMotionEvent.requestPermission === 'function') {
+                    const motionPerm = await DeviceMotionEvent.requestPermission();
+                    if (motionPerm !== 'granted') {
+                        alert('Motion permission is required!\n\nPlease go to:\nSettings → Safari → Motion & Orientation Access\n\nAnd enable it.');
+                        return;
+                    }
+                }
+            } catch (e) {
+                console.error('Motion permission error:', e);
+            }
+            
+            try {
+                if (typeof DeviceOrientationEvent.requestPermission === 'function') {
+                    await DeviceOrientationEvent.requestPermission();
+                }
+            } catch (e) {
+                console.error('Orientation permission error:', e);
+            }
+            
+            startTracking();
+        });
+
+        // =============================================
+        // START / STOP TRACKING
+        // =============================================
+        function startTracking() {
+            state.isTracking = true;
+            state.lastStepTime = Date.now();
+            state.lastWalkTime = Date.now();
+            
+            letsGoBtn.textContent = '⏸️ Pause';
+            letsGoBtn.classList.add('tracking');
+            
+            avatar.classList.add('avatar-walking');
+            startLabel.style.opacity = '0';
+            
+            window.addEventListener('devicemotion', handleMotion, true);
+            
+            // Start idle checker
+            state.idleChecker = setInterval(checkIdle, 500);
+        }
+
+        function stopTracking() {
+            state.isTracking = false;
+            state.isWalking = false;
+            
+            letsGoBtn.textContent = '🚀 Let\'s Go';
+            letsGoBtn.classList.remove('tracking');
+            
+            avatar.classList.remove('avatar-walking');
+            
+            window.removeEventListener('devicemotion', handleMotion, true);
+            
+            if (state.idleChecker) {
+                clearInterval(state.idleChecker);
+                state.idleChecker = null;
+            }
+            
+            hideOffer();
+        }
+
+        // =============================================
+        // MOTION HANDLER - STEP DETECTION
+        // =============================================
+        function handleMotion(event) {
+            if (!state.isTracking) return;
+            
+            const now = Date.now();
+            if (now - state.lastStepTime < CONFIG.STEP_COOLDOWN) return;
+            
+            let stepDetected = false;
+            
+            // Method 1: Pure acceleration (best)
+            if (event.acceleration && event.acceleration.x !== null) {
+                const a = event.acceleration;
+                const magnitude = Math.sqrt(a.x * a.x + a.y * a.y + a.z * a.z);
+                
+                if (magnitude > CONFIG.ACCEL_THRESHOLD) {
+                    stepDetected = true;
+                }
+            }
+            
+            // Method 2: Delta from gravity (fallback)
+            if (!stepDetected && event.accelerationIncludingGravity) {
+                const g = event.accelerationIncludingGravity;
+                const dx = Math.abs((g.x || 0) - state.lastAccel.x);
+                const dy = Math.abs((g.y || 0) - state.lastAccel.y);
+                const dz = Math.abs((g.z || 0) - state.lastAccel.z);
+                const delta = dx + dy + dz;
+                
+                state.lastAccel = { x: g.x || 0, y: g.y || 0, z: g.z || 0 };
+                
+                if (delta > CONFIG.DELTA_THRESHOLD) {
+                    stepDetected = true;
+                }
+            }
+            
+            if (stepDetected) {
+                registerStep();
+            }
+        }
+
+        // =============================================
+        // STEP REGISTRATION
+        // =============================================
+        function registerStep() {
+            if (state.steps >= CONFIG.TOTAL_STEPS) return;
+            
+            const now = Date.now();
+            state.lastStepTime = now;
+            state.lastWalkTime = now;
+            state.isWalking = true;
+            state.steps++;
+            
+            // Move avatar along path
+            const progress = state.steps / CONFIG.TOTAL_STEPS;
+            const point = routePath.getPointAtLength(progress * state.pathLength);
+            animateAvatarTo(point.x, point.y);
+            
+            // Update UI
+            updateStats();
+            
+            // Check for offers (only while walking)
+            checkOffers();
+            
+            // Check arrival
+            if (state.steps >= CONFIG.TOTAL_STEPS) {
+                setTimeout(() => {
+                    stopTracking();
+                    showArrival();
+                }, 600);
+            }
+        }
+
+        // =============================================
+        // IDLE CHECK - Hide offers when stopped
+        // =============================================
+        function checkIdle() {
+            const now = Date.now();
+            const timeSinceWalk = now - state.lastWalkTime;
+            
+            if (timeSinceWalk > CONFIG.IDLE_TIMEOUT && state.isWalking) {
+                state.isWalking = false;
+                hideOffer();
+            }
+        }
+
+        // =============================================
+        // UPDATE STATS
+        // =============================================
+        function updateStats() {
+            const progress = state.steps / CONFIG.TOTAL_STEPS;
+            
+            stepsEl.textContent = `${state.steps}/${CONFIG.TOTAL_STEPS}`;
+            
+            const distRemaining = Math.round(CONFIG.TOTAL_DISTANCE * (1 - progress));
+            distanceEl.textContent = `${distRemaining}m`;
+            
+            const timeRemaining = Math.round(CONFIG.TOTAL_TIME * (1 - progress));
+            const mins = Math.floor(timeRemaining / 60);
+            const secs = timeRemaining % 60;
+            timeEl.textContent = `${mins}:${secs.toString().padStart(2, '0')}`;
+        }
+
+        // =============================================
+        // OFFERS
+        // =============================================
+        function checkOffers() {
+            if (!state.isWalking) {
+                hideOffer();
+                return;
+            }
+            
+            const offer = OFFERS.find(o => 
+                state.steps >= o.startStep && state.steps <= o.endStep
+            );
+            
+            if (offer) {
+                showOffer(offer);
+            } else {
+                hideOffer();
+            }
+        }
+
+        function showOffer(offer) {
+            popupIcon.textContent = offer.icon;
+            popupName.textContent = offer.name;
+            popupOffer.textContent = offer.discount;
+            popupOffer.style.background = offer.color;
+            storePopup.classList.add('show');
+        }
+
+        function hideOffer() {
+            storePopup.classList.remove('show');
+        }
+
+        // =============================================
+        // AVATAR ANIMATION - Smooth lerp
+        // =============================================
+        function animateAvatarTo(x, y) {
+            state.targetX = x;
+            state.targetY = y;
+            
+            if (!state.animId) {
+                animateFrame();
+            }
+        }
+
+        function animateFrame() {
+            state.currentX += (state.targetX - state.currentX) * CONFIG.SMOOTH_FACTOR;
+            state.currentY += (state.targetY - state.currentY) * CONFIG.SMOOTH_FACTOR;
+            
+            avatar.setAttribute('cx', state.currentX);
+            avatar.setAttribute('cy', state.currentY);
+            avatarEmoji.setAttribute('x', state.currentX);
+            avatarEmoji.setAttribute('y', state.currentY + 4);
+            
+            const dx = Math.abs(state.targetX - state.currentX);
+            const dy = Math.abs(state.targetY - state.currentY);
+            
+            if (dx > 0.5 || dy > 0.5) {
+                state.animId = requestAnimationFrame(animateFrame);
+            } else {
+                state.animId = null;
+            }
+        }
+
+        // =============================================
+        // ARRIVAL
+        // =============================================
+        function showArrival() {
+            arrivalModal.classList.add('show');
+            createConfetti();
+        }
+
+        function createConfetti() {
+            const colors = ['#CFFFE2', '#BFA1FF', '#D5BEFF', '#FFD700', '#FF69B4', '#FF6347'];
+            const container = document.querySelector('.phone-content');
+            
+            for (let i = 0; i < 40; i++) {
+                setTimeout(() => {
+                    const conf = document.createElement('div');
+                    conf.className = 'confetti';
+                    conf.style.left = Math.random() * 100 + '%';
+                    conf.style.top = '80px';
+                    conf.style.width = (6 + Math.random() * 8) + 'px';
+                    conf.style.height = conf.style.width;
+                    conf.style.background = colors[Math.floor(Math.random() * colors.length)];
+                    container.appendChild(conf);
+                    
+                    setTimeout(() => conf.remove(), 3000);
+                }, i * 50);
+            }
+        }
+
+        // =============================================
+        // COPY COUPON
+        // =============================================
+        copyBtn.addEventListener('click', function() {
+            navigator.clipboard.writeText('KFC30OFF').then(() => {
+                this.textContent = 'Copied! ✓';
+                this.classList.add('copied');
+                setTimeout(() => {
+                    this.textContent = 'Copy Code';
+                    this.classList.remove('copied');
+                }, 2000);
+            });
+        });
+
+        // =============================================
+        // START
+        // =============================================
+        init();
+    </script>
+</body>
+</html>
