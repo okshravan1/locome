@@ -1,0 +1,1186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>LOCOME - Indoor Navigation</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(180deg, #FFFFFF 0%, #F1EDFF 25%, #D9CCFF 60%, #C1A4FF 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            overflow: hidden;
+        }
+
+        .phone-wrapper {
+            width: 360px;
+            height: 780px;
+            border-radius: 45px;
+            background: linear-gradient(180deg, #A77BFF 0%, #8C5BFF 40%, #6C3BFF 100%);
+            box-shadow: 0 25px 80px rgba(0, 0, 0, 0.4), inset 0 0 0 2px rgba(255,255,255,0.1);
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            border: 10px solid #1a1a1a;
+        }
+
+        .dynamic-island {
+            position: absolute;
+            top: 8px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px;
+            height: 28px;
+            background: #000;
+            border-radius: 16px;
+            z-index: 999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 5px;
+            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        .dynamic-island.expanded {
+            width: 160px;
+        }
+
+        .dynamic-island .live-dot {
+            width: 6px;
+            height: 6px;
+            background: #34C759;
+            border-radius: 50%;
+            animation: livePulse 1.5s ease infinite;
+        }
+
+        .dynamic-island .live-text {
+            color: #34C759;
+            font-size: 10px;
+            font-weight: 600;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .dynamic-island.expanded .live-text {
+            opacity: 1;
+        }
+
+        @keyframes livePulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.6; transform: scale(0.8); }
+        }
+
+        .phone-content {
+            width: 100%;
+            height: 100%;
+            padding-top: 42px;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        /* Compact Top Bar - Everything in one line */
+        .top-bar {
+            display: flex;
+            align-items: center;
+            padding: 6px 12px;
+            gap: 8px;
+        }
+
+        .back-btn {
+            width: 32px;
+            height: 32px;
+            background: rgba(255, 255, 255, 0.15);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: none;
+            color: #fff;
+            font-size: 14px;
+            flex-shrink: 0;
+        }
+
+        .destination-chip {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            background: rgba(255,255,255,0.15);
+            padding: 6px 12px;
+            border-radius: 20px;
+            flex-shrink: 0;
+        }
+
+        .destination-chip .dest-icon {
+            font-size: 16px;
+        }
+
+        .destination-chip .dest-name {
+            color: #fff;
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        .floor-badge {
+            background: rgba(207, 255, 226, 0.2);
+            color: #CFFFE2;
+            padding: 4px 8px;
+            border-radius: 8px;
+            font-size: 9px;
+            font-weight: 600;
+            margin-left: auto;
+            flex-shrink: 0;
+        }
+
+        /* Compact Direction + Stats Row */
+        .nav-strip {
+            display: flex;
+            align-items: center;
+            padding: 8px 12px;
+            margin: 4px 10px;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 14px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            gap: 10px;
+        }
+
+        .nav-strip.turn-alert {
+            background: linear-gradient(135deg, #FFF9E6 0%, #FFE4B5 100%);
+            border: 2px solid #FFD93D;
+        }
+
+        .nav-strip.free-roam {
+            background: linear-gradient(135deg, #E8FFF0 0%, #CFFFE2 100%);
+        }
+
+        .nav-direction {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex: 1;
+        }
+
+        .dir-icon {
+            width: 36px;
+            height: 36px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            flex-shrink: 0;
+        }
+
+        .nav-strip.turn-alert .dir-icon {
+            background: linear-gradient(135deg, #FFD93D 0%, #FF9500 100%);
+            animation: iconPulse 0.6s ease infinite;
+        }
+
+        @keyframes iconPulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+
+        .dir-text {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .dir-title {
+            color: #1a1a2e;
+            font-size: 13px;
+            font-weight: 700;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .dir-subtitle {
+            color: #666;
+            font-size: 10px;
+        }
+
+        .nav-stats {
+            display: flex;
+            gap: 12px;
+            flex-shrink: 0;
+        }
+
+        .stat {
+            text-align: center;
+        }
+
+        .stat-val {
+            color: #1a1a2e;
+            font-size: 14px;
+            font-weight: 700;
+        }
+
+        .stat-lbl {
+            color: #888;
+            font-size: 8px;
+            text-transform: uppercase;
+        }
+
+        .turn-deg {
+            background: rgba(0,0,0,0.1);
+            padding: 4px 10px;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .turn-deg-val {
+            font-size: 16px;
+            font-weight: 800;
+            color: #FF9500;
+        }
+
+        .turn-deg-lbl {
+            font-size: 7px;
+            color: #666;
+        }
+
+        /* MAP - MAXIMUM SIZE */
+        .map-container {
+            flex: 1;
+            margin: 4px 4px;
+            border-radius: 20px;
+            overflow: hidden;
+            background: rgba(0,0,0,0.15);
+            position: relative;
+        }
+
+        .map-wrapper {
+            width: 100%;
+            height: 100%;
+            transition: transform 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        .map-wrapper.turned {
+            transform: rotate(-90deg);
+        }
+
+        .mall-map {
+            width: 100%;
+            height: 100%;
+        }
+
+        .store-rect {
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        /* Store Selection Popup */
+        .store-popup {
+            position: absolute;
+            bottom: 10px;
+            left: 8px;
+            right: 8px;
+            background: #fff;
+            border-radius: 20px;
+            padding: 16px;
+            box-shadow: 0 -8px 40px rgba(0,0,0,0.25);
+            transform: translateY(120%);
+            opacity: 0;
+            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+            z-index: 200;
+        }
+
+        .store-popup.show {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        .store-popup-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 12px;
+        }
+
+        .store-popup-icon {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 26px;
+        }
+
+        .store-popup-info h3 {
+            font-size: 18px;
+            font-weight: 700;
+            color: #1a1a2e;
+        }
+
+        .store-popup-offer {
+            display: inline-block;
+            background: linear-gradient(135deg, #FF416C 0%, #FF4B2B 100%);
+            color: #fff;
+            padding: 3px 10px;
+            border-radius: 6px;
+            font-size: 11px;
+            font-weight: 700;
+        }
+
+        .store-popup-stats {
+            display: flex;
+            justify-content: space-around;
+            background: #f8f8f8;
+            border-radius: 12px;
+            padding: 12px;
+            margin-bottom: 12px;
+        }
+
+        .popup-stat-value {
+            font-size: 18px;
+            font-weight: 800;
+            color: #667eea;
+        }
+
+        .popup-stat-label {
+            font-size: 9px;
+            color: #888;
+            text-transform: uppercase;
+        }
+
+        .store-popup-btn {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(135deg, #CFFFE2 0%, #A8F5C8 100%);
+            border: none;
+            border-radius: 14px;
+            font-size: 15px;
+            font-weight: 700;
+            color: #1a1a2e;
+            font-family: 'Poppins', sans-serif;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .store-popup-close {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            width: 28px;
+            height: 28px;
+            background: #f0f0f0;
+            border: none;
+            border-radius: 50%;
+            font-size: 14px;
+            cursor: pointer;
+        }
+
+        /* Offer Strip - At bottom, above button */
+        .offer-strip {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 12px;
+            margin: 0 10px;
+            background: linear-gradient(135deg, #fff 0%, #f8f8f8 100%);
+            border-radius: 14px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            transform: translateY(100px);
+            opacity: 0;
+            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        .offer-strip.show {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        .offer-strip-icon {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, #FF6B6B 0%, #FF8E53 100%);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            flex-shrink: 0;
+        }
+
+        .offer-strip-text {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .offer-strip-store {
+            font-size: 13px;
+            font-weight: 700;
+            color: #1a1a2e;
+        }
+
+        .offer-strip-deal {
+            font-size: 10px;
+            color: #666;
+        }
+
+        .offer-strip-badge {
+            background: linear-gradient(135deg, #FF416C 0%, #FF4B2B 100%);
+            color: #fff;
+            padding: 6px 12px;
+            border-radius: 8px;
+            font-size: 12px;
+            font-weight: 700;
+            flex-shrink: 0;
+        }
+
+        /* Bottom Section */
+        .bottom-section {
+            padding: 8px 10px 10px;
+        }
+
+        .start-btn {
+            width: 100%;
+            padding: 16px;
+            background: linear-gradient(135deg, #CFFFE2 0%, #A8F5C8 100%);
+            border: none;
+            border-radius: 18px;
+            font-family: 'Poppins', sans-serif;
+            font-size: 16px;
+            font-weight: 700;
+            color: #1a1a2e;
+            cursor: pointer;
+            box-shadow: 0 6px 25px rgba(207, 255, 226, 0.4);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .start-btn:active {
+            transform: scale(0.98);
+        }
+
+        .start-btn.active {
+            background: linear-gradient(135deg, #FFE066 0%, #FFD93D 100%);
+        }
+
+        .start-btn.exploring {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #fff;
+        }
+
+        /* Bottom Nav */
+        .bottom-nav {
+            height: 60px;
+            background: rgba(20, 20, 30, 0.98);
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            padding-bottom: 10px;
+            border-radius: 20px 20px 0 0;
+        }
+
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 2px;
+            color: #666;
+            text-decoration: none;
+            font-size: 9px;
+        }
+
+        .nav-item.active {
+            color: #CFFFE2;
+        }
+
+        .nav-icon {
+            font-size: 20px;
+        }
+
+        /* Modal */
+        .modal-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(15px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 500;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.4s ease;
+        }
+
+        .modal-overlay.show {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .modal-card {
+            background: #fff;
+            border-radius: 24px;
+            padding: 30px 24px;
+            margin: 20px;
+            text-align: center;
+            transform: scale(0.9) translateY(30px);
+            transition: transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        .modal-overlay.show .modal-card {
+            transform: scale(1) translateY(0);
+        }
+
+        .modal-icon {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, #CFFFE2 0%, #34C759 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 16px;
+            font-size: 40px;
+        }
+
+        .modal-title {
+            font-size: 24px;
+            font-weight: 800;
+            color: #1a1a2e;
+            margin-bottom: 6px;
+        }
+
+        .modal-subtitle {
+            color: #666;
+            font-size: 13px;
+            margin-bottom: 20px;
+        }
+
+        .coupon-card {
+            background: #F8F9FA;
+            border: 2px dashed #764ba2;
+            border-radius: 14px;
+            padding: 16px;
+            margin-bottom: 16px;
+        }
+
+        .coupon-label {
+            color: #888;
+            font-size: 10px;
+            text-transform: uppercase;
+        }
+
+        .coupon-code {
+            font-size: 26px;
+            font-weight: 800;
+            color: #764ba2;
+            letter-spacing: 3px;
+            margin: 6px 0 10px;
+        }
+
+        .copy-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #fff;
+            border: none;
+            padding: 10px 24px;
+            border-radius: 10px;
+            font-size: 13px;
+            font-weight: 600;
+            font-family: 'Poppins', sans-serif;
+            cursor: pointer;
+        }
+
+        .copy-btn.copied {
+            background: linear-gradient(135deg, #34C759 0%, #30D158 100%);
+        }
+
+        .modal-btn {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(135deg, #CFFFE2 0%, #A8F5C8 100%);
+            border: none;
+            border-radius: 14px;
+            font-size: 15px;
+            font-weight: 700;
+            color: #1a1a2e;
+            font-family: 'Poppins', sans-serif;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+
+        .confetti {
+            position: absolute;
+            border-radius: 2px;
+            animation: confettiFall 3s ease-out forwards;
+            pointer-events: none;
+        }
+
+        @keyframes confettiFall {
+            0% { transform: translateY(0) rotate(0deg); opacity: 1; }
+            100% { transform: translateY(700px) rotate(720deg); opacity: 0; }
+        }
+
+        @keyframes gpsPulse {
+            0% { transform: scale(1); opacity: 1; }
+            100% { transform: scale(3); opacity: 0; }
+        }
+
+        @keyframes avatarGlow {
+            0%, 100% { filter: drop-shadow(0 0 6px rgba(66, 133, 244, 0.8)); }
+            50% { filter: drop-shadow(0 0 16px rgba(66, 133, 244, 1)); }
+        }
+
+        .avatar-active {
+            animation: avatarGlow 1s ease-in-out infinite;
+        }
+
+        @keyframes routeFlow {
+            to { stroke-dashoffset: -30; }
+        }
+
+        .route-flow {
+            stroke-dasharray: 15, 15;
+            animation: routeFlow 1s linear infinite;
+        }
+    </style>
+</head>
+<body>
+    <div class="phone-wrapper">
+        <div class="dynamic-island" id="dynamicIsland">
+            <div class="live-dot"></div>
+            <span class="live-text">LIVE</span>
+        </div>
+
+        <div class="phone-content">
+            <!-- Compact Top Bar -->
+            <div class="top-bar">
+                <button class="back-btn">←</button>
+                <div class="destination-chip">
+                    <span class="dest-icon" id="destIcon">🍗</span>
+                    <span class="dest-name" id="destName">KFC</span>
+                </div>
+                <div class="floor-badge">Floor G</div>
+            </div>
+
+            <!-- Compact Nav Strip -->
+            <div class="nav-strip" id="navStrip">
+                <div class="nav-direction">
+                    <div class="dir-icon"><span id="dirIcon">⬆️</span></div>
+                    <div class="dir-text">
+                        <div class="dir-title" id="dirTitle">Head straight</div>
+                        <div class="dir-subtitle" id="dirSubtitle">20 steps then right</div>
+                    </div>
+                </div>
+                <div class="nav-stats" id="navStats">
+                    <div class="stat">
+                        <div class="stat-val" id="stepsVal">0</div>
+                        <div class="stat-lbl">Steps</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-val" id="etaVal">3:00</div>
+                        <div class="stat-lbl">ETA</div>
+                    </div>
+                </div>
+                <div class="turn-deg" id="turnDeg" style="display: none;">
+                    <div class="turn-deg-val" id="turnDegVal">0°</div>
+                    <div class="turn-deg-lbl">Turn</div>
+                </div>
+            </div>
+
+            <!-- BIG MAP -->
+            <div class="map-container">
+                <div class="map-wrapper" id="mapWrapper">
+                    <svg class="mall-map" id="mallMap" viewBox="0 0 340 520" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet">
+                        <!-- Background -->
+                        <rect x="2" y="2" width="336" height="516" fill="rgba(255,255,255,0.03)" stroke="rgba(255,255,255,0.2)" stroke-width="1" rx="10"/>
+                        
+                        <!-- Corridors -->
+                        <rect x="155" y="10" width="30" height="480" fill="rgba(255,255,255,0.04)" rx="3"/>
+                        <rect x="10" y="95" width="320" height="20" fill="rgba(255,255,255,0.03)" rx="2"/>
+                        <rect x="10" y="205" width="320" height="20" fill="rgba(255,255,255,0.03)" rx="2"/>
+                        <rect x="10" y="315" width="320" height="20" fill="rgba(255,255,255,0.03)" rx="2"/>
+                        <rect x="10" y="425" width="320" height="20" fill="rgba(255,255,255,0.03)" rx="2"/>
+
+                        <!-- Main Gate -->
+                        <rect x="130" y="465" width="80" height="28" fill="rgba(207,255,226,0.12)" stroke="#CFFFE2" stroke-width="1.5" rx="6"/>
+                        <text x="170" y="484" fill="#CFFFE2" font-size="10" text-anchor="middle" font-weight="600">🚪 MAIN GATE</text>
+
+                        <!-- ROW 1 -->
+                        <rect class="store-rect" data-store="zara" x="10" y="12" width="68" height="73" fill="rgba(255,255,255,0.06)" stroke="rgba(255,255,255,0.2)" stroke-width="1.5" rx="10"/>
+                        <text x="44" y="48" fill="rgba(255,255,255,0.8)" font-size="11" text-anchor="middle" font-weight="600">Zara</text>
+                        <text x="44" y="65" fill="rgba(255,255,255,0.4)" font-size="8" text-anchor="middle">Fashion</text>
+
+                        <rect class="store-rect" data-store="hm" x="83" y="12" width="68" height="73" fill="rgba(255,255,255,0.06)" stroke="rgba(255,255,255,0.2)" stroke-width="1.5" rx="10"/>
+                        <text x="117" y="48" fill="rgba(255,255,255,0.8)" font-size="11" text-anchor="middle" font-weight="600">H&M</text>
+                        <text x="117" y="65" fill="rgba(255,255,255,0.4)" font-size="8" text-anchor="middle">Fashion</text>
+
+                        <rect class="store-rect" data-store="nike" x="189" y="12" width="68" height="73" fill="rgba(255,255,255,0.06)" stroke="rgba(255,255,255,0.2)" stroke-width="1.5" rx="10"/>
+                        <text x="223" y="48" fill="rgba(255,255,255,0.8)" font-size="11" text-anchor="middle" font-weight="600">Nike</text>
+                        <text x="223" y="65" fill="rgba(255,255,255,0.4)" font-size="8" text-anchor="middle">Sports</text>
+
+                        <rect class="store-rect" data-store="adidas" x="262" y="12" width="68" height="73" fill="rgba(255,255,255,0.06)" stroke="rgba(255,255,255,0.2)" stroke-width="1.5" rx="10"/>
+                        <text x="296" y="48" fill="rgba(255,255,255,0.8)" font-size="11" text-anchor="middle" font-weight="600">Adidas</text>
+                        <text x="296" y="65" fill="rgba(255,255,255,0.4)" font-size="8" text-anchor="middle">Sports</text>
+
+                        <!-- ROW 2 -->
+                        <rect class="store-rect" data-store="titan" x="10" y="125" width="68" height="70" fill="rgba(255,215,0,0.1)" stroke="rgba(255,215,0,0.5)" stroke-width="2" rx="10"/>
+                        <text x="44" y="155" fill="rgba(255,215,0,0.95)" font-size="10" text-anchor="middle" font-weight="700">⌚ Titan</text>
+                        <text x="44" y="173" fill="rgba(255,215,0,0.7)" font-size="9" text-anchor="middle">20% OFF</text>
+
+                        <rect class="store-rect" data-store="snitch" x="83" y="125" width="68" height="70" fill="rgba(255,105,180,0.1)" stroke="rgba(255,105,180,0.5)" stroke-width="2" rx="10"/>
+                        <text x="117" y="155" fill="rgba(255,105,180,0.95)" font-size="10" text-anchor="middle" font-weight="700">👕 Snitch</text>
+                        <text x="117" y="173" fill="rgba(255,105,180,0.7)" font-size="9" text-anchor="middle">20% OFF</text>
+
+                        <rect class="store-rect" data-store="puma" x="189" y="125" width="68" height="70" fill="rgba(255,255,255,0.06)" stroke="rgba(255,255,255,0.2)" stroke-width="1.5" rx="10"/>
+                        <text x="223" y="163" fill="rgba(255,255,255,0.7)" font-size="11" text-anchor="middle" font-weight="600">Puma</text>
+
+                        <rect class="store-rect" data-store="levis" x="262" y="125" width="68" height="70" fill="rgba(255,255,255,0.06)" stroke="rgba(255,255,255,0.2)" stroke-width="1.5" rx="10"/>
+                        <text x="296" y="163" fill="rgba(255,255,255,0.7)" font-size="11" text-anchor="middle" font-weight="600">Levi's</text>
+
+                        <!-- ROW 3 -->
+                        <rect class="store-rect" data-store="sephora" x="10" y="235" width="68" height="70" fill="rgba(255,255,255,0.06)" stroke="rgba(255,255,255,0.2)" stroke-width="1.5" rx="10"/>
+                        <text x="44" y="273" fill="rgba(255,255,255,0.7)" font-size="10" text-anchor="middle" font-weight="600">Sephora</text>
+
+                        <rect class="store-rect" data-store="gamezone" x="83" y="235" width="68" height="70" fill="rgba(255,68,68,0.12)" stroke="rgba(255,68,68,0.6)" stroke-width="2" rx="10"/>
+                        <text x="117" y="260" fill="rgba(255,68,68,0.95)" font-size="9" text-anchor="middle" font-weight="700">🎮 GameZone</text>
+                        <text x="117" y="280" fill="rgba(255,68,68,0.85)" font-size="11" text-anchor="middle" font-weight="800">60% OFF</text>
+
+                        <rect class="store-rect" data-store="croma" x="189" y="235" width="68" height="70" fill="rgba(255,255,255,0.06)" stroke="rgba(255,255,255,0.2)" stroke-width="1.5" rx="10"/>
+                        <text x="223" y="273" fill="rgba(255,255,255,0.7)" font-size="11" text-anchor="middle" font-weight="600">Croma</text>
+
+                        <rect class="store-rect" data-store="samsung" x="262" y="235" width="68" height="70" fill="rgba(255,255,255,0.06)" stroke="rgba(255,255,255,0.2)" stroke-width="1.5" rx="10"/>
+                        <text x="296" y="273" fill="rgba(255,255,255,0.7)" font-size="10" text-anchor="middle" font-weight="600">Samsung</text>
+
+                        <!-- ROW 4 - Food Court -->
+                        <rect class="store-rect" data-store="haldiram" x="10" y="345" width="68" height="70" fill="rgba(255,99,71,0.12)" stroke="rgba(255,99,71,0.6)" stroke-width="2" rx="10"/>
+                        <text x="44" y="370" fill="rgba(255,99,71,0.95)" font-size="9" text-anchor="middle" font-weight="700">🍛 Haldiram</text>
+                        <text x="44" y="390" fill="rgba(255,99,71,0.85)" font-size="11" text-anchor="middle" font-weight="800">80% OFF</text>
+
+                        <rect class="store-rect" data-store="baskin" x="83" y="345" width="68" height="70" fill="rgba(255,182,193,0.1)" stroke="rgba(255,182,193,0.5)" stroke-width="2" rx="10"/>
+                        <text x="117" y="372" fill="rgba(255,182,193,0.95)" font-size="10" text-anchor="middle" font-weight="700">🍦 Baskin</text>
+                        <text x="117" y="392" fill="rgba(255,182,193,0.7)" font-size="9" text-anchor="middle">15% OFF</text>
+
+                        <rect class="store-rect" data-store="pizzahut" x="189" y="345" width="68" height="70" fill="rgba(255,165,0,0.1)" stroke="rgba(255,165,0,0.5)" stroke-width="2" rx="10"/>
+                        <text x="223" y="370" fill="rgba(255,165,0,0.95)" font-size="9" text-anchor="middle" font-weight="700">🍕 Pizza Hut</text>
+                        <text x="223" y="390" fill="rgba(255,165,0,0.7)" font-size="9" text-anchor="middle">30% OFF</text>
+
+                        <!-- KFC -->
+                        <rect class="store-rect" data-store="kfc" x="262" y="345" width="68" height="70" fill="rgba(207,255,226,0.2)" stroke="#CFFFE2" stroke-width="3" rx="10"/>
+                        <text x="296" y="375" fill="#CFFFE2" font-size="13" text-anchor="middle" font-weight="800">🍗 KFC</text>
+                        <text x="296" y="395" fill="rgba(207,255,226,0.7)" font-size="9" text-anchor="middle">30% OFF</text>
+
+                        <!-- Utilities -->
+                        <text x="25" y="108" fill="rgba(255,255,255,0.3)" font-size="8">ATM</text>
+                        <text x="305" y="108" fill="rgba(255,255,255,0.3)" font-size="8">Lift</text>
+                        <text x="25" y="218" fill="rgba(255,255,255,0.3)" font-size="8">WC</text>
+                        <text x="305" y="218" fill="rgba(255,255,255,0.3)" font-size="8">Info</text>
+                        <text x="25" y="328" fill="rgba(255,255,255,0.3)" font-size="8">Stairs</text>
+                        <text x="305" y="328" fill="rgba(255,255,255,0.3)" font-size="8">Exit</text>
+
+                        <!-- Turn Point -->
+                        <circle id="turnPoint" cx="170" cy="105" r="10" fill="rgba(255,200,0,0.15)" stroke="rgba(255,200,0,0.6)" stroke-width="2" stroke-dasharray="3,3"/>
+                        <text x="170" y="109" fill="rgba(255,200,0,0.95)" font-size="9" text-anchor="middle">↱</text>
+
+                        <!-- Route -->
+                        <defs>
+                            <linearGradient id="routeGrad" x1="0%" y1="100%" x2="100%" y2="0%">
+                                <stop offset="0%" stop-color="#4285F4"/>
+                                <stop offset="100%" stop-color="#34A853"/>
+                            </linearGradient>
+                            <filter id="routeGlow">
+                                <feGaussianBlur stdDeviation="2.5" result="blur"/>
+                                <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+                            </filter>
+                        </defs>
+
+                        <path id="routePath" 
+                              d="M 170 455 L 170 105 L 296 105 L 296 380"
+                              fill="none"
+                              stroke="url(#routeGrad)"
+                              stroke-width="5"
+                              stroke-linecap="round"
+                              stroke-linejoin="round"
+                              filter="url(#routeGlow)"
+                              class="route-flow"
+                              opacity="0.9"/>
+
+                        <!-- GPS Pulse -->
+                        <circle id="pulse1" cx="170" cy="455" r="10" fill="none" stroke="#4285F4" stroke-width="2" opacity="0"/>
+                        <circle id="pulse2" cx="170" cy="455" r="10" fill="none" stroke="#4285F4" stroke-width="2" opacity="0"/>
+
+                        <!-- Avatar -->
+                        <circle id="avatarOuter" cx="170" cy="455" r="12" fill="rgba(66,133,244,0.3)"/>
+                        <circle id="avatar" cx="170" cy="455" r="8" fill="#4285F4" stroke="#fff" stroke-width="2.5"/>
+                        <polygon id="dirArrow" points="170,445 166,453 174,453" fill="#fff" opacity="0.9"/>
+                    </svg>
+                </div>
+
+                <!-- Store Popup -->
+                <div class="store-popup" id="storePopup">
+                    <button class="store-popup-close" id="storePopupClose">✕</button>
+                    <div class="store-popup-header">
+                        <div class="store-popup-icon" id="storePopupIcon">🏪</div>
+                        <div class="store-popup-info">
+                            <h3 id="storePopupName">Store</h3>
+                            <span class="store-popup-offer" id="storePopupOffer">20% OFF</span>
+                        </div>
+                    </div>
+                    <div class="store-popup-stats">
+                        <div class="popup-stat"><div class="popup-stat-value" id="popupSteps">15</div><div class="popup-stat-label">Steps</div></div>
+                        <div class="popup-stat"><div class="popup-stat-value" id="popupDist">90m</div><div class="popup-stat-label">Distance</div></div>
+                        <div class="popup-stat"><div class="popup-stat-value" id="popupEta">1:30</div><div class="popup-stat-label">ETA</div></div>
+                    </div>
+                    <button class="store-popup-btn" id="storePopupBtn">🚀 Let's Go</button>
+                </div>
+            </div>
+
+            <!-- Offer Strip (appears at bottom when walking) -->
+            <div class="offer-strip" id="offerStrip">
+                <div class="offer-strip-icon" id="offerStripIcon">🍛</div>
+                <div class="offer-strip-text">
+                    <div class="offer-strip-store" id="offerStripStore">Haldiram's</div>
+                    <div class="offer-strip-deal" id="offerStripDeal">Special discount!</div>
+                </div>
+                <div class="offer-strip-badge" id="offerStripBadge">80% OFF</div>
+            </div>
+
+            <!-- Bottom -->
+            <div class="bottom-section">
+                <button class="start-btn" id="startBtn">
+                    <span>🚀</span>
+                    <span id="btnText">Start Navigation</span>
+                </button>
+            </div>
+
+            <div class="bottom-nav">
+                <a href="#" class="nav-item"><div class="nav-icon">🏠</div><span>Home</span></a>
+                <a href="#" class="nav-item"><div class="nav-icon">🏪</div><span>Stores</span></a>
+                <a href="#" class="nav-item active"><div class="nav-icon">🗺️</div><span>Navigate</span></a>
+                <a href="#" class="nav-item"><div class="nav-icon">⭐</div><span>Saved</span></a>
+            </div>
+
+            <!-- Modal -->
+            <div class="modal-overlay" id="arrivalModal">
+                <div class="modal-card">
+                    <div class="modal-icon" id="modalIcon">🍗</div>
+                    <div class="modal-title" id="modalTitle">You've Arrived!</div>
+                    <div class="modal-subtitle" id="modalSubtitle">Welcome to KFC</div>
+                    <div class="coupon-card">
+                        <div class="coupon-label">Your Reward</div>
+                        <div class="coupon-code" id="modalCoupon">KFC30OFF</div>
+                        <button class="copy-btn" id="copyBtn">Copy Code</button>
+                    </div>
+                    <button class="modal-btn" id="closeModalBtn">Explore Mall</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const STORES = {
+            zara: { name: 'Zara', icon: '👗', offer: '25% OFF', x: 44, y: 50, steps: 38, dist: '230m', eta: '3:50', color: '#667eea' },
+            hm: { name: 'H&M', icon: '👕', offer: '30% OFF', x: 117, y: 50, steps: 35, dist: '210m', eta: '3:30', color: '#764ba2' },
+            nike: { name: 'Nike', icon: '👟', offer: '15% OFF', x: 223, y: 50, steps: 32, dist: '190m', eta: '3:10', color: '#FF6B6B' },
+            adidas: { name: 'Adidas', icon: '👟', offer: '20% OFF', x: 296, y: 50, steps: 34, dist: '200m', eta: '3:20', color: '#4ECDC4' },
+            titan: { name: 'Titan', icon: '⌚', offer: '20% OFF', x: 44, y: 160, steps: 28, dist: '170m', eta: '2:50', color: '#FFD700' },
+            snitch: { name: 'Snitch', icon: '👕', offer: '20% OFF', x: 117, y: 160, steps: 25, dist: '150m', eta: '2:30', color: '#FF69B4' },
+            puma: { name: 'Puma', icon: '👟', offer: '10% OFF', x: 223, y: 160, steps: 22, dist: '130m', eta: '2:10', color: '#45B7D1' },
+            levis: { name: 'Levi\'s', icon: '👖', offer: '35% OFF', x: 296, y: 160, steps: 24, dist: '145m', eta: '2:25', color: '#E74C3C' },
+            sephora: { name: 'Sephora', icon: '💄', offer: '15% OFF', x: 44, y: 270, steps: 18, dist: '110m', eta: '1:50', color: '#FF8ED4' },
+            gamezone: { name: 'GameZone', icon: '🎮', offer: '60% OFF', x: 117, y: 270, steps: 15, dist: '90m', eta: '1:30', color: '#FF4444' },
+            croma: { name: 'Croma', icon: '📱', offer: '10% OFF', x: 223, y: 270, steps: 14, dist: '85m', eta: '1:25', color: '#2ECC71' },
+            samsung: { name: 'Samsung', icon: '📱', offer: '12% OFF', x: 296, y: 270, steps: 16, dist: '95m', eta: '1:35', color: '#3498DB' },
+            haldiram: { name: 'Haldiram\'s', icon: '🍛', offer: '80% OFF', x: 44, y: 380, steps: 10, dist: '60m', eta: '1:00', color: '#FF6347' },
+            baskin: { name: 'Baskin Robbins', icon: '🍦', offer: '15% OFF', x: 117, y: 380, steps: 8, dist: '50m', eta: '0:50', color: '#FFB6C1' },
+            pizzahut: { name: 'Pizza Hut', icon: '🍕', offer: '30% OFF', x: 223, y: 380, steps: 6, dist: '35m', eta: '0:35', color: '#FFA500' },
+            kfc: { name: 'KFC', icon: '🍗', offer: '30% OFF', x: 296, y: 380, steps: 30, dist: '180m', eta: '3:00', color: '#E74C3C' },
+        };
+
+        const OFFERS = [
+            { start: 3, end: 6, icon: '🍛', store: 'Haldiram\'s', deal: 'Festival Special!', badge: '80% OFF', color: '#FF6347' },
+            { start: 8, end: 11, icon: '🎮', store: 'GameZone', deal: 'Gaming Paradise', badge: '60% OFF', color: '#FF4444' },
+            { start: 13, end: 16, icon: '👕', store: 'Snitch', deal: 'New Collection', badge: '20% OFF', color: '#FF69B4' },
+            { start: 18, end: 20, icon: '⌚', store: 'Titan', deal: 'Premium Watches', badge: '20% OFF', color: '#FFD700' },
+            { start: 23, end: 26, icon: '🍕', store: 'Pizza Hut', deal: 'Lunch Combo', badge: '30% OFF', color: '#FFA500' },
+            { start: 27, end: 29, icon: '🍦', store: 'Baskin', deal: 'Cool Treats', badge: '15% OFF', color: '#FFB6C1' },
+        ];
+
+        const CONFIG = {
+            STEPS_PHASE1: 20, STEPS_PHASE2: 10, TOTAL_STEPS: 30,
+            ACCEL_THRESHOLD: 0.75, DELTA_THRESHOLD: 1.8, STEP_COOLDOWN: 300,
+            TURN_THRESHOLD_MIN: 75, TURN_THRESHOLD_MAX: 110,
+            SMOOTH_FACTOR: 0.08, FREE_STEP_SIZE: 10,
+        };
+
+        const $ = id => document.getElementById(id);
+        const avatar = $('avatar'), avatarOuter = $('avatarOuter'), dirArrow = $('dirArrow');
+        const pulse1 = $('pulse1'), pulse2 = $('pulse2'), routePath = $('routePath');
+        const mapWrapper = $('mapWrapper'), turnPoint = $('turnPoint');
+        const dynamicIsland = $('dynamicIsland'), startBtn = $('startBtn'), btnText = $('btnText');
+        const destIcon = $('destIcon'), destName = $('destName');
+        const navStrip = $('navStrip'), dirIcon = $('dirIcon'), dirTitle = $('dirTitle'), dirSubtitle = $('dirSubtitle');
+        const navStats = $('navStats'), stepsVal = $('stepsVal'), etaVal = $('etaVal');
+        const turnDeg = $('turnDeg'), turnDegVal = $('turnDegVal');
+        const offerStrip = $('offerStrip'), storePopup = $('storePopup'), arrivalModal = $('arrivalModal');
+
+        let state = {
+            steps: 0, phase: 'idle', isTracking: false, lastStepTime: 0, pathLength: 0,
+            currentDestination: 'kfc', hasTurned: false, initialHeading: null, currentHeading: 0, turnAmount: 0,
+            currentX: 170, currentY: 455, targetX: 170, targetY: 455, animId: null,
+            lastAccel: { x: 0, y: 0, z: 0 }, pulseInterval: null, selectedStore: null,
+        };
+
+        function init() {
+            state.pathLength = routePath.getTotalLength();
+            document.querySelectorAll('.store-rect').forEach(r => {
+                r.addEventListener('click', () => {
+                    if (state.phase !== 'free_roam') return;
+                    const id = r.getAttribute('data-store');
+                    if (id && STORES[id]) showStorePopup(id);
+                });
+            });
+        }
+
+        function showStorePopup(id) {
+            const s = STORES[id]; state.selectedStore = id;
+            $('storePopupIcon').textContent = s.icon;
+            $('storePopupIcon').style.background = `linear-gradient(135deg, ${s.color} 0%, ${s.color}99 100%)`;
+            $('storePopupName').textContent = s.name;
+            $('storePopupOffer').textContent = s.offer;
+            $('popupSteps').textContent = s.steps;
+            $('popupDist').textContent = s.dist;
+            $('popupEta').textContent = s.eta;
+            storePopup.classList.add('show');
+            if (navigator.vibrate) navigator.vibrate(30);
+        }
+
+        $('storePopupClose').onclick = () => { storePopup.classList.remove('show'); state.selectedStore = null; };
+        $('storePopupBtn').onclick = () => {
+            if (!state.selectedStore) return;
+            const s = STORES[state.selectedStore];
+            storePopup.classList.remove('show');
+            startNewNav(state.selectedStore, s);
+        };
+
+        function startNewNav(id, s) {
+            state.steps = 0; state.phase = 'walking'; state.hasTurned = false; state.currentDestination = id;
+            destIcon.textContent = s.icon; destName.textContent = s.name;
+            CONFIG.TOTAL_STEPS = s.steps; CONFIG.STEPS_PHASE1 = Math.floor(s.steps * 0.66);
+            mapWrapper.classList.remove('turned');
+            const np = `M ${state.currentX} ${state.currentY} L 170 105 L ${s.x} 105 L ${s.x} ${s.y}`;
+            routePath.setAttribute('d', np); routePath.style.opacity = '0.9';
+            state.pathLength = routePath.getTotalLength();
+            turnPoint.style.display = 'block';
+            navStrip.classList.remove('free-roam', 'turn-alert');
+            navStats.style.display = 'flex'; turnDeg.style.display = 'none';
+            updateUI();
+            if (!state.isTracking) startTracking();
+            if (navigator.vibrate) navigator.vibrate([50, 30, 50]);
+        }
+
+        startBtn.onclick = async () => {
+            if (state.isTracking && state.phase !== 'free_roam') { stopTracking(); return; }
+            if (state.phase === 'free_roam') { state.isTracking ? stopTracking() : (await reqPerms() && startTracking()); return; }
+            await reqPerms() && startTracking();
+        };
+
+        async function reqPerms() {
+            try { if (typeof DeviceMotionEvent.requestPermission === 'function') { const p = await DeviceMotionEvent.requestPermission(); if (p !== 'granted') { alert('Motion permission required!'); return false; } } } catch(e){}
+            try { if (typeof DeviceOrientationEvent.requestPermission === 'function') await DeviceOrientationEvent.requestPermission(); } catch(e){}
+            return true;
+        }
+
+        function startTracking() {
+            state.isTracking = true; state.lastStepTime = Date.now();
+            if (state.phase === 'idle') state.phase = 'walking';
+            dynamicIsland.classList.add('expanded');
+            startBtn.classList.add(state.phase === 'free_roam' ? 'exploring' : 'active');
+            btnText.textContent = state.phase === 'free_roam' ? 'Exploring...' : 'Navigating...';
+            avatar.classList.add('avatar-active'); startPulse();
+            if (navigator.vibrate) navigator.vibrate(50);
+            window.addEventListener('devicemotion', onMotion, true);
+            window.addEventListener('deviceorientation', onOrient, true);
+        }
+
+        function stopTracking() {
+            state.isTracking = false;
+            dynamicIsland.classList.remove('expanded');
+            startBtn.classList.remove('active', 'exploring');
+            btnText.textContent = state.phase === 'free_roam' ? 'Continue Exploring' : 'Start Navigation';
+            avatar.classList.remove('avatar-active'); stopPulse();
+            window.removeEventListener('devicemotion', onMotion, true);
+            window.removeEventListener('deviceorientation', onOrient, true);
+            hideOffer();
+        }
+
+        function startPulse() {
+            let t = false;
+            state.pulseInterval = setInterval(() => {
+                const p = t ? pulse1 : pulse2;
+                p.setAttribute('cx', state.currentX); p.setAttribute('cy', state.currentY);
+                p.style.animation = 'none'; p.offsetHeight; p.style.animation = 'gpsPulse 1.5s ease-out forwards';
+                t = !t;
+            }, 750);
+        }
+        function stopPulse() { if (state.pulseInterval) clearInterval(state.pulseInterval); }
+
+        function onMotion(e) {
+            if (!state.isTracking || state.phase === 'waiting_turn') return;
+            const now = Date.now(); if (now - state.lastStepTime < CONFIG.STEP_COOLDOWN) return;
+            let step = false;
+            if (e.acceleration?.x !== null) { const a = e.acceleration, m = Math.sqrt(a.x*a.x+a.y*a.y+a.z*a.z); if (m > CONFIG.ACCEL_THRESHOLD) step = true; }
+            if (!step && e.accelerationIncludingGravity) { const g = e.accelerationIncludingGravity, d = Math.abs((g.x||0)-state.lastAccel.x)+Math.abs((g.y||0)-state.lastAccel.y)+Math.abs((g.z||0)-state.lastAccel.z); state.lastAccel = {x:g.x||0,y:g.y||0,z:g.z||0}; if (d > CONFIG.DELTA_THRESHOLD) step = true; }
+            if (step) state.phase === 'free_roam' ? freeStep() : regStep();
+        }
+
+        function onOrient(e) {
+            if (!state.isTracking) return;
+            const h = e.webkitCompassHeading !== undefined ? e.webkitCompassHeading : (e.alpha || 0);
+            state.currentHeading = h;
+            const ar = state.phase === 'free_roam' ? h : 0;
+            dirArrow.setAttribute('transform', `rotate(${ar}, ${state.currentX}, ${state.currentY - 5})`);
+            if (state.phase !== 'waiting_turn') return;
+            if (state.initialHeading === null) { state.initialHeading = h; return; }
+            let t = h - state.initialHeading; if (t > 180) t -= 360; if (t < -180) t += 360;
+            state.turnAmount = Math.abs(t);
+            turnDegVal.textContent = `${Math.round(state.turnAmount)}°`;
+            turnDegVal.style.color = state.turnAmount >= CONFIG.TURN_THRESHOLD_MIN ? '#34C759' : state.turnAmount >= 40 ? '#FF9500' : '#FF3B30';
+            if (state.turnAmount >= CONFIG.TURN_THRESHOLD_MIN && state.turnAmount <= CONFIG.TURN_THRESHOLD_MAX) completeTurn();
+        }
+
+        function completeTurn() {
+            state.hasTurned = true; state.phase = 'after_turn';
+            mapWrapper.classList.add('turned');
+            navStrip.classList.remove('turn-alert');
+            turnDeg.style.display = 'none'; navStats.style.display = 'flex';
+            if (navigator.vibrate) navigator.vibrate([100, 50, 100, 50, 200]);
+            updateUI();
+        }
+
+        function regStep() {
+            if (state.steps >= CONFIG.TOTAL_STEPS) return;
+            state.lastStepTime = Date.now(); state.steps++;
+            if (navigator.vibrate) navigator.vibrate(20);
+            const pr = state.steps / CONFIG.TOTAL_STEPS, pt = routePath.getPointAtLength(pr * state.pathLength);
+            animTo(pt.x, pt.y); updateUI(); checkOffers();
+            if (state.steps === CONFIG.STEPS_PHASE1 && !state.hasTurned) {
+                state.phase = 'waiting_turn'; state.initialHeading = null; state.turnAmount = 0;
+                navStrip.classList.add('turn-alert'); navStats.style.display = 'none'; turnDeg.style.display = 'block'; turnDegVal.textContent = '0°';
+                if (navigator.vibrate) navigator.vibrate([200, 100, 200]);
+                updateUI();
+            }
+            if (state.steps >= CONFIG.TOTAL_STEPS) { state.phase = 'arrived'; setTimeout(() => { stopTracking(); showArrival(); }, 500); }
+        }
+
+        function freeStep() {
+            state.lastStepTime = Date.now();
+            if (navigator.vibrate) navigator.vibrate(15);
+            const r = (state.currentHeading - 90) * (Math.PI / 180);
+            let nx = state.currentX + Math.cos(r) * CONFIG.FREE_STEP_SIZE, ny = state.currentY + Math.sin(r) * CONFIG.FREE_STEP_SIZE;
+            nx = Math.max(20, Math.min(320, nx)); ny = Math.max(20, Math.min(480, ny));
+            animTo(nx, ny);
+        }
+
+        function updateUI() {
+            const left = CONFIG.TOTAL_STEPS - state.steps;
+            stepsVal.textContent = state.phase === 'free_roam' ? '—' : state.steps;
+            const t = Math.round((CONFIG.TOTAL_STEPS - state.steps) * 6), m = Math.floor(t/60), s = t%60;
+            etaVal.textContent = state.phase === 'free_roam' ? '—' : `${m}:${s.toString().padStart(2,'0')}`;
+            if (state.phase === 'free_roam') { dirIcon.textContent = '🗺️'; dirTitle.textContent = 'Explore Mall'; dirSubtitle.textContent = 'Tap any store'; navStrip.classList.add('free-roam'); }
+            else if (state.phase === 'arrived') { dirIcon.textContent = '🎉'; dirTitle.textContent = 'Arrived!'; dirSubtitle.textContent = STORES[state.currentDestination]?.name || ''; }
+            else if (state.phase === 'waiting_turn') { dirIcon.textContent = '↱'; dirTitle.textContent = 'Turn Right 90°'; dirSubtitle.textContent = 'Rotate phone'; }
+            else if (state.phase === 'after_turn') { dirIcon.textContent = '⬆️'; dirTitle.textContent = 'Head straight'; dirSubtitle.textContent = `${left} steps`; }
+            else { dirIcon.textContent = '⬆️'; dirTitle.textContent = 'Head straight'; dirSubtitle.textContent = `${CONFIG.STEPS_PHASE1 - state.steps} steps, then right`; }
+        }
+
+        function checkOffers() {
+            if (state.phase === 'free_roam' || state.phase === 'waiting_turn') { hideOffer(); return; }
+            const o = OFFERS.find(x => state.steps >= x.start && state.steps <= x.end);
+            o ? showOffer(o) : hideOffer();
+        }
+
+        function showOffer(o) {
+            $('offerStripIcon').textContent = o.icon; $('offerStripStore').textContent = o.store;
+            $('offerStripDeal').textContent = o.deal; $('offerStripBadge').textContent = o.badge;
+            $('offerStripBadge').style.background = `linear-gradient(135deg, ${o.color} 0%, ${o.color}CC 100%)`;
+            offerStrip.classList.add('show');
+            if (navigator.vibrate) navigator.vibrate([30, 20, 30]);
+        }
+        function hideOffer() { offerStrip.classList.remove('show'); }
+
+        function animTo(x, y) { state.targetX = x; state.targetY = y; if (!state.animId) animFrame(); }
+        function animFrame() {
+            state.currentX += (state.targetX - state.currentX) * CONFIG.SMOOTH_FACTOR;
+            state.currentY += (state.targetY - state.currentY) * CONFIG.SMOOTH_FACTOR;
+            avatar.setAttribute('cx', state.currentX); avatar.setAttribute('cy', state.currentY);
+            avatarOuter.setAttribute('cx', state.currentX); avatarOuter.setAttribute('cy', state.currentY);
+            dirArrow.setAttribute('points', `${state.currentX},${state.currentY-10} ${state.currentX-4},${state.currentY-2} ${state.currentX+4},${state.currentY-2}`);
+            if (Math.abs(state.targetX - state.currentX) > 0.2 || Math.abs(state.targetY - state.currentY) > 0.2) state.animId = requestAnimationFrame(animFrame);
+            else state.animId = null;
+        }
+
+        function showArrival() {
+            const s = STORES[state.currentDestination];
+            $('modalIcon').textContent = s?.icon || '🎉';
+            $('modalTitle').textContent = 'You\'ve Arrived!';
+            $('modalSubtitle').textContent = `Welcome to ${s?.name || ''}`;
+            $('modalCoupon').textContent = `${(s?.name||'STORE').toUpperCase().replace(/[^A-Z]/g,'').slice(0,4)}30OFF`;
+            arrivalModal.classList.add('show'); confetti();
+            if (navigator.vibrate) navigator.vibrate([100, 50, 100, 50, 200]);
+        }
+
+        $('closeModalBtn').onclick = () => { arrivalModal.classList.remove('show'); enterFreeRoam(); };
+        function enterFreeRoam() {
+            state.phase = 'free_roam'; state.steps = 0;
+            destIcon.textContent = '🗺️'; destName.textContent = 'Explore';
+            routePath.style.opacity = '0.15'; turnPoint.style.display = 'none';
+            mapWrapper.classList.remove('turned');
+            startBtn.classList.remove('active'); startBtn.classList.add('exploring');
+            btnText.textContent = 'Exploring...';
+            navStrip.classList.remove('turn-alert'); navStrip.classList.add('free-roam');
+            navStats.style.display = 'none'; turnDeg.style.display = 'none';
+            updateUI(); startTracking();
+        }
+
+        $('copyBtn').onclick = function() {
+            navigator.clipboard.writeText($('modalCoupon').textContent);
+            this.textContent = 'Copied! ✓'; this.classList.add('copied');
+            if (navigator.vibrate) navigator.vibrate(50);
+            setTimeout(() => { this.textContent = 'Copy Code'; this.classList.remove('copied'); }, 2000);
+        };
+
+        function confetti() {
+            const colors = ['#CFFFE2', '#667eea', '#764ba2', '#FFD700', '#FF69B4', '#4285F4'];
+            const c = document.querySelector('.phone-content');
+            for (let i = 0; i < 50; i++) setTimeout(() => {
+                const d = document.createElement('div'); d.className = 'confetti';
+                d.style.cssText = `left:${Math.random()*100}%;top:50px;width:${6+Math.random()*10}px;height:${6+Math.random()*10}px;background:${colors[Math.floor(Math.random()*colors.length)]};border-radius:${Math.random()>.5?'50%':'2px'}`;
+                c.appendChild(d); setTimeout(() => d.remove(), 3500);
+            }, i * 40);
+        }
+
+        init();
+    </script>
+</body>
+</html>
