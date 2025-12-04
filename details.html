@@ -1,0 +1,675 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Listing Detail - Spotly Bazaar</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-pink: #FF2D55;
+            --coral: #FF6B88;
+            --light-pink: #FFE5EC;
+            --background: #FFF5F7;
+            --card-white: #FFFFFF;
+            --text-dark: #2D2D2D;
+            --text-gray: #8E8E93;
+            --accent-purple: #8B5CF6;
+            --accent-blue: #3B82F6;
+            --accent-orange: #FF8C42;
+            --gradient-pink: linear-gradient(135deg, #FF6B88 0%, #FF2D55 100%);
+            --gradient-bg: linear-gradient(180deg, #FFB5C5 0%, #FFF5F7 50%, #FFFFFF 100%);
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: #F5F5F7;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        /* iPhone Wrapper */
+        .iphone-wrapper {
+            width: 390px;
+            height: 844px;
+            background: #000;
+            border-radius: 50px;
+            padding: 12px;
+            box-shadow: 0 30px 80px rgba(0, 0, 0, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .iphone-notch {
+            position: absolute;
+            top: 12px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 150px;
+            height: 30px;
+            background: #000;
+            border-radius: 0 0 20px 20px;
+            z-index: 1000;
+        }
+
+        .iphone-screen {
+            width: 100%;
+            height: 100%;
+            background: var(--gradient-bg);
+            border-radius: 40px;
+            overflow-y: auto;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        .iphone-screen::-webkit-scrollbar {
+            display: none;
+        }
+
+        /* Status Bar */
+        .status-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 50px 24px 10px;
+            color: var(--text-dark);
+            font-size: 15px;
+            font-weight: 600;
+        }
+
+        .status-icons {
+            display: flex;
+            gap: 6px;
+            align-items: center;
+            font-size: 18px;
+        }
+
+        /* Top Header */
+        .top-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 24px 20px;
+            position: relative;
+            z-index: 10;
+        }
+
+        .back-btn, .bookmark-btn {
+            width: 44px;
+            height: 44px;
+            background: white;
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+            transition: all 0.3s ease;
+        }
+
+        .back-btn:active, .bookmark-btn:active {
+            transform: scale(0.95);
+        }
+
+        .bookmark-btn.active {
+            background: var(--gradient-pink);
+            color: white;
+        }
+
+        /* Image Gallery */
+        .image-gallery {
+            position: relative;
+            margin: 0 24px 24px;
+            border-radius: 24px;
+            overflow: hidden;
+            height: 320px;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .gallery-image {
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 48px;
+        }
+
+        .gallery-badges {
+            position: absolute;
+            top: 16px;
+            left: 16px;
+            right: 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+        }
+
+        .featured-badge {
+            background: #FFD60A;
+            color: var(--text-dark);
+            padding: 8px 14px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            box-shadow: 0 4px 15px rgba(255, 214, 10, 0.4);
+        }
+
+        .verified-badge {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            color: var(--primary-pink);
+            padding: 8px 12px;
+            border-radius: 12px;
+            font-size: 12px;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            font-weight: 600;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .gallery-dots {
+            position: absolute;
+            bottom: 16px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 8px;
+        }
+
+        .dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.5);
+            transition: all 0.3s ease;
+        }
+
+        .dot.active {
+            width: 24px;
+            border-radius: 4px;
+            background: white;
+        }
+
+        /* Content Section */
+        .content-section {
+            padding: 0 24px 24px;
+        }
+
+        /* Listing Header */
+        .listing-header {
+            background: white;
+            padding: 20px;
+            border-radius: 20px;
+            margin-bottom: 16px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+            animation: slideUp 0.5s ease-out;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .category-tag {
+            display: inline-block;
+            background: rgba(255, 45, 85, 0.1);
+            color: var(--primary-pink);
+            padding: 6px 12px;
+            border-radius: 10px;
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 12px;
+        }
+
+        .listing-title {
+            font-size: 22px;
+            font-weight: 800;
+            color: var(--text-dark);
+            margin-bottom: 12px;
+            line-height: 1.3;
+        }
+
+        .listing-meta {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 16px;
+        }
+
+        .meta-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 13px;
+            color: var(--text-gray);
+        }
+
+        .price-section {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-top: 16px;
+            border-top: 1px solid #F5F5F7;
+        }
+
+        .price-label {
+            font-size: 13px;
+            color: var(--text-gray);
+            font-weight: 500;
+        }
+
+        .price-amount {
+            font-size: 28px;
+            font-weight: 800;
+            background: var(--gradient-pink);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        /* Seller Card */
+        .seller-card {
+            background: white;
+            padding: 18px;
+            border-radius: 20px;
+            margin-bottom: 16px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+            animation: slideUp 0.5s ease-out 0.1s both;
+        }
+
+        .seller-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 14px;
+        }
+
+        .seller-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: var(--gradient-pink);
+            flex-shrink: 0;
+            position: relative;
+        }
+
+        .seller-avatar::after {
+            content: '';
+            position: absolute;
+            inset: -3px;
+            border-radius: 50%;
+            padding: 3px;
+            background: linear-gradient(135deg, #FF6B88, #8B5CF6);
+            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor;
+            mask-composite: exclude;
+        }
+
+        .seller-info {
+            flex: 1;
+        }
+
+        .seller-name {
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--text-dark);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            margin-bottom: 4px;
+        }
+
+        .seller-name .verified-icon {
+            color: var(--primary-pink);
+            font-size: 16px;
+        }
+
+        .seller-subtitle {
+            font-size: 13px;
+            color: var(--text-gray);
+        }
+
+        .view-profile-btn {
+            background: rgba(255, 45, 85, 0.1);
+            color: var(--primary-pink);
+            padding: 10px 20px;
+            border-radius: 12px;
+            font-size: 13px;
+            font-weight: 600;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 100%;
+        }
+
+        .view-profile-btn:active {
+            transform: scale(0.98);
+        }
+
+        /* Description Card */
+        .description-card {
+            background: white;
+            padding: 20px;
+            border-radius: 20px;
+            margin-bottom: 16px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+            animation: slideUp 0.5s ease-out 0.2s both;
+        }
+
+        .card-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--text-dark);
+            margin-bottom: 12px;
+        }
+
+        .description-text {
+            font-size: 14px;
+            color: var(--text-gray);
+            line-height: 1.7;
+            margin-bottom: 16px;
+        }
+
+        .tags-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .tag {
+            background: rgba(139, 92, 246, 0.1);
+            color: var(--accent-purple);
+            padding: 6px 12px;
+            border-radius: 10px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        /* Similar Listings */
+        .similar-section {
+            margin-bottom: 16px;
+            animation: slideUp 0.5s ease-out 0.3s both;
+        }
+
+        .section-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--text-dark);
+            padding: 0 0 16px 0;
+        }
+
+        .similar-scroll {
+            display: flex;
+            gap: 12px;
+            overflow-x: auto;
+            padding-bottom: 10px;
+        }
+
+        .similar-scroll::-webkit-scrollbar {
+            height: 0;
+        }
+
+        .similar-card {
+            min-width: 200px;
+            background: white;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+
+        .similar-card:active {
+            transform: scale(0.98);
+        }
+
+        .similar-image {
+            width: 100%;
+            height: 130px;
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        }
+
+        .similar-content {
+            padding: 12px;
+        }
+
+        .similar-title {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-dark);
+            margin-bottom: 6px;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .similar-price {
+            font-size: 15px;
+            font-weight: 800;
+            color: var(--primary-pink);
+        }
+
+        /* Bottom Action Bar */
+        .bottom-action-bar {
+            position: sticky;
+            bottom: 0;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            padding: 16px 24px 28px;
+            display: flex;
+            gap: 12px;
+            border-top: 1px solid rgba(0, 0, 0, 0.05);
+            box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.06);
+        }
+
+        .report-btn {
+            width: 56px;
+            height: 56px;
+            background: white;
+            border: 2px solid #F5F5F7;
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            flex-shrink: 0;
+        }
+
+        .report-btn:active {
+            transform: scale(0.95);
+        }
+
+        .contact-btn {
+            flex: 1;
+            background: var(--gradient-pink);
+            color: white;
+            padding: 18px;
+            border-radius: 16px;
+            font-size: 16px;
+            font-weight: 700;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            box-shadow: 0 6px 25px rgba(255, 45, 85, 0.4);
+            transition: all 0.3s ease;
+        }
+
+        .contact-btn:active {
+            transform: scale(0.98);
+        }
+
+        /* Spacer */
+        .spacer {
+            height: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="iphone-wrapper">
+        <div class="iphone-notch"></div>
+        <div class="iphone-screen">
+            <!-- Status Bar -->
+            <div class="status-bar">
+                <span>7:18</span>
+                <div class="status-icons">
+                    <span>⋯</span>
+                    <span>📶</span>
+                    <span>🔋</span>
+                </div>
+            </div>
+
+            <!-- Top Header -->
+            <div class="top-header">
+                <div class="back-btn">←</div>
+                <div class="bookmark-btn">🔖</div>
+            </div>
+
+            <!-- Image Gallery -->
+            <div class="image-gallery">
+                <div class="gallery-image">
+                    📷
+                </div>
+                <div class="gallery-badges">
+                    <div class="featured-badge">
+                        ⭐ Featured
+                    </div>
+                    <div class="verified-badge">
+                        ✓ Verified
+                    </div>
+                </div>
+                <div class="gallery-dots">
+                    <div class="dot active"></div>
+                    <div class="dot"></div>
+                    <div class="dot"></div>
+                    <div class="dot"></div>
+                </div>
+            </div>
+
+            <!-- Content Section -->
+            <div class="content-section">
+                <!-- Listing Header -->
+                <div class="listing-header">
+                    <div class="category-tag">📷 Equipment</div>
+                    <h1 class="listing-title">Sony A7S III Cinema Package</h1>
+                    <div class="listing-meta">
+                        <div class="meta-item">
+                            📍 Mumbai, Maharashtra
+                        </div>
+                        <div class="meta-item">
+                            🕐 2 hours ago
+                        </div>
+                    </div>
+                    <div class="price-section">
+                        <div class="price-label">Rental Price</div>
+                        <div class="price-amount">₹5,500<span style="font-size: 16px; color: var(--text-gray);">/day</span></div>
+                    </div>
+                </div>
+
+                <!-- Seller Card -->
+                <div class="seller-card">
+                    <div class="seller-header">
+                        <div class="seller-avatar"></div>
+                        <div class="seller-info">
+                            <div class="seller-name">
+                                Rajesh Kumar
+                                <span class="verified-icon">✓</span>
+                            </div>
+                            <div class="seller-subtitle">Active 10 min ago</div>
+                        </div>
+                    </div>
+                    <button class="view-profile-btn">View Profile</button>
+                </div>
+
+                <!-- Description Card -->
+                <div class="description-card">
+                    <h2 class="card-title">Description</h2>
+                    <p class="description-text">
+                        Professional cinema package featuring Sony A7S III with complete accessories. Perfect for wedding shoots, music videos, and commercial productions. Includes cage, follow focus, matte box, and multiple batteries.
+                        <br><br>
+                        Package includes: Sony A7S III body, Sigma 24-70mm f/2.8, Smallrig cage, ND filters, 5 batteries, 256GB SD card, monitor mount, and carrying case.
+                        <br><br>
+                        Available for daily, weekly, or monthly rentals. Same-day delivery available in Mumbai. Well-maintained equipment with regular servicing.
+                    </p>
+                    <div class="tags-container">
+                        <div class="tag">#Cinema</div>
+                        <div class="tag">#Sony</div>
+                        <div class="tag">#Fullframe</div>
+                        <div class="tag">#4K</div>
+                        <div class="tag">#LowLight</div>
+                    </div>
+                </div>
+
+                <!-- Similar Listings -->
+                <div class="similar-section">
+                    <h2 class="section-title">Similar Listings</h2>
+                    <div class="similar-scroll">
+                        <div class="similar-card">
+                            <div class="similar-image" style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);"></div>
+                            <div class="similar-content">
+                                <div class="similar-title">Canon EOS R5 Package</div>
+                                <div class="similar-price">₹6,000/day</div>
+                            </div>
+                        </div>
+                        <div class="similar-card">
+                            <div class="similar-image" style="background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);"></div>
+                            <div class="similar-content">
+                                <div class="similar-title">Panasonic GH6 Cinema</div>
+                                <div class="similar-price">₹4,500/day</div>
+                            </div>
+                        </div>
+                        <div class="similar-card">
+                            <div class="similar-image" style="background: linear-gradient(135deg, #30cfd0 0%, #330867 100%);"></div>
+                            <div class="similar-content">
+                                <div class="similar-title">BMPCC 6K Pro</div>
+                                <div class="similar-price">₹7,000/day</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="spacer"></div>
+
+            <!-- Bottom Action Bar -->
+            <div class="bottom-action-bar">
+                <div class="report-btn">🚩</div>
+                <button class="contact-btn">
+                    💬 Contact Seller
+                </button>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

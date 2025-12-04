@@ -1,0 +1,1092 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Post Listing - Spotly Bazaar</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-pink: #FF2D55;
+            --coral: #FF6B88;
+            --light-pink: #FFE5EC;
+            --background: #FFF5F7;
+            --card-white: #FFFFFF;
+            --text-dark: #2D2D2D;
+            --text-gray: #8E8E93;
+            --accent-purple: #8B5CF6;
+            --accent-blue: #3B82F6;
+            --accent-orange: #FF8C42;
+            --gradient-pink: linear-gradient(135deg, #FF6B88 0%, #FF2D55 100%);
+            --gradient-bg: linear-gradient(180deg, #FFB5C5 0%, #FFF5F7 50%, #FFFFFF 100%);
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: #F5F5F7;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        /* iPhone Wrapper */
+        .iphone-wrapper {
+            width: 390px;
+            height: 844px;
+            background: #000;
+            border-radius: 50px;
+            padding: 12px;
+            box-shadow: 0 30px 80px rgba(0, 0, 0, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .iphone-notch {
+            position: absolute;
+            top: 12px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 150px;
+            height: 30px;
+            background: #000;
+            border-radius: 0 0 20px 20px;
+            z-index: 1000;
+        }
+
+        .iphone-screen {
+            width: 100%;
+            height: 100%;
+            background: var(--gradient-bg);
+            border-radius: 40px;
+            overflow-y: auto;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        .iphone-screen::-webkit-scrollbar {
+            display: none;
+        }
+
+        /* Status Bar */
+        .status-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 50px 24px 10px;
+            color: var(--text-dark);
+            font-size: 15px;
+            font-weight: 600;
+        }
+
+        .status-icons {
+            display: flex;
+            gap: 6px;
+            align-items: center;
+            font-size: 18px;
+        }
+
+        /* Top Header */
+        .top-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 24px 20px;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .back-btn {
+            width: 44px;
+            height: 44px;
+            background: white;
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+            transition: all 0.3s ease;
+        }
+
+        .back-btn:active {
+            transform: scale(0.95);
+        }
+
+        .header-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--text-dark);
+        }
+
+        .save-draft-btn {
+            color: var(--primary-pink);
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        /* Form Section */
+        .form-section {
+            padding: 0 24px 24px;
+        }
+
+        /* Photo Upload */
+        .photo-upload-card {
+            background: white;
+            padding: 20px;
+            border-radius: 20px;
+            margin-bottom: 16px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+            animation: slideUp 0.5s ease-out;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .card-label {
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--text-dark);
+            margin-bottom: 4px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .required-badge {
+            color: var(--primary-pink);
+            font-size: 14px;
+        }
+
+        .card-helper {
+            font-size: 12px;
+            color: var(--text-gray);
+            margin-bottom: 16px;
+        }
+
+        .photo-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+        }
+
+        .photo-box {
+            aspect-ratio: 1;
+            border-radius: 16px;
+            border: 2px dashed rgba(255, 45, 85, 0.3);
+            background: rgba(255, 45, 85, 0.05);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .photo-box:hover {
+            border-color: var(--primary-pink);
+            background: rgba(255, 45, 85, 0.1);
+        }
+
+        .photo-box.has-image {
+            border-style: solid;
+            border-color: var(--primary-pink);
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+
+        .photo-icon {
+            font-size: 28px;
+            margin-bottom: 4px;
+        }
+
+        .photo-text {
+            font-size: 11px;
+            color: var(--text-gray);
+            font-weight: 600;
+        }
+
+        .remove-photo {
+            position: absolute;
+            top: 6px;
+            right: 6px;
+            width: 24px;
+            height: 24px;
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(10px);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            color: white;
+            cursor: pointer;
+        }
+
+        /* Form Card */
+        .form-card {
+            background: white;
+            padding: 20px;
+            border-radius: 20px;
+            margin-bottom: 16px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+            animation: slideUp 0.5s ease-out;
+        }
+
+        .form-card:nth-child(2) { animation-delay: 0.1s; }
+        .form-card:nth-child(3) { animation-delay: 0.2s; }
+        .form-card:nth-child(4) { animation-delay: 0.3s; }
+        .form-card:nth-child(5) { animation-delay: 0.4s; }
+        .form-card:nth-child(6) { animation-delay: 0.5s; }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group:last-child {
+            margin-bottom: 0;
+        }
+
+        .form-label {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-dark);
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .form-input,
+        .form-textarea,
+        .form-select {
+            width: 100%;
+            padding: 14px 16px;
+            background: #F5F5F7;
+            border: 2px solid transparent;
+            border-radius: 14px;
+            color: var(--text-dark);
+            font-size: 15px;
+            font-family: 'Poppins', sans-serif;
+            transition: all 0.3s ease;
+        }
+
+        .form-input:focus,
+        .form-textarea:focus,
+        .form-select:focus {
+            outline: none;
+            background: white;
+            border-color: var(--primary-pink);
+            box-shadow: 0 0 0 4px rgba(255, 45, 85, 0.1);
+        }
+
+        .form-input::placeholder,
+        .form-textarea::placeholder {
+            color: var(--text-gray);
+        }
+
+        .form-textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+
+        .form-select {
+            cursor: pointer;
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg width='12' height='8' viewBox='0 0 12 8' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1.5L6 6.5L11 1.5' stroke='%238E8E93' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 16px center;
+            padding-right: 40px;
+        }
+
+        /* Category Selector */
+        .category-selector {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+        }
+
+        .category-option {
+            padding: 16px;
+            border: 2px solid #F5F5F7;
+            border-radius: 14px;
+            background: #F5F5F7;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .category-option:hover {
+            border-color: var(--primary-pink);
+        }
+
+        .category-option.selected {
+            border-color: var(--primary-pink);
+            background: rgba(255, 45, 85, 0.1);
+        }
+
+        .category-icon {
+            font-size: 28px;
+        }
+
+        .category-name {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-dark);
+        }
+
+        /* Price Input Group */
+        .price-input-group {
+            display: flex;
+            gap: 10px;
+        }
+
+        .price-input-wrapper {
+            position: relative;
+            flex: 1;
+        }
+
+        .price-prefix {
+            position: absolute;
+            left: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-weight: 600;
+            color: var(--text-gray);
+        }
+
+        .price-input-wrapper .form-input {
+            padding-left: 36px;
+        }
+
+        .price-type-select {
+            width: 120px;
+        }
+
+        /* Tags Input */
+        .tags-input-wrapper {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            padding: 12px;
+            background: #F5F5F7;
+            border: 2px solid transparent;
+            border-radius: 14px;
+            min-height: 52px;
+            cursor: text;
+            transition: all 0.3s ease;
+        }
+
+        .tags-input-wrapper:focus-within {
+            background: white;
+            border-color: var(--primary-pink);
+            box-shadow: 0 0 0 4px rgba(255, 45, 85, 0.1);
+        }
+
+        .tag-item {
+            background: var(--primary-pink);
+            color: white;
+            padding: 6px 12px;
+            border-radius: 8px;
+            font-size: 12px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .remove-tag {
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .tag-input {
+            flex: 1;
+            min-width: 100px;
+            border: none;
+            background: transparent;
+            outline: none;
+            font-family: 'Poppins', sans-serif;
+            font-size: 14px;
+            color: var(--text-dark);
+        }
+
+        .tag-input::placeholder {
+            color: var(--text-gray);
+        }
+
+        /* AI Button Styles */
+        .input-with-ai,
+        .textarea-with-ai {
+            position: relative;
+        }
+
+        .ai-button {
+            position: absolute;
+            right: 8px;
+            top: 8px;
+            background: linear-gradient(135deg, #8B5CF6 0%, #6366F1 100%);
+            color: white;
+            border: none;
+            padding: 8px 14px;
+            border-radius: 10px;
+            font-size: 12px;
+            font-weight: 700;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            box-shadow: 0 4px 15px rgba(139, 92, 246, 0.3);
+            transition: all 0.3s ease;
+            font-family: 'Poppins', sans-serif;
+            z-index: 10;
+        }
+
+        .ai-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(139, 92, 246, 0.4);
+        }
+
+        .ai-button:active {
+            transform: scale(0.97);
+        }
+
+        .ai-button-textarea {
+            top: 12px;
+        }
+
+        /* AI Loading Animation */
+        @keyframes shimmer {
+            0% {
+                background-position: -200% 0;
+            }
+            100% {
+                background-position: 200% 0;
+            }
+        }
+
+        .ai-button.loading {
+            background: linear-gradient(
+                90deg,
+                #8B5CF6 0%,
+                #A78BFA 50%,
+                #8B5CF6 100%
+            );
+            background-size: 200% 100%;
+            animation: shimmer 1.5s infinite;
+        }
+
+        .ai-button.loading::after {
+            content: '⏳';
+            margin-left: 4px;
+        }
+
+        /* Location Input */
+        .location-button {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 14px 16px;
+            background: #F5F5F7;
+            border: 2px solid transparent;
+            border-radius: 14px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .location-button:hover {
+            border-color: var(--primary-pink);
+        }
+
+        .location-icon {
+            font-size: 20px;
+        }
+
+        .location-text {
+            flex: 1;
+            text-align: left;
+        }
+
+        .location-label {
+            font-size: 12px;
+            color: var(--text-gray);
+            display: block;
+        }
+
+        .location-value {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-dark);
+        }
+
+        /* Promote Option */
+        .promote-card {
+            background: linear-gradient(135deg, rgba(255, 107, 136, 0.1) 0%, rgba(139, 92, 246, 0.1) 100%);
+            border: 2px solid rgba(255, 45, 85, 0.2);
+            padding: 18px;
+            border-radius: 20px;
+            margin-bottom: 16px;
+            animation: slideUp 0.5s ease-out 0.6s both;
+        }
+
+        .promote-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+
+        .promote-title {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--text-dark);
+        }
+
+        .promote-badge {
+            background: linear-gradient(135deg, #FFD60A 0%, #FF8C42 100%);
+            color: var(--text-dark);
+            padding: 4px 10px;
+            border-radius: 8px;
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+
+        .promote-toggle {
+            width: 50px;
+            height: 28px;
+            background: #E5E5EA;
+            border-radius: 14px;
+            position: relative;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .promote-toggle.active {
+            background: var(--gradient-pink);
+        }
+
+        .promote-toggle::after {
+            content: '';
+            position: absolute;
+            top: 3px;
+            left: 3px;
+            width: 22px;
+            height: 22px;
+            background: white;
+            border-radius: 50%;
+            transition: all 0.3s ease;
+        }
+
+        .promote-toggle.active::after {
+            left: 25px;
+        }
+
+        .promote-description {
+            font-size: 13px;
+            color: var(--text-gray);
+            line-height: 1.5;
+            margin-bottom: 12px;
+        }
+
+        .promote-features {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .promote-feature {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 12px;
+            color: var(--text-dark);
+        }
+
+        .promote-feature-icon {
+            color: var(--primary-pink);
+        }
+
+        .promote-price {
+            margin-top: 12px;
+            padding-top: 12px;
+            border-top: 1px solid rgba(255, 45, 85, 0.2);
+            font-size: 13px;
+            color: var(--text-gray);
+        }
+
+        .promote-price strong {
+            color: var(--primary-pink);
+            font-size: 16px;
+        }
+
+        /* Bottom Action Bar */
+        .bottom-action-bar {
+            position: sticky;
+            bottom: 0;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            padding: 16px 24px 28px;
+            display: flex;
+            gap: 12px;
+            border-top: 1px solid rgba(0, 0, 0, 0.05);
+            box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.06);
+        }
+
+        .preview-btn {
+            width: 56px;
+            height: 56px;
+            background: white;
+            border: 2px solid #F5F5F7;
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            flex-shrink: 0;
+        }
+
+        .preview-btn:active {
+            transform: scale(0.95);
+        }
+
+        .publish-btn {
+            flex: 1;
+            background: var(--gradient-pink);
+            color: white;
+            padding: 18px;
+            border-radius: 16px;
+            font-size: 16px;
+            font-weight: 700;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            box-shadow: 0 6px 25px rgba(255, 45, 85, 0.4);
+            transition: all 0.3s ease;
+        }
+
+        .publish-btn:active {
+            transform: scale(0.98);
+        }
+
+        .publish-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        /* Spacer */
+        .spacer {
+            height: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="iphone-wrapper">
+        <div class="iphone-notch"></div>
+        <div class="iphone-screen">
+            <!-- Status Bar -->
+            <div class="status-bar">
+                <span>7:18</span>
+                <div class="status-icons">
+                    <span>⋯</span>
+                    <span>📶</span>
+                    <span>🔋</span>
+                </div>
+            </div>
+
+            <!-- Top Header -->
+            <div class="top-header">
+                <div class="header-left">
+                    <div class="back-btn">←</div>
+                    <div class="header-title">Post Listing</div>
+                </div>
+                <div class="save-draft-btn">Save Draft</div>
+            </div>
+
+            <!-- Form Section -->
+            <div class="form-section">
+                <!-- Photo Upload Card -->
+                <div class="photo-upload-card">
+                    <div class="card-label">
+                        Photos/Videos
+                        <span class="required-badge">*</span>
+                    </div>
+                    <div class="card-helper">Add up to 6 photos (First photo will be cover)</div>
+                    <div class="photo-grid">
+                        <div class="photo-box has-image">
+                            <div class="remove-photo">✕</div>
+                        </div>
+                        <div class="photo-box">
+                            <div class="photo-icon">📷</div>
+                            <div class="photo-text">Add Photo</div>
+                        </div>
+                        <div class="photo-box">
+                            <div class="photo-icon">🎥</div>
+                            <div class="photo-text">Add Video</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Category Selection -->
+                <div class="form-card">
+                    <div class="form-label">
+                        Category
+                        <span class="required-badge">*</span>
+                    </div>
+                    <div class="category-selector">
+                        <div class="category-option selected">
+                            <div class="category-icon">📷</div>
+                            <div class="category-name">Equipment</div>
+                        </div>
+                        <div class="category-option">
+                            <div class="category-icon">💼</div>
+                            <div class="category-name">Jobs & Gigs</div>
+                        </div>
+                        <div class="category-option">
+                            <div class="category-icon">🎬</div>
+                            <div class="category-name">Services</div>
+                        </div>
+                        <div class="category-option">
+                            <div class="category-icon">🏢</div>
+                            <div class="category-name">Office & Homes</div>
+                        </div>
+                        <div class="category-option">
+                            <div class="category-icon">💰</div>
+                            <div class="category-name">Buy & Sell</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Title -->
+                <div class="form-card">
+                    <div class="form-group">
+                        <div class="form-label">
+                            Title
+                            <span class="required-badge">*</span>
+                        </div>
+                        <div class="input-with-ai">
+                            <input type="text" class="form-input" placeholder="e.g., Sony A7S III Cinema Package" value="Sony A7S III Cinema Package">
+                            <button class="ai-button">
+                                ✨ AI Title
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Description -->
+                <div class="form-card">
+                    <div class="form-group">
+                        <div class="form-label">
+                            Description
+                            <span class="required-badge">*</span>
+                        </div>
+                        <div class="textarea-with-ai">
+                            <textarea class="form-textarea" placeholder="Describe your listing in detail...">Professional cinema package featuring Sony A7S III with complete accessories. Perfect for wedding shoots, music videos, and commercial productions.</textarea>
+                            <button class="ai-button ai-button-textarea">
+                                ✨ AI Description
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Price -->
+                <div class="form-card">
+                    <div class="form-group">
+                        <div class="form-label">
+                            Price/Budget
+                            <span class="required-badge">*</span>
+                        </div>
+                        <div class="price-input-group">
+                            <div class="price-input-wrapper">
+                                <span class="price-prefix">₹</span>
+                                <input type="number" class="form-input" placeholder="5,500" value="5500">
+                            </div>
+                            <select class="form-select price-type-select">
+                                <option value="day">Per Day</option>
+                                <option value="hour">Per Hour</option>
+                                <option value="month">Per Month</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Location -->
+                <div class="form-card">
+                    <div class="form-group">
+                        <div class="form-label">
+                            Location
+                            <span class="required-badge">*</span>
+                        </div>
+                        <div class="location-button">
+                            <div class="location-icon">📍</div>
+                            <div class="location-text">
+                                <span class="location-label">Your Location</span>
+                                <div class="location-value">Mumbai, Maharashtra</div>
+                            </div>
+                            <div style="color: var(--text-gray);">→</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tags -->
+                <div class="form-card">
+                    <div class="form-group">
+                        <div class="form-label">Tags/Keywords</div>
+                        <div class="tags-input-wrapper">
+                            <div class="tag-item">
+                                #Cinema
+                                <span class="remove-tag">✕</span>
+                            </div>
+                            <div class="tag-item">
+                                #Sony
+                                <span class="remove-tag">✕</span>
+                            </div>
+                            <div class="tag-item">
+                                #4K
+                                <span class="remove-tag">✕</span>
+                            </div>
+                            <input type="text" class="tag-input" placeholder="Add tags...">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Promote Option -->
+                <div class="promote-card">
+                    <div class="promote-header">
+                        <div class="promote-title">
+                            ⭐ Promote Listing
+                            <span class="promote-badge">Premium</span>
+                        </div>
+                        <div class="promote-toggle active"></div>
+                    </div>
+                    <div class="promote-description">
+                        Get 10x more visibility with a featured listing! Your listing will appear at the top of search results.
+                    </div>
+                    <div class="promote-features">
+                        <div class="promote-feature">
+                            <span class="promote-feature-icon">✓</span>
+                            <span>Top placement in search results</span>
+                        </div>
+                        <div class="promote-feature">
+                            <span class="promote-feature-icon">✓</span>
+                            <span>Featured badge on your listing</span>
+                        </div>
+                        <div class="promote-feature">
+                            <span class="promote-feature-icon">✓</span>
+                            <span>Highlighted in category pages</span>
+                        </div>
+                        <div class="promote-feature">
+                            <span class="promote-feature-icon">✓</span>
+                            <span>30 days featured duration</span>
+                        </div>
+                    </div>
+                    <div class="promote-price">
+                        One-time payment: <strong>₹499</strong> for 30 days
+                    </div>
+                </div>
+            </div>
+
+            <div class="spacer"></div>
+
+            <!-- Bottom Action Bar -->
+            <div class="bottom-action-bar">
+                <div class="preview-btn">👁️</div>
+                <button class="publish-btn">
+                    🚀 Publish Listing
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Category selection with dynamic price update
+        document.querySelectorAll('.category-option').forEach(option => {
+            option.addEventListener('click', function() {
+                document.querySelectorAll('.category-option').forEach(opt => opt.classList.remove('selected'));
+                this.classList.add('selected');
+                
+                // Get selected category name
+                const categoryName = this.querySelector('.category-name').textContent;
+                const priceSelect = document.querySelector('.price-type-select');
+                
+                // Update price dropdown based on category
+                if (categoryName === 'Equipment') {
+                    priceSelect.innerHTML = `
+                        <option value="day">Per Day</option>
+                        <option value="hour">Per Hour</option>
+                        <option value="month">Per Month</option>
+                    `;
+                } else if (categoryName === 'Jobs & Gigs') {
+                    priceSelect.innerHTML = `
+                        <option value="day">Per Day</option>
+                        <option value="project">Per Project</option>
+                        <option value="month">Per Month</option>
+                    `;
+                } else if (categoryName === 'Services') {
+                    priceSelect.innerHTML = `
+                        <option value="day">Per Day</option>
+                        <option value="project">Per Project</option>
+                        <option value="month">Per Month</option>
+                    `;
+                } else if (categoryName === 'Office & Homes') {
+                    priceSelect.innerHTML = `
+                        <option value="rent">Rent</option>
+                        <option value="buy">Buy</option>
+                    `;
+                } else if (categoryName === 'Buy & Sell') {
+                    priceSelect.innerHTML = `
+                        <option value="fixed">Fixed Price</option>
+                    `;
+                }
+            });
+        });
+
+        // Promote toggle
+        document.querySelector('.promote-toggle').addEventListener('click', function() {
+            this.classList.toggle('active');
+        });
+
+        // Tag removal
+        document.querySelectorAll('.remove-tag').forEach(removeBtn => {
+            removeBtn.addEventListener('click', function() {
+                this.parentElement.remove();
+            });
+        });
+
+        // Tag input - add tag on Enter
+        document.querySelector('.tag-input').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter' && this.value.trim()) {
+                const tagItem = document.createElement('div');
+                tagItem.className = 'tag-item';
+                tagItem.innerHTML = `
+                    ${this.value.startsWith('#') ? this.value : '#' + this.value}
+                    <span class="remove-tag">✕</span>
+                `;
+                tagItem.querySelector('.remove-tag').addEventListener('click', function() {
+                    tagItem.remove();
+                });
+                this.parentElement.insertBefore(tagItem, this);
+                this.value = '';
+            }
+        });
+
+        // Photo removal
+        document.querySelectorAll('.remove-photo').forEach(removeBtn => {
+            removeBtn.addEventListener('click', function(e) {
+                e.stopPropagation();
+                this.parentElement.classList.remove('has-image');
+                this.remove();
+            });
+        });
+
+        // Photo/Video box click
+        document.querySelectorAll('.photo-box:not(.has-image)').forEach(box => {
+            box.addEventListener('click', function() {
+                // Simulate file input click
+                alert('Photo/Video upload would trigger here');
+            });
+        });
+
+        // AI Title Generator
+        document.querySelector('.input-with-ai .ai-button').addEventListener('click', function() {
+            const button = this;
+            const input = this.previousElementSibling;
+            
+            // Add loading state
+            button.classList.add('loading');
+            button.textContent = 'Generating...';
+            
+            // Simulate AI generation (replace with actual API call)
+            setTimeout(() => {
+                const aiTitles = [
+                    'Professional Sony A7S III Cinema Package - Full Kit',
+                    'Sony A7S III Complete Cinema Setup with Accessories',
+                    'Premium Sony A7S III Camera Package for Film Production',
+                    'Sony A7S III Full-Frame Cinema Camera with Lenses',
+                    'Professional Grade Sony A7S III Filming Package'
+                ];
+                
+                const randomTitle = aiTitles[Math.floor(Math.random() * aiTitles.length)];
+                input.value = randomTitle;
+                
+                // Remove loading state
+                button.classList.remove('loading');
+                button.innerHTML = '✨ AI Title';
+                
+                // Visual feedback
+                input.style.background = 'rgba(139, 92, 246, 0.1)';
+                setTimeout(() => {
+                    input.style.background = '#F5F5F7';
+                }, 1000);
+            }, 1500);
+        });
+
+        // AI Description Generator
+        document.querySelector('.textarea-with-ai .ai-button').addEventListener('click', function() {
+            const button = this;
+            const textarea = this.previousElementSibling;
+            
+            // Add loading state
+            button.classList.add('loading');
+            button.textContent = 'Generating...';
+            
+            // Simulate AI generation (replace with actual API call)
+            setTimeout(() => {
+                const aiDescriptions = [
+                    'This professional-grade Sony A7S III cinema package is perfect for filmmakers and content creators looking for exceptional low-light performance and 4K video quality. The complete kit includes the camera body, premium lenses, cage system, follow focus, matte box, and all essential accessories.\n\nIdeal for wedding videography, commercial shoots, music videos, and documentary production. The Sony A7S III offers unmatched image quality with its full-frame sensor and advanced autofocus system. All equipment is well-maintained, regularly serviced, and comes with protective cases.\n\nDelivery available across Mumbai. Flexible rental terms with daily, weekly, or monthly rates. Professional support and technical guidance included.',
+                    
+                    'Elevate your production quality with this comprehensive Sony A7S III cinema package. Featuring industry-leading low-light capabilities and stunning 4K video, this complete setup includes everything needed for professional filmmaking.\n\nThe package comes fully equipped with the Sony A7S III body, professional cinema lenses, Smallrig cage system, wireless follow focus, variable ND filters, high-capacity batteries, and premium memory cards. Perfect for narrative films, corporate videos, and creative content production.\n\nAll gear is meticulously maintained and ready for immediate use. Same-day delivery available in Mumbai area. Competitive rates with flexible booking options.',
+                    
+                    'Premium Sony A7S III cinema package designed for professional film production and content creation. This complete filming solution delivers exceptional image quality in any lighting condition, making it the go-to choice for serious filmmakers.\n\nIncludes Sony A7S III camera, professional-grade lenses, complete rigging system, focus control, monitoring solutions, and extensive power options. Suitable for all types of productions including features, commercials, events, and digital content.\n\nTrusted by Mumbai\'s top production houses. Equipment is professionally maintained with full insurance coverage. Quick turnaround and reliable service guaranteed.'
+                ];
+                
+                const randomDescription = aiDescriptions[Math.floor(Math.random() * aiDescriptions.length)];
+                textarea.value = randomDescription;
+                
+                // Remove loading state
+                button.classList.remove('loading');
+                button.innerHTML = '✨ AI Description';
+                
+                // Visual feedback
+                textarea.style.background = 'rgba(139, 92, 246, 0.1)';
+                setTimeout(() => {
+                    textarea.style.background = '#F5F5F7';
+                }, 1000);
+            }, 2000);
+        });
+    </script>
+</body>
+</html>

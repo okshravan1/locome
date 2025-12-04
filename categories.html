@@ -1,0 +1,858 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jobs & Gigs - Spotly Bazaar</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-pink: #FF2D55;
+            --coral: #FF6B88;
+            --light-pink: #FFE5EC;
+            --background: #FFF5F7;
+            --card-white: #FFFFFF;
+            --text-dark: #2D2D2D;
+            --text-gray: #8E8E93;
+            --accent-purple: #8B5CF6;
+            --accent-blue: #3B82F6;
+            --accent-orange: #FF8C42;
+            --gradient-pink: linear-gradient(135deg, #FF6B88 0%, #FF2D55 100%);
+            --gradient-bg: linear-gradient(180deg, #FFB5C5 0%, #FFF5F7 50%, #FFFFFF 100%);
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: #F5F5F7;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        /* iPhone Wrapper */
+        .iphone-wrapper {
+            width: 390px;
+            height: 844px;
+            background: #000;
+            border-radius: 50px;
+            padding: 12px;
+            box-shadow: 0 30px 80px rgba(0, 0, 0, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .iphone-notch {
+            position: absolute;
+            top: 12px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 150px;
+            height: 30px;
+            background: #000;
+            border-radius: 0 0 20px 20px;
+            z-index: 1000;
+        }
+
+        .iphone-screen {
+            width: 100%;
+            height: 100%;
+            background: var(--gradient-bg);
+            border-radius: 40px;
+            overflow-y: auto;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        .iphone-screen::-webkit-scrollbar {
+            display: none;
+        }
+
+        /* Status Bar */
+        .status-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 50px 24px 10px;
+            color: var(--text-dark);
+            font-size: 15px;
+            font-weight: 600;
+        }
+
+        .status-icons {
+            display: flex;
+            gap: 6px;
+            align-items: center;
+            font-size: 18px;
+        }
+
+        /* Top Header */
+        .top-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 24px 20px;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .back-btn {
+            width: 44px;
+            height: 44px;
+            background: white;
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+            transition: all 0.3s ease;
+        }
+
+        .back-btn:active {
+            transform: scale(0.95);
+        }
+
+        .header-title {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .category-icon-header {
+            font-size: 24px;
+        }
+
+        .category-name-header {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--text-dark);
+        }
+
+        .filter-btn {
+            width: 44px;
+            height: 44px;
+            background: white;
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .filter-btn:active {
+            transform: scale(0.95);
+        }
+
+        .filter-badge {
+            position: absolute;
+            top: -4px;
+            right: -4px;
+            width: 18px;
+            height: 18px;
+            background: var(--primary-pink);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 10px;
+            font-weight: 700;
+            color: white;
+        }
+
+        /* Stats Bar */
+        .stats-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 24px 20px;
+        }
+
+        .results-count {
+            font-size: 14px;
+            color: var(--text-gray);
+            font-weight: 500;
+        }
+
+        .results-count strong {
+            color: var(--text-dark);
+            font-weight: 700;
+        }
+
+        .sort-dropdown {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            background: white;
+            padding: 8px 14px;
+            border-radius: 12px;
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-dark);
+            cursor: pointer;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.06);
+            transition: all 0.3s ease;
+        }
+
+        .sort-dropdown:active {
+            transform: scale(0.97);
+        }
+
+        /* Featured Section */
+        .featured-section {
+            padding: 0 24px 30px;
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+
+        .section-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--text-dark);
+        }
+
+        .featured-badge-title {
+            background: linear-gradient(135deg, #FFD60A 0%, #FF8C42 100%);
+            color: var(--text-dark);
+            padding: 4px 10px;
+            border-radius: 8px;
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+
+        .featured-scroll {
+            display: flex;
+            gap: 16px;
+            overflow-x: auto;
+            padding-bottom: 10px;
+            animation: fadeIn 0.8s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .featured-scroll::-webkit-scrollbar {
+            height: 0;
+        }
+
+        .featured-card {
+            min-width: 260px;
+            background: white;
+            border-radius: 20px;
+            overflow: hidden;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+        }
+
+        .featured-card:active {
+            transform: scale(0.98);
+        }
+
+        .featured-image {
+            width: 100%;
+            height: 160px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .featured-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .featured-badge {
+            position: absolute;
+            top: 12px;
+            left: 12px;
+            background: #FFD60A;
+            color: var(--text-dark);
+            padding: 6px 12px;
+            border-radius: 10px;
+            font-size: 11px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            box-shadow: 0 2px 10px rgba(255, 214, 10, 0.4);
+        }
+
+        .verified-badge {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            color: var(--primary-pink);
+            padding: 6px 10px;
+            border-radius: 10px;
+            font-size: 11px;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            font-weight: 600;
+        }
+
+        .featured-content {
+            padding: 16px;
+        }
+
+        .featured-title {
+            font-size: 15px;
+            font-weight: 700;
+            color: var(--text-dark);
+            margin-bottom: 10px;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            line-height: 1.4;
+        }
+
+        .featured-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+
+        .featured-price {
+            font-size: 18px;
+            font-weight: 800;
+            background: var(--gradient-pink);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .featured-location {
+            font-size: 12px;
+            color: var(--text-gray);
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .featured-seller {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding-top: 12px;
+            border-top: 1px solid #F5F5F7;
+        }
+
+        .seller-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: var(--gradient-pink);
+        }
+
+        .seller-name {
+            font-size: 13px;
+            color: var(--text-gray);
+            font-weight: 500;
+        }
+
+        /* All Listings Section */
+        .all-listings-section {
+            padding: 0 24px 24px;
+        }
+
+        .all-listings-header {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--text-dark);
+            margin-bottom: 16px;
+        }
+
+        .listings-grid {
+            display: grid;
+            gap: 16px;
+            animation: fadeIn 0.8s ease-out 0.2s both;
+        }
+
+        .listing-card {
+            background: white;
+            border-radius: 20px;
+            display: flex;
+            gap: 16px;
+            padding: 14px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+        }
+
+        .listing-card:active {
+            transform: translateX(5px);
+            box-shadow: 0 6px 30px rgba(255, 45, 85, 0.15);
+        }
+
+        .listing-image {
+            width: 100px;
+            height: 100px;
+            border-radius: 16px;
+            flex-shrink: 0;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .listing-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .listing-verified {
+            position: absolute;
+            top: 6px;
+            right: 6px;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            color: var(--primary-pink);
+            padding: 4px 6px;
+            border-radius: 6px;
+            font-size: 10px;
+            font-weight: 600;
+        }
+
+        .listing-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .listing-category {
+            font-size: 11px;
+            color: var(--primary-pink);
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 6px;
+        }
+
+        .listing-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-dark);
+            margin-bottom: 8px;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            line-height: 1.4;
+        }
+
+        .listing-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .listing-price {
+            font-size: 16px;
+            font-weight: 800;
+            color: var(--text-dark);
+        }
+
+        .listing-time {
+            font-size: 11px;
+            color: var(--text-gray);
+            font-weight: 500;
+        }
+
+        /* Load More Button */
+        .load-more-section {
+            padding: 0 24px 24px;
+        }
+
+        .load-more-btn {
+            width: 100%;
+            background: white;
+            color: var(--primary-pink);
+            padding: 16px;
+            border-radius: 16px;
+            font-size: 15px;
+            font-weight: 700;
+            border: 2px solid var(--primary-pink);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+        }
+
+        .load-more-btn:active {
+            transform: scale(0.98);
+            background: rgba(255, 45, 85, 0.05);
+        }
+
+        .load-more-btn.loading {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 60px 24px;
+            animation: fadeIn 0.8s ease-out;
+        }
+
+        .empty-icon {
+            font-size: 80px;
+            margin-bottom: 20px;
+            opacity: 0.5;
+        }
+
+        .empty-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--text-dark);
+            margin-bottom: 10px;
+        }
+
+        .empty-description {
+            font-size: 14px;
+            color: var(--text-gray);
+            line-height: 1.6;
+        }
+
+        /* Spacer */
+        .spacer {
+            height: 20px;
+        }
+
+        /* Gradient overlays for images */
+        .gradient-overlay-1 {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+
+        .gradient-overlay-2 {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        }
+
+        .gradient-overlay-3 {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+        }
+
+        .gradient-overlay-4 {
+            background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
+        }
+
+        .gradient-overlay-5 {
+            background: linear-gradient(135deg, #30cfd0 0%, #330867 100%);
+        }
+
+        .gradient-overlay-6 {
+            background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
+        }
+
+        .gradient-overlay-7 {
+            background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%);
+        }
+
+        .gradient-overlay-8 {
+            background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%);
+        }
+
+        .gradient-overlay-9 {
+            background: linear-gradient(135deg, #e0c3fc 0%, #8ec5fc 100%);
+        }
+
+        .gradient-overlay-10 {
+            background: linear-gradient(135deg, #a1c4fd 0%, #c2e9fb 100%);
+        }
+    </style>
+</head>
+<body>
+    <div class="iphone-wrapper">
+        <div class="iphone-notch"></div>
+        <div class="iphone-screen">
+            <!-- Status Bar -->
+            <div class="status-bar">
+                <span>7:18</span>
+                <div class="status-icons">
+                    <span>⋯</span>
+                    <span>📶</span>
+                    <span>🔋</span>
+                </div>
+            </div>
+
+            <!-- Top Header -->
+            <div class="top-header">
+                <div class="header-left">
+                    <div class="back-btn">←</div>
+                    <div class="header-title">
+                        <span class="category-icon-header">💼</span>
+                        <span class="category-name-header">Jobs & Gigs</span>
+                    </div>
+                </div>
+                <div class="filter-btn">
+                    <span class="filter-badge">2</span>
+                    ⚙️
+                </div>
+            </div>
+
+            <!-- Stats Bar -->
+            <div class="stats-bar">
+                <div class="results-count">
+                    Showing <strong>850+</strong> results
+                </div>
+                <div class="sort-dropdown">
+                    Newest First
+                    <span>▼</span>
+                </div>
+            </div>
+
+            <!-- Featured Section -->
+            <div class="featured-section">
+                <div class="section-header">
+                    <div class="section-title">Featured Jobs</div>
+                    <span class="featured-badge-title">⭐ Premium</span>
+                </div>
+                <div class="featured-scroll">
+                    <div class="featured-card">
+                        <div class="featured-image gradient-overlay-1">
+                            <div class="featured-badge">⭐ Featured</div>
+                            <div class="verified-badge">✓ Verified</div>
+                        </div>
+                        <div class="featured-content">
+                            <div class="featured-title">Cinematographer Needed - Feature Film</div>
+                            <div class="featured-meta">
+                                <div class="featured-price">₹2,50,000</div>
+                                <div class="featured-location">📍 Mumbai</div>
+                            </div>
+                            <div class="featured-seller">
+                                <div class="seller-avatar"></div>
+                                <div class="seller-name">Filmscape Productions</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="featured-card">
+                        <div class="featured-image gradient-overlay-2">
+                            <div class="featured-badge">⭐ Featured</div>
+                            <div class="verified-badge">✓ Verified</div>
+                        </div>
+                        <div class="featured-content">
+                            <div class="featured-title">Video Editor - Music Video Project</div>
+                            <div class="featured-meta">
+                                <div class="featured-price">₹45,000</div>
+                                <div class="featured-location">📍 Bandra</div>
+                            </div>
+                            <div class="featured-seller">
+                                <div class="seller-avatar"></div>
+                                <div class="seller-name">Rhythm Records</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="featured-card">
+                        <div class="featured-image gradient-overlay-3">
+                            <div class="featured-badge">⭐ Featured</div>
+                        </div>
+                        <div class="featured-content">
+                            <div class="featured-title">Colorist Required - Web Series</div>
+                            <div class="featured-meta">
+                                <div class="featured-price">₹1,20,000</div>
+                                <div class="featured-location">📍 Andheri</div>
+                            </div>
+                            <div class="featured-seller">
+                                <div class="seller-avatar"></div>
+                                <div class="seller-name">Digital Dreams</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- All Listings Section -->
+            <div class="all-listings-section">
+                <div class="all-listings-header">All Jobs & Gigs</div>
+                <div class="listings-grid">
+                    <div class="listing-card">
+                        <div class="listing-image gradient-overlay-4">
+                            <div class="listing-verified">✓</div>
+                        </div>
+                        <div class="listing-content">
+                            <div class="listing-category">💼 Jobs</div>
+                            <div class="listing-title">DOP for Documentary - 15 Days Shoot</div>
+                            <div class="listing-footer">
+                                <div class="listing-price">₹1,80,000</div>
+                                <div class="listing-time">2h ago</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="listing-card">
+                        <div class="listing-image gradient-overlay-5"></div>
+                        <div class="listing-content">
+                            <div class="listing-category">💼 Gigs</div>
+                            <div class="listing-title">Sound Designer - Short Film Project</div>
+                            <div class="listing-footer">
+                                <div class="listing-price">₹35,000</div>
+                                <div class="listing-time">4h ago</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="listing-card">
+                        <div class="listing-image gradient-overlay-6">
+                            <div class="listing-verified">✓</div>
+                        </div>
+                        <div class="listing-content">
+                            <div class="listing-category">💼 Jobs</div>
+                            <div class="listing-title">Gaffer & Lighting Team - Ad Shoot</div>
+                            <div class="listing-footer">
+                                <div class="listing-price">₹65,000</div>
+                                <div class="listing-time">6h ago</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="listing-card">
+                        <div class="listing-image gradient-overlay-7"></div>
+                        <div class="listing-content">
+                            <div class="listing-category">💼 Gigs</div>
+                            <div class="listing-title">Production Assistant for Fashion Shoot</div>
+                            <div class="listing-footer">
+                                <div class="listing-price">₹15,000</div>
+                                <div class="listing-time">8h ago</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="listing-card">
+                        <div class="listing-image gradient-overlay-8">
+                            <div class="listing-verified">✓</div>
+                        </div>
+                        <div class="listing-content">
+                            <div class="listing-category">💼 Jobs</div>
+                            <div class="listing-title">Drone Operator - Real Estate Videos</div>
+                            <div class="listing-footer">
+                                <div class="listing-price">₹40,000</div>
+                                <div class="listing-time">12h ago</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="listing-card">
+                        <div class="listing-image gradient-overlay-9"></div>
+                        <div class="listing-content">
+                            <div class="listing-category">💼 Gigs</div>
+                            <div class="listing-title">Script Supervisor - Feature Film</div>
+                            <div class="listing-footer">
+                                <div class="listing-price">₹95,000</div>
+                                <div class="listing-time">1d ago</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="listing-card">
+                        <div class="listing-image gradient-overlay-10">
+                            <div class="listing-verified">✓</div>
+                        </div>
+                        <div class="listing-content">
+                            <div class="listing-category">💼 Jobs</div>
+                            <div class="listing-title">Makeup Artist - Bollywood Film</div>
+                            <div class="listing-footer">
+                                <div class="listing-price">₹1,50,000</div>
+                                <div class="listing-time">1d ago</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="listing-card">
+                        <div class="listing-image gradient-overlay-4"></div>
+                        <div class="listing-content">
+                            <div class="listing-category">💼 Gigs</div>
+                            <div class="listing-title">VFX Artist for Action Sequence</div>
+                            <div class="listing-footer">
+                                <div class="listing-price">₹85,000</div>
+                                <div class="listing-time">2d ago</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Load More Button -->
+            <div class="load-more-section">
+                <button class="load-more-btn">
+                    Load More Jobs
+                    <span>↓</span>
+                </button>
+            </div>
+
+            <div class="spacer"></div>
+        </div>
+    </div>
+
+    <script>
+        // Load More Button
+        document.querySelector('.load-more-btn').addEventListener('click', function() {
+            this.classList.add('loading');
+            this.innerHTML = '⏳ Loading...';
+            
+            // Simulate loading
+            setTimeout(() => {
+                this.classList.remove('loading');
+                this.innerHTML = 'Load More Jobs <span>↓</span>';
+                alert('More listings would load here');
+            }, 1500);
+        });
+
+        // Sort Dropdown
+        document.querySelector('.sort-dropdown').addEventListener('click', function() {
+            alert('Sort options:\n• Newest First\n• Price: Low to High\n• Price: High to Low\n• Most Popular');
+        });
+
+        // Filter Button
+        document.querySelector('.filter-btn').addEventListener('click', function() {
+            alert('Filter options:\n• Price Range\n• Location\n• Job Type\n• Duration\n• Experience Level');
+        });
+
+        // Listing Cards Click
+        document.querySelectorAll('.listing-card, .featured-card').forEach(card => {
+            card.addEventListener('click', function() {
+                console.log('Navigate to listing detail page');
+            });
+        });
+    </script>
+</body>
+</html>
