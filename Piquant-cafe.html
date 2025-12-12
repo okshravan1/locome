@@ -1,0 +1,958 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Piquant Cafe - Old Panvel, Navi Mumbai</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Abril+Fatface&family=Outfit:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --pink: #FF6B9D;
+            --orange: #FF8C42;
+            --yellow: #FFC914;
+            --teal: #00D9C0;
+            --purple: #8B5CF6;
+            --blue: #3B82F6;
+            --dark: #1A1A2E;
+            --light: #FAFAFA;
+            --cream: #FFF9F0;
+        }
+
+        body {
+            font-family: 'Outfit', sans-serif;
+            background: var(--light);
+            color: var(--dark);
+            overflow-x: hidden;
+        }
+
+        /* Header */
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: rgba(255, 255, 255, 0.98);
+            backdrop-filter: blur(20px);
+            z-index: 1000;
+            padding: 1rem 1.5rem;
+            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.05);
+            animation: slideDown 0.6s ease;
+        }
+
+        @keyframes slideDown {
+            from { transform: translateY(-100%); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        .header-content {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .logo-container {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .logo {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            border: 3px solid var(--pink);
+            object-fit: cover;
+            box-shadow: 0 4px 12px rgba(255, 107, 157, 0.3);
+        }
+
+        .logo-text {
+            font-family: 'Abril Fatface', cursive;
+            font-size: 1.5rem;
+            background: linear-gradient(135deg, var(--pink), var(--orange));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .order-btn {
+            background: linear-gradient(135deg, var(--pink), var(--orange));
+            color: white;
+            border: none;
+            padding: 0.7rem 1.5rem;
+            border-radius: 50px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+            box-shadow: 0 4px 15px rgba(255, 107, 157, 0.4);
+        }
+
+        .order-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(255, 107, 157, 0.6);
+        }
+
+        /* Hero Section */
+        .hero {
+            margin-top: 80px;
+            padding: 4rem 1.5rem;
+            background: linear-gradient(135deg, #FFE5EC 0%, #FFF9E5 50%, #E5F9FF 100%);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '☕';
+            position: absolute;
+            font-size: 15rem;
+            opacity: 0.05;
+            top: -50px;
+            right: -50px;
+            animation: rotate 20s linear infinite;
+        }
+
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        .hero-content {
+            max-width: 800px;
+            margin: 0 auto;
+            text-align: center;
+            position: relative;
+            z-index: 1;
+            animation: fadeInUp 0.8s ease;
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(40px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .hero h1 {
+            font-family: 'Abril Fatface', cursive;
+            font-size: 3.5rem;
+            margin-bottom: 1rem;
+            line-height: 1.1;
+            background: linear-gradient(135deg, var(--pink), var(--orange), var(--yellow));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero .tagline {
+            font-size: 1.3rem;
+            color: var(--dark);
+            margin-bottom: 2rem;
+            font-weight: 300;
+        }
+
+        .rating-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: white;
+            padding: 1rem 2rem;
+            border-radius: 50px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            margin-bottom: 2rem;
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        .stars {
+            color: var(--yellow);
+            font-size: 1.5rem;
+        }
+
+        .cta-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-top: 2rem;
+        }
+
+        .btn {
+            padding: 1rem 2.5rem;
+            border-radius: 50px;
+            font-weight: 700;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            display: inline-block;
+            font-size: 1.1rem;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--pink), var(--orange));
+            color: white;
+            box-shadow: 0 6px 20px rgba(255, 107, 157, 0.4);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 30px rgba(255, 107, 157, 0.6);
+        }
+
+        .btn-secondary {
+            background: white;
+            color: var(--dark);
+            border: 2px solid var(--dark);
+        }
+
+        .btn-secondary:hover {
+            background: var(--dark);
+            color: white;
+        }
+
+        /* Features Grid */
+        .features {
+            padding: 4rem 1.5rem;
+            background: white;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .feature-card {
+            background: linear-gradient(135deg, rgba(255, 107, 157, 0.1), rgba(255, 140, 66, 0.1));
+            padding: 2.5rem;
+            border-radius: 30px;
+            text-align: center;
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .feature-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            transform: rotate(45deg);
+            transition: all 0.6s ease;
+        }
+
+        .feature-card:hover::before {
+            left: 100%;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
+        }
+
+        .feature-icon {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+            animation: bounce 2s ease-in-out infinite;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .feature-card:nth-child(1) .feature-icon { animation-delay: 0s; }
+        .feature-card:nth-child(2) .feature-icon { animation-delay: 0.2s; }
+        .feature-card:nth-child(3) .feature-icon { animation-delay: 0.4s; }
+
+        .feature-card h3 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 0.75rem;
+            color: var(--dark);
+        }
+
+        .feature-card p {
+            color: #666;
+            line-height: 1.7;
+            font-size: 1.05rem;
+        }
+
+        /* Section Header */
+        .section-header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .section-header h2 {
+            font-family: 'Abril Fatface', cursive;
+            font-size: 3rem;
+            margin-bottom: 0.5rem;
+            background: linear-gradient(135deg, var(--purple), var(--pink));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .section-header p {
+            font-size: 1.2rem;
+            color: #666;
+        }
+
+        /* Menu Section */
+        .menu-section {
+            padding: 4rem 1.5rem;
+            background: linear-gradient(135deg, #FFF9F0 0%, #FFE5EC 100%);
+        }
+
+        .menu-categories {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-bottom: 3rem;
+        }
+
+        .category-btn {
+            padding: 0.8rem 2rem;
+            border-radius: 50px;
+            border: 2px solid var(--pink);
+            background: white;
+            color: var(--pink);
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .category-btn:hover, .category-btn.active {
+            background: linear-gradient(135deg, var(--pink), var(--orange));
+            color: white;
+            transform: scale(1.05);
+        }
+
+        .menu-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .menu-card {
+            background: white;
+            border-radius: 25px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            transition: all 0.4s ease;
+        }
+
+        .menu-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
+        }
+
+        .menu-image {
+            width: 100%;
+            height: 250px;
+            object-fit: cover;
+            position: relative;
+        }
+
+        .menu-content {
+            padding: 1.5rem;
+        }
+
+        .menu-content h3 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            color: var(--dark);
+        }
+
+        .menu-content p {
+            color: #666;
+            line-height: 1.6;
+            margin-bottom: 1rem;
+        }
+
+        .menu-tags {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+
+        .tag {
+            padding: 0.4rem 1rem;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: white;
+        }
+
+        .tag-continental { background: linear-gradient(135deg, var(--pink), var(--orange)); }
+        .tag-chinese { background: linear-gradient(135deg, var(--teal), var(--blue)); }
+        .tag-cafe { background: linear-gradient(135deg, var(--purple), var(--pink)); }
+
+        /* Gallery */
+        .gallery {
+            padding: 4rem 1.5rem;
+            background: white;
+        }
+
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .gallery-item {
+            position: relative;
+            border-radius: 25px;
+            overflow: hidden;
+            cursor: pointer;
+            aspect-ratio: 1;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .gallery-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.6s ease;
+        }
+
+        .gallery-item:hover img {
+            transform: scale(1.15);
+        }
+
+        .gallery-overlay {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(to top, rgba(0, 0, 0, 0.8), transparent);
+            display: flex;
+            align-items: flex-end;
+            padding: 1.5rem;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .gallery-item:hover .gallery-overlay {
+            opacity: 1;
+        }
+
+        .gallery-overlay p {
+            color: white;
+            font-weight: 600;
+            font-size: 1.1rem;
+        }
+
+        /* Reviews */
+        .reviews {
+            padding: 4rem 1.5rem;
+            background: linear-gradient(135deg, #E5F9FF 0%, #FFE5EC 100%);
+        }
+
+        .reviews-container {
+            max-width: 1000px;
+            margin: 0 auto;
+            display: grid;
+            gap: 2rem;
+        }
+
+        .review-card {
+            background: white;
+            padding: 2rem;
+            border-radius: 25px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            position: relative;
+        }
+
+        .review-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .reviewer-avatar {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--pink), var(--orange));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 700;
+            font-size: 1.5rem;
+        }
+
+        .reviewer-info h4 {
+            font-weight: 700;
+            font-size: 1.2rem;
+            color: var(--dark);
+        }
+
+        .review-stars {
+            color: var(--yellow);
+            font-size: 1.2rem;
+        }
+
+        .review-text {
+            color: #555;
+            line-height: 1.8;
+            font-size: 1.05rem;
+        }
+
+        /* Contact */
+        .contact {
+            padding: 4rem 1.5rem;
+            background: white;
+        }
+
+        .contact-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            max-width: 1200px;
+            margin: 2rem auto 0;
+        }
+
+        .contact-card {
+            background: linear-gradient(135deg, rgba(139, 92, 246, 0.1), rgba(255, 107, 157, 0.1));
+            padding: 2rem;
+            border-radius: 25px;
+            text-align: center;
+        }
+
+        .contact-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        .contact-card h3 {
+            font-size: 1.3rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            color: var(--dark);
+        }
+
+        .contact-card p {
+            color: #666;
+            line-height: 1.6;
+        }
+
+        .contact-card a {
+            color: var(--pink);
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .social-links {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-top: 3rem;
+        }
+
+        .social-btn {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--pink), var(--orange));
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8rem;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(255, 107, 157, 0.4);
+        }
+
+        .social-btn:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(255, 107, 157, 0.6);
+        }
+
+        /* Map */
+        .map-section {
+            padding: 4rem 1.5rem;
+            background: var(--cream);
+        }
+
+        .map-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            border-radius: 30px;
+            overflow: hidden;
+            box-shadow: 0 15px 50px rgba(0, 0, 0, 0.15);
+            height: 450px;
+        }
+
+        .map-container iframe {
+            width: 100%;
+            height: 100%;
+            border: 0;
+        }
+
+        /* Footer */
+        footer {
+            background: var(--dark);
+            color: white;
+            text-align: center;
+            padding: 3rem 1.5rem;
+        }
+
+        footer p {
+            opacity: 0.8;
+            margin-bottom: 0.5rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+
+            .section-header h2 {
+                font-size: 2.2rem;
+            }
+
+            .gallery-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="header-content">
+            <div class="logo-container">
+                <img src="/logo.jpg" alt="Piquant Cafe" class="logo">
+                <span class="logo-text">Piquant</span>
+            </div>
+            <a href="https://www.zomato.com/mumbai/piquant-cafe-old-panvel-navi-mumbai" class="order-btn" target="_blank">Order Now</a>
+        </div>
+    </header>
+
+    <!-- Hero -->
+    <section class="hero">
+        <div class="hero-content">
+            <h1>Your Happy Place<br>for Great Food!</h1>
+            <p class="tagline">Serving smiles, one plate at a time 🌟</p>
+            
+            <div class="rating-badge">
+                <span class="stars">★★★★★</span>
+                <div>
+                    <strong style="font-size: 1.3rem;">4.3</strong>
+                    <div style="font-size: 0.9rem; color: #666;">500+ Reviews</div>
+                </div>
+            </div>
+
+            <div class="cta-buttons">
+                <a href="https://www.zomato.com/mumbai/piquant-cafe-old-panvel-navi-mumbai" class="btn btn-primary" target="_blank">🍽️ Order Now</a>
+                <a href="#location" class="btn btn-secondary">📍 Visit Us</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features -->
+    <section class="features">
+        <div class="features-grid">
+            <div class="feature-card">
+                <div class="feature-icon">🌮</div>
+                <h3>Multi-Cuisine Magic</h3>
+                <p>Continental, Chinese, Italian, Indian - we've got it all! Explore flavors from around the world without leaving Panvel.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">☕</div>
+                <h3>Cafe Vibes</h3>
+                <p>Perfect for coffee dates, work sessions, or catching up with friends. Cozy corners and great coffee await!</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">⏰</div>
+                <h3>All Day Dining</h3>
+                <p>Open 11:30 AM to 11:30 PM daily. Lunch, dinner, or late-night cravings - we're here for you!</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Menu -->
+    <section class="menu-section">
+        <div class="section-header">
+            <h2>Our Favorites</h2>
+            <p>Handpicked dishes that our guests absolutely love!</p>
+        </div>
+
+        <div class="menu-grid">
+            <div class="menu-card">
+                <img src="https://images.unsplash.com/photo-1621996346565-e3dbc646d9a9?w=800&q=80" alt="Pasta" class="menu-image">
+                <div class="menu-content">
+                    <h3>Pasta Perfection</h3>
+                    <p>Creamy Alfredo, tangy Arrabiata, or classic Carbonara - cooked just the way you like it!</p>
+                    <div class="menu-tags">
+                        <span class="tag tag-continental">Continental</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="menu-card">
+                <img src="https://images.unsplash.com/photo-1555939594-58d7cb561ad1?w=800&q=80" alt="Burger" class="menu-image">
+                <div class="menu-content">
+                    <h3>Gourmet Burgers</h3>
+                    <p>Juicy patties, fresh veggies, and our special sauces. Each bite is pure happiness!</p>
+                    <div class="menu-tags">
+                        <span class="tag tag-continental">Continental</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="menu-card">
+                <img src="https://images.unsplash.com/photo-1582878826629-29b7ad1cdc43?w=800&q=80" alt="Noodles" class="menu-image">
+                <div class="menu-content">
+                    <h3>Wok-Tossed Noodles</h3>
+                    <p>Authentic Chinese flavors with fresh veggies and your choice of protein. Slurp-worthy!</p>
+                    <div class="menu-tags">
+                        <span class="tag tag-chinese">Chinese</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="menu-card">
+                <img src="https://images.unsplash.com/photo-1571091718767-18b5b1457add?w=800&q=80" alt="Coffee" class="menu-image">
+                <div class="menu-content">
+                    <h3>Artisan Coffee</h3>
+                    <p>From classic espresso to trendy cold brews - every cup tells a story of perfection.</p>
+                    <div class="menu-tags">
+                        <span class="tag tag-cafe">Cafe</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="menu-card">
+                <img src="https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?w=800&q=80" alt="Pizza" class="menu-image">
+                <div class="menu-content">
+                    <h3>Wood-Fired Pizza</h3>
+                    <p>Thin crust, loaded toppings, melted cheese. The perfect slice every time!</p>
+                    <div class="menu-tags">
+                        <span class="tag tag-continental">Italian</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="menu-card">
+                <img src="https://images.unsplash.com/photo-1587314168485-3236d6710814?w=800&q=80" alt="Desserts" class="menu-image">
+                <div class="menu-content">
+                    <h3>Decadent Desserts</h3>
+                    <p>Sweet endings with brownies, cheesecakes, and sundaes that'll make you smile!</p>
+                    <div class="menu-tags">
+                        <span class="tag tag-cafe">Cafe</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Gallery -->
+    <section class="gallery">
+        <div class="section-header">
+            <h2>Taste the Vibes</h2>
+            <p>A peek into our colorful world of flavors!</p>
+        </div>
+
+        <div class="gallery-grid">
+            <div class="gallery-item">
+                <img src="https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=800&q=80" alt="Restaurant">
+                <div class="gallery-overlay">
+                    <p>Cozy Interior ✨</p>
+                </div>
+            </div>
+            <div class="gallery-item">
+                <img src="https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=800&q=80" alt="Food">
+                <div class="gallery-overlay">
+                    <p>Fresh & Delicious 🍴</p>
+                </div>
+            </div>
+            <div class="gallery-item">
+                <img src="https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=800&q=80" alt="Dining">
+                <div class="gallery-overlay">
+                    <p>Perfect Ambiance 🌟</p>
+                </div>
+            </div>
+            <div class="gallery-item">
+                <img src="https://images.unsplash.com/photo-1559339352-11d035aa65de?w=800&q=80" alt="Coffee">
+                <div class="gallery-overlay">
+                    <p>Coffee Love ☕</p>
+                </div>
+            </div>
+            <div class="gallery-item">
+                <img src="https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=800&q=80" alt="Plating">
+                <div class="gallery-overlay">
+                    <p>Beautiful Plating 🎨</p>
+                </div>
+            </div>
+            <div class="gallery-item">
+                <img src="https://images.unsplash.com/photo-1551218808-94e220e084d2?w=800&q=80" alt="Drinks">
+                <div class="gallery-overlay">
+                    <p>Refreshing Drinks 🥤</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Reviews -->
+    <section class="reviews">
+        <div class="section-header">
+            <h2>Love from Our Guests</h2>
+            <p>Here's what makes us smile every day!</p>
+        </div>
+
+        <div class="reviews-container">
+            <div class="review-card">
+                <div class="review-header">
+                    <div class="reviewer-avatar">A</div>
+                    <div class="reviewer-info">
+                        <h4>Amit Sharma</h4>
+                        <div class="review-stars">★★★★★</div>
+                    </div>
+                </div>
+                <p class="review-text">"Absolutely loved the pasta here! The ambiance is perfect for a family dinner, and the staff is super friendly. The chocolate brownie is a must-try. Will definitely be back soon! 🍝❤️"</p>
+            </div>
+
+            <div class="review-card">
+                <div class="review-header">
+                    <div class="reviewer-avatar">P</div>
+                    <div class="reviewer-info">
+                        <h4>Priya Desai</h4>
+                        <div class="review-stars">★★★★★</div>
+                    </div>
+                </div>
+                <p class="review-text">"Best cafe in Panvel! Their cappuccino is divine and the cozy corners are perfect for working or catching up with friends. The desserts are absolutely delicious too! ☕✨"</p>
+            </div>
+
+            <div class="review-card">
+                <div class="review-header">
+                    <div class="reviewer-avatar">R</div>
+                    <div class="reviewer-info">
+                        <h4>Rahul Patil</h4>
+                        <div class="review-stars">★★★★★</div>
+                    </div>
+                </div>
+                <p class="review-text">"Great variety of cuisines! The Chinese noodles were authentic and the pizza was amazing. Portion sizes are generous and prices are reasonable. Highly recommend! 🍜🍕"</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Map -->
+    <section class="map-section" id="location">
+        <div class="section-header">
+            <h2>Come Say Hi!</h2>
+            <p>We're right here in Old Panvel, Navi Mumbai</p>
+        </div>
+        <div class="map-container">
+            <iframe 
+                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3772.0635875986647!2d73.1156!3d19.0086!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3be7e9618a92e4bf%3A0xe21bb843e5dc3d0b!2sPiquant%20Cafe!5e0!3m2!1sen!2sin!4v1234567890" 
+                allowfullscreen="" 
+                loading="lazy">
+            </iframe>
+        </div>
+    </section>
+
+    <!-- Contact -->
+    <section class="contact">
+        <div class="section-header">
+            <h2>Let's Connect!</h2>
+            <p>We'd love to hear from you</p>
+        </div>
+
+        <div class="contact-grid">
+            <div class="contact-card">
+                <div class="contact-icon">📍</div>
+                <h3>Location</h3>
+                <p>Old Panvel<br>Navi Mumbai, Maharashtra</p>
+            </div>
+
+            <div class="contact-card">
+                <div class="contact-icon">⏰</div>
+                <h3>Opening Hours</h3>
+                <p>Monday - Sunday<br>11:30 AM - 11:30 PM</p>
+            </div>
+
+            <div class="contact-card">
+                <div class="contact-icon">📱</div>
+                <h3>Follow Us</h3>
+                <p>Stay updated with our<br>latest dishes & offers!</p>
+            </div>
+        </div>
+
+        <div class="social-links">
+            <a href="https://www.instagram.com/piquant_cafe/" target="_blank" class="social-btn">📷</a>
+            <a href="https://www.zomato.com/mumbai/piquant-cafe-old-panvel-navi-mumbai" target="_blank" class="social-btn">🍴</a>
+            <a href="https://www.google.com/search?q=Piquant+Cafe" target="_blank" class="social-btn">⭐</a>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <p style="font-size: 1.1rem; margin-bottom: 1rem;">🍽️ Piquant Cafe 🍽️</p>
+        <p>&copy; 2024 Piquant Cafe. All Rights Reserved.</p>
+        <p>Made with ❤️ and lots of good food!</p>
+    </footer>
+
+    <script>
+        // Smooth scroll
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+            });
+        });
+
+        // Intersection Observer for animations
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -100px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, observerOptions);
+
+        // Observe all cards
+        document.querySelectorAll('.feature-card, .menu-card, .review-card, .contact-card').forEach(el => {
+            el.style.opacity = '0';
+            el.style.transform = 'translateY(30px)';
+            el.style.transition = 'all 0.6s ease';
+            observer.observe(el);
+        });
+    </script>
+</body>
+</html>
