@@ -1,0 +1,887 @@
+<!DOCTYPE html>
+<html lang="mr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Popcorn Patil - Business Ready</title>
+<link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg-deep: #0a0612;
+    --bg-mid: #110920;
+    --purple-core: #7c3aed;
+    --purple-bright: #a855f7;
+    --purple-glow: #c084fc;
+    --pink-accent: #ec4899;
+    --gold-accent: #f59e0b;
+    --text-primary: #f0e9ff;
+    --text-muted: #a78bca;
+    --card-bg: rgba(124, 58, 237, 0.08);
+    --card-border: rgba(168, 85, 247, 0.2);
+    --btn-primary: linear-gradient(135deg, #7c3aed, #a855f7);
+    --btn-glow: 0 0 24px rgba(168, 85, 247, 0.5);
+  }
+
+  html, body {
+    height: 100%; width: 100%;
+    font-family: 'Quicksand', sans-serif;
+    background: var(--bg-deep);
+    color: var(--text-primary);
+    overflow: hidden;
+    -webkit-tap-highlight-color: transparent;
+    user-select: none;
+  }
+
+  /* Animated background */
+  .bg-layer {
+    position: fixed; inset: 0; z-index: 0;
+    background: radial-gradient(ellipse 80% 60% at 50% -10%, rgba(124,58,237,0.35) 0%, transparent 70%),
+                radial-gradient(ellipse 60% 50% at 80% 110%, rgba(236,72,153,0.18) 0%, transparent 60%),
+                linear-gradient(180deg, #0a0612 0%, #110920 50%, #0d0818 100%);
+  }
+
+  .orb {
+    position: fixed; border-radius: 50%; filter: blur(60px); z-index: 0;
+    animation: orbFloat 8s ease-in-out infinite;
+  }
+  .orb-1 { width: 280px; height: 280px; background: rgba(124,58,237,0.25); top: -80px; left: -60px; animation-delay: 0s; }
+  .orb-2 { width: 200px; height: 200px; background: rgba(236,72,153,0.2); bottom: -60px; right: -40px; animation-delay: 3s; }
+  .orb-3 { width: 150px; height: 150px; background: rgba(245,158,11,0.12); top: 40%; left: 60%; animation-delay: 5s; }
+
+  @keyframes orbFloat {
+    0%, 100% { transform: translate(0, 0) scale(1); }
+    33% { transform: translate(20px, -20px) scale(1.05); }
+    66% { transform: translate(-15px, 15px) scale(0.97); }
+  }
+
+  /* Stars */
+  .stars { position: fixed; inset: 0; z-index: 0; overflow: hidden; }
+  .star {
+    position: absolute; background: #fff; border-radius: 50%;
+    animation: twinkle 3s ease-in-out infinite;
+  }
+  @keyframes twinkle {
+    0%, 100% { opacity: 0.3; }
+    50% { opacity: 1; }
+  }
+
+  /* Progress bar */
+  #progress-container {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    height: 4px; background: rgba(255,255,255,0.08);
+  }
+  #progress-bar {
+    height: 100%;
+    background: linear-gradient(90deg, var(--purple-bright), var(--pink-accent), var(--gold-accent));
+    border-radius: 0 2px 2px 0;
+    transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 0 12px rgba(168,85,247,0.8);
+    width: 0%;
+  }
+
+  /* Screens */
+  #app {
+    position: fixed; inset: 0; z-index: 10;
+    display: flex; align-items: center; justify-content: center;
+  }
+
+  .screen {
+    position: absolute; inset: 0;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    padding: 28px 20px 40px;
+    opacity: 0; pointer-events: none;
+    transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    transform: translateX(60px);
+    overflow-y: auto;
+  }
+
+  .screen.active {
+    opacity: 1; pointer-events: all;
+    transform: translateX(0);
+  }
+
+  .screen.exit-left {
+    opacity: 0;
+    transform: translateX(-60px);
+    pointer-events: none;
+  }
+
+  .screen-inner {
+    width: 100%; max-width: 420px;
+    display: flex; flex-direction: column;
+    align-items: center; gap: 20px;
+  }
+
+  /* Step indicator */
+  .step-label {
+    font-size: 12px; font-weight: 600; letter-spacing: 2px;
+    color: var(--purple-glow); text-transform: uppercase;
+    background: rgba(124,58,237,0.15);
+    border: 1px solid rgba(168,85,247,0.25);
+    padding: 6px 16px; border-radius: 100px;
+  }
+
+  /* Logo mark */
+  .logo-mark {
+    width: 64px; height: 64px; border-radius: 20px;
+    background: linear-gradient(135deg, rgba(124,58,237,0.3), rgba(236,72,153,0.2));
+    border: 1px solid rgba(168,85,247,0.3);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 28px;
+    box-shadow: 0 0 30px rgba(124,58,237,0.3);
+    animation: logoPulse 3s ease-in-out infinite;
+  }
+  @keyframes logoPulse {
+    0%, 100% { box-shadow: 0 0 30px rgba(124,58,237,0.3); }
+    50% { box-shadow: 0 0 50px rgba(168,85,247,0.5); }
+  }
+
+  /* Typography */
+  .headline {
+    font-size: 26px; font-weight: 800;
+    line-height: 1.25; text-align: center;
+    background: linear-gradient(135deg, #f0e9ff 30%, var(--purple-glow));
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .subtext {
+    font-size: 15px; font-weight: 500;
+    color: var(--text-muted); text-align: center;
+    line-height: 1.6;
+  }
+
+  .question-text {
+    font-size: 22px; font-weight: 700;
+    text-align: center; line-height: 1.35;
+    color: var(--text-primary);
+  }
+
+  /* Options */
+  .options-grid {
+    width: 100%; display: flex;
+    flex-direction: column; gap: 12px;
+  }
+
+  .option-btn {
+    width: 100%; padding: 18px 20px;
+    background: var(--card-bg);
+    border: 1.5px solid var(--card-border);
+    border-radius: 16px; color: var(--text-primary);
+    font-family: 'Quicksand', sans-serif;
+    font-size: 16px; font-weight: 600;
+    cursor: pointer; text-align: left;
+    display: flex; align-items: center; gap: 14px;
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    -webkit-tap-highlight-color: transparent;
+    position: relative; overflow: hidden;
+  }
+
+  .option-btn::before {
+    content: ''; position: absolute; inset: 0;
+    background: linear-gradient(135deg, rgba(124,58,237,0.15), rgba(168,85,247,0.08));
+    opacity: 0; transition: opacity 0.25s;
+  }
+
+  .option-btn:hover::before, .option-btn:active::before { opacity: 1; }
+
+  .option-btn:active {
+    transform: scale(0.96);
+    border-color: var(--purple-bright);
+    box-shadow: 0 0 20px rgba(168,85,247,0.3);
+  }
+
+  .option-btn.selected {
+    border-color: var(--purple-bright);
+    background: rgba(124,58,237,0.2);
+    box-shadow: 0 0 20px rgba(168,85,247,0.3);
+  }
+
+  .option-icon {
+    width: 36px; height: 36px; border-radius: 10px;
+    background: rgba(168,85,247,0.15);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 16px; flex-shrink: 0;
+  }
+
+  /* Primary CTA button */
+  .btn-primary {
+    width: 100%; padding: 18px;
+    background: var(--btn-primary);
+    border: none; border-radius: 16px;
+    color: #fff; font-family: 'Quicksand', sans-serif;
+    font-size: 17px; font-weight: 700;
+    cursor: pointer; letter-spacing: 0.3px;
+    box-shadow: var(--btn-glow);
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative; overflow: hidden;
+  }
+
+  .btn-primary::after {
+    content: ''; position: absolute; inset: 0;
+    background: linear-gradient(180deg, rgba(255,255,255,0.15) 0%, transparent 100%);
+  }
+
+  .btn-primary:active {
+    transform: scale(0.97);
+    box-shadow: 0 0 40px rgba(168,85,247,0.7);
+  }
+
+  .btn-secondary {
+    width: 100%; padding: 18px;
+    background: transparent;
+    border: 1.5px solid var(--card-border);
+    border-radius: 16px; color: var(--text-primary);
+    font-family: 'Quicksand', sans-serif;
+    font-size: 17px; font-weight: 700;
+    cursor: pointer;
+    transition: all 0.25s;
+  }
+
+  .btn-secondary:active {
+    transform: scale(0.97);
+    border-color: var(--purple-bright);
+  }
+
+  /* Result card */
+  .result-card {
+    width: 100%; padding: 28px;
+    background: linear-gradient(135deg, rgba(124,58,237,0.15), rgba(236,72,153,0.08));
+    border: 1.5px solid rgba(168,85,247,0.3);
+    border-radius: 24px;
+    box-shadow: 0 0 40px rgba(124,58,237,0.2);
+  }
+
+  .result-badge {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: rgba(245,158,11,0.15);
+    border: 1px solid rgba(245,158,11,0.3);
+    padding: 6px 14px; border-radius: 100px;
+    font-size: 13px; font-weight: 700; color: #f59e0b;
+    margin-bottom: 14px;
+  }
+
+  .result-title {
+    font-size: 22px; font-weight: 800;
+    line-height: 1.3; margin-bottom: 16px;
+    background: linear-gradient(135deg, #f0e9ff, var(--purple-glow));
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .result-tips { display: flex; flex-direction: column; gap: 10px; }
+
+  .tip-item {
+    display: flex; align-items: flex-start; gap: 10px;
+    padding: 12px; background: rgba(255,255,255,0.04);
+    border-radius: 12px; border: 1px solid rgba(255,255,255,0.06);
+  }
+
+  .tip-dot {
+    width: 8px; height: 8px; border-radius: 50%;
+    background: var(--purple-bright); flex-shrink: 0; margin-top: 5px;
+    box-shadow: 0 0 8px rgba(168,85,247,0.8);
+  }
+
+  .tip-text { font-size: 14px; font-weight: 600; color: var(--text-muted); line-height: 1.5; }
+
+  /* Input field */
+  .input-group { width: 100%; position: relative; }
+
+  .input-field {
+    width: 100%; padding: 18px 20px;
+    background: var(--card-bg);
+    border: 1.5px solid var(--card-border);
+    border-radius: 16px; color: var(--text-primary);
+    font-family: 'Quicksand', sans-serif;
+    font-size: 16px; font-weight: 600;
+    outline: none; transition: all 0.25s;
+  }
+
+  .input-field::placeholder { color: rgba(167,139,202,0.5); }
+  .input-field:focus { border-color: var(--purple-bright); box-shadow: 0 0 20px rgba(168,85,247,0.2); }
+
+  .trust-line {
+    font-size: 13px; font-weight: 500; color: var(--text-muted);
+    text-align: center; display: flex; align-items: center;
+    justify-content: center; gap: 6px;
+  }
+
+  /* Community screen */
+  .access-badge {
+    display: flex; align-items: center; gap: 10px;
+    background: rgba(16,185,129,0.1);
+    border: 1px solid rgba(16,185,129,0.3);
+    padding: 10px 20px; border-radius: 100px;
+    color: #34d399; font-size: 14px; font-weight: 700;
+  }
+
+  .community-card {
+    width: 100%; padding: 24px;
+    background: linear-gradient(135deg, rgba(16,185,129,0.08), rgba(124,58,237,0.1));
+    border: 1.5px solid rgba(16,185,129,0.2);
+    border-radius: 24px; text-align: center;
+  }
+
+  .community-num {
+    font-size: 42px; font-weight: 800;
+    background: linear-gradient(135deg, #34d399, var(--purple-glow));
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .social-proof {
+    font-size: 13px; font-weight: 600; color: var(--text-muted);
+    display: flex; align-items: center; justify-content: center; gap: 6px;
+  }
+
+  .avatars {
+    display: flex; justify-content: center; margin-bottom: 8px;
+  }
+
+  .avatar {
+    width: 32px; height: 32px; border-radius: 50%;
+    border: 2px solid var(--bg-deep);
+    background: linear-gradient(135deg, var(--purple-core), var(--pink-accent));
+    margin-left: -8px; display: flex; align-items: center;
+    justify-content: center; font-size: 12px;
+  }
+
+  /* Loading */
+  .loading-screen {
+    display: flex; flex-direction: column;
+    align-items: center; gap: 20px;
+  }
+
+  .loader-ring {
+    width: 72px; height: 72px; position: relative;
+  }
+
+  .loader-ring::before, .loader-ring::after {
+    content: ''; position: absolute; inset: 0; border-radius: 50%;
+    border: 3px solid transparent;
+  }
+
+  .loader-ring::before {
+    border-top-color: var(--purple-bright);
+    animation: spin 1s linear infinite;
+  }
+
+  .loader-ring::after {
+    border-bottom-color: var(--pink-accent);
+    animation: spin 1.5s linear infinite reverse;
+  }
+
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  .loader-emoji {
+    position: absolute; inset: 0;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 28px;
+    animation: emojiPop 0.5s ease-in-out infinite alternate;
+  }
+
+  @keyframes emojiPop {
+    from { transform: scale(0.9); }
+    to { transform: scale(1.1); }
+  }
+
+  .loading-text {
+    font-size: 16px; font-weight: 600; color: var(--text-muted);
+    animation: textFade 1s ease-in-out infinite alternate;
+  }
+
+  @keyframes textFade {
+    from { opacity: 0.6; }
+    to { opacity: 1; }
+  }
+
+  .loading-dots::after {
+    content: '';
+    animation: dots 1.5s steps(4, end) infinite;
+  }
+
+  @keyframes dots {
+    0% { content: ''; }
+    25% { content: '.'; }
+    50% { content: '..'; }
+    75% { content: '...'; }
+  }
+
+  /* WhatsApp button */
+  .btn-whatsapp {
+    width: 100%; padding: 18px;
+    background: linear-gradient(135deg, #25d366, #128c7e);
+    border: none; border-radius: 16px;
+    color: #fff; font-family: 'Quicksand', sans-serif;
+    font-size: 17px; font-weight: 700;
+    cursor: pointer; display: flex;
+    align-items: center; justify-content: center; gap: 10px;
+    box-shadow: 0 0 24px rgba(37,211,102,0.4);
+    text-decoration: none;
+    transition: all 0.25s;
+  }
+
+  .btn-whatsapp:active { transform: scale(0.97); }
+
+  /* Divider */
+  .divider { width: 100%; height: 1px; background: var(--card-border); }
+
+  /* FOMO Ticker */
+  .fomo-ticker {
+    width: 100%;
+    background: rgba(16,185,129,0.07);
+    border: 1px solid rgba(16,185,129,0.2);
+    border-radius: 12px;
+    padding: 9px 14px;
+    display: flex; align-items: center; gap: 10px;
+    overflow: hidden;
+    min-height: 42px;
+  }
+
+  .fomo-dot {
+    width: 8px; height: 8px; border-radius: 50%;
+    background: #34d399; flex-shrink: 0;
+    box-shadow: 0 0 8px rgba(52,211,153,0.8);
+    animation: livePulse 1.5s ease-in-out infinite;
+  }
+
+  @keyframes livePulse {
+    0%, 100% { transform: scale(1); opacity: 1; }
+    50% { transform: scale(1.4); opacity: 0.6; }
+  }
+
+  .fomo-text {
+    font-size: 13px; font-weight: 600;
+    color: rgba(167,139,202,0.9);
+    white-space: nowrap;
+    animation: fomoSlideIn 0.5s cubic-bezier(0.4,0,0.2,1);
+  }
+
+  .fomo-text span { color: #a7f3d0; font-weight: 700; }
+
+  @keyframes fomoSlideIn {
+    from { opacity: 0; transform: translateY(8px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  /* Welcome emoji grid */
+  .emoji-float {
+    position: absolute; font-size: 20px; opacity: 0.4;
+    animation: floatUp 6s ease-in-out infinite;
+  }
+
+  @keyframes floatUp {
+    0%, 100% { transform: translateY(0) rotate(0deg); opacity: 0.4; }
+    50% { transform: translateY(-20px) rotate(10deg); opacity: 0.7; }
+  }
+</style>
+</head>
+<body>
+
+<div class="bg-layer"></div>
+<div class="orb orb-1"></div>
+<div class="orb orb-2"></div>
+<div class="orb orb-3"></div>
+<div class="stars" id="stars"></div>
+
+<div id="progress-container">
+  <div id="progress-bar"></div>
+</div>
+
+<div id="app">
+
+  <!-- SCREEN 1: Welcome -->
+  <div class="screen active" id="screen-1">
+    <div class="screen-inner">
+      <div class="logo-mark">🚀</div>
+      <div class="headline">2 minute madhye samjun ghya — tumhi founder banayla ready aahat ka?</div>
+      <div class="subtext">Fun startup readiness test for Marathi youth. 7 questions. Honest answers. Real roadmap.</div>
+      <div class="divider"></div>
+      <div style="display:flex; gap:20px; width:100%; justify-content:center;">
+        <div style="text-align:center;">
+          <div style="font-size:20px; font-weight:800; color:var(--purple-glow);">7</div>
+          <div style="font-size:12px; color:var(--text-muted); font-weight:600;">Questions</div>
+        </div>
+        <div style="width:1px; background:var(--card-border);"></div>
+        <div style="text-align:center;">
+          <div style="font-size:20px; font-weight:800; color:var(--purple-glow);">2 min</div>
+          <div style="font-size:12px; color:var(--text-muted); font-weight:600;">Time</div>
+        </div>
+        <div style="width:1px; background:var(--card-border);"></div>
+        <div style="text-align:center;">
+          <div style="font-size:20px; font-weight:800; color:var(--purple-glow);">Free</div>
+          <div style="font-size:12px; color:var(--text-muted); font-weight:600;">Results</div>
+        </div>
+      </div>
+      <button class="btn-primary" onclick="goTo(2)">Start Test →</button>
+    </div>
+  </div>
+
+  <!-- SCREEN 2: Status -->
+  <div class="screen" id="screen-2">
+    <div class="screen-inner">
+      <div class="step-label">Question 1 of 6</div>
+      <div class="question-text">Sadhya tumhi kontya stage madhe aahat?</div>
+      <div class="options-grid">
+        <button class="option-btn" onclick="selectAnswer(2,'Student',this,3)">
+          <div class="option-icon">🎓</div> Student
+        </button>
+        <button class="option-btn" onclick="selectAnswer(2,'Job karto',this,3)">
+          <div class="option-icon">💼</div> Job karto
+        </button>
+        <button class="option-btn" onclick="selectAnswer(2,'Business karto',this,3)">
+          <div class="option-icon">🏢</div> Business karto
+        </button>
+        <button class="option-btn" onclick="selectAnswer(2,'Idea explore karto',this,3)">
+          <div class="option-icon">💡</div> Idea explore karto
+        </button>
+      </div>
+      <div class="fomo-ticker"><div class="fomo-dot"></div><div class="fomo-text" id="fomo-2">...</div></div>
+    </div>
+  </div>
+
+  <!-- SCREEN 3: Problem -->
+  <div class="screen" id="screen-3">
+    <div class="screen-inner">
+      <div class="step-label">Question 2 of 6</div>
+      <div class="question-text">Tumhala saglyat motha struggle kay vatto?</div>
+      <div class="options-grid">
+        <button class="option-btn" onclick="selectAnswer(3,'Idea nahi',this,4)">
+          <div class="option-icon">🤔</div> Idea nahi
+        </button>
+        <button class="option-btn" onclick="selectAnswer(3,'Risk chi bhiti',this,4)">
+          <div class="option-icon">😰</div> Risk chi bhiti
+        </button>
+        <button class="option-btn" onclick="selectAnswer(3,'Funding clarity nahi',this,4)">
+          <div class="option-icon">💰</div> Funding clarity nahi
+        </button>
+        <button class="option-btn" onclick="selectAnswer(3,'Time nahi',this,4)">
+          <div class="option-icon">⏰</div> Time nahi
+        </button>
+      </div>
+      <div class="fomo-ticker"><div class="fomo-dot"></div><div class="fomo-text" id="fomo-3">...</div></div>
+    </div>
+  </div>
+
+  <!-- SCREEN 4: Goal -->
+  <div class="screen" id="screen-4">
+    <div class="screen-inner">
+      <div class="step-label">Question 3 of 6</div>
+      <div class="question-text">Pudhil 2 varshat tumhala kay achieve karaycha aahe?</div>
+      <div class="options-grid">
+        <button class="option-btn" onclick="selectAnswer(4,'Side income',this,5)">
+          <div class="option-icon">💵</div> Side income
+        </button>
+        <button class="option-btn" onclick="selectAnswer(4,'Startup build',this,5)">
+          <div class="option-icon">🏗️</div> Startup build
+        </button>
+        <button class="option-btn" onclick="selectAnswer(4,'Funding raise',this,5)">
+          <div class="option-icon">📈</div> Funding raise
+        </button>
+        <button class="option-btn" onclick="selectAnswer(4,'Global scale',this,5)">
+          <div class="option-icon">🌍</div> Global scale
+        </button>
+      </div>
+      <div class="fomo-ticker"><div class="fomo-dot"></div><div class="fomo-text" id="fomo-4">...</div></div>
+    </div>
+  </div>
+
+  <!-- SCREEN 5: Time -->
+  <div class="screen" id="screen-5">
+    <div class="screen-inner">
+      <div class="step-label">Question 4 of 6</div>
+      <div class="question-text">Weekly startup sathi kiti time deu shakta?</div>
+      <div class="options-grid">
+        <button class="option-btn" onclick="selectAnswer(5,'2 hours',this,6)">
+          <div class="option-icon">🌱</div> 2 hours/week
+        </button>
+        <button class="option-btn" onclick="selectAnswer(5,'5 hours',this,6)">
+          <div class="option-icon">🌿</div> 5 hours/week
+        </button>
+        <button class="option-btn" onclick="selectAnswer(5,'10 hours',this,6)">
+          <div class="option-icon">🌲</div> 10 hours/week
+        </button>
+        <button class="option-btn" onclick="selectAnswer(5,'Serious founder',this,6)">
+          <div class="option-icon">🔥</div> Serious founder mode
+        </button>
+      </div>
+      <div class="fomo-ticker"><div class="fomo-dot"></div><div class="fomo-text" id="fomo-5">...</div></div>
+    </div>
+  </div>
+
+  <!-- SCREEN 6: Exposure -->
+  <div class="screen" id="screen-6">
+    <div class="screen-inner">
+      <div class="step-label">Question 5 of 6</div>
+      <div class="question-text">Startup world madhe tumhi kiti involved aahat?</div>
+      <div class="options-grid">
+        <button class="option-btn" onclick="selectAnswer(6,'Fakt reels',this,'loading')">
+          <div class="option-icon">📱</div> Fakt reels baghto
+        </button>
+        <button class="option-btn" onclick="selectAnswer(6,'Ideas lihun',this,'loading')">
+          <div class="option-icon">📝</div> Ideas lihun thevle aahet
+        </button>
+        <button class="option-btn" onclick="selectAnswer(6,'Small try',this,'loading')">
+          <div class="option-icon">⚡</div> Small try kelay
+        </button>
+        <button class="option-btn" onclick="selectAnswer(6,'Already building',this,'loading')">
+          <div class="option-icon">🏆</div> Already build karto
+        </button>
+      </div>
+      <div class="fomo-ticker"><div class="fomo-dot"></div><div class="fomo-text" id="fomo-6">...</div></div>
+    </div>
+  </div>
+
+  <!-- LOADING SCREEN -->
+  <div class="screen" id="screen-loading">
+    <div class="screen-inner" style="gap:28px;">
+      <div class="loader-ring">
+        <div class="loader-emoji">🧠</div>
+      </div>
+      <div>
+        <div class="loading-text">Analyzing your founder profile<span class="loading-dots"></span></div>
+        <div style="font-size:13px; color:rgba(167,139,202,0.5); text-align:center; margin-top:8px; font-weight:500;">Processing 6 data points</div>
+      </div>
+      <div style="width:100%; background:rgba(255,255,255,0.06); border-radius:100px; height:6px; overflow:hidden;">
+        <div id="fake-progress" style="height:100%; background:linear-gradient(90deg,var(--purple-bright),var(--pink-accent)); border-radius:100px; width:0%; transition:width 0.3s;"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SCREEN 7: Result -->
+  <div class="screen" id="screen-7">
+    <div class="screen-inner">
+      <div class="step-label">Your Result ✨</div>
+      <div class="result-card">
+        <div class="result-badge">⭐ Founder Stage Identified</div>
+        <div class="result-title">Tumhi Early Founder Explorer Stage madhe aahat</div>
+        <div class="result-tips">
+          <div class="tip-item">
+            <div class="tip-dot"></div>
+            <div class="tip-text">Tumhala idea validation framework pahije — concept prove kara before building</div>
+          </div>
+          <div class="tip-item">
+            <div class="tip-dot"></div>
+            <div class="tip-text">Small execution start kara — ek chhota step roz kela tar 90 days madhe result disun yeil</div>
+          </div>
+          <div class="tip-item">
+            <div class="tip-dot"></div>
+            <div class="tip-text">Founder network join kara — right people milalyavar speed 10x hote</div>
+          </div>
+        </div>
+      </div>
+      <button class="btn-primary" onclick="goTo(8)">Get Personal Startup Updates 🎯</button>
+    </div>
+  </div>
+
+  <!-- SCREEN 8: WhatsApp Capture -->
+  <div class="screen" id="screen-8">
+    <div class="screen-inner">
+      <div class="logo-mark" style="font-size:24px;">📲</div>
+      <div class="headline">Mi tumhala personalised startup roadmap WhatsApp var pathavu ka?</div>
+      <div class="input-group">
+        <input type="tel" class="input-field" id="phone-input" placeholder="📱 Tumcha WhatsApp number" maxlength="10" />
+      </div>
+      <button class="btn-primary" onclick="submitPhone()">Continue →</button>
+      <div class="trust-line">
+        <span>🔒</span> Spam nahi. Only startup growth updates.
+      </div>
+    </div>
+  </div>
+
+  <!-- SCREEN 9: Community -->
+  <div class="screen" id="screen-9">
+    <div class="screen-inner">
+      <div class="access-badge">
+        <span>✅</span> Access Granted
+      </div>
+      <div class="headline">🎉 Congratulations!</div>
+      <div class="community-card">
+        <div class="avatars">
+          <div class="avatar">👨</div>
+          <div class="avatar">👩</div>
+          <div class="avatar">🧑</div>
+          <div class="avatar">👨‍💻</div>
+          <div class="avatar" style="background:linear-gradient(135deg,var(--gold-accent),var(--pink-accent))">+</div>
+        </div>
+        <div class="community-num">3,000+</div>
+        <div class="social-proof">🔥 Marathi founders already inside</div>
+      </div>
+      <div class="subtext">Tumhala Job + Startup Exclusive Community invite milala aahe. Ithe real founders, opportunities ani growth discussions hotat.</div>
+      <a class="btn-whatsapp" href="https://chat.whatsapp.com/LaT2d0tyZC4KjynEIXgha3" target="_blank">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="white"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+        Join Community
+      </a>
+      <div class="trust-line">🎯 Free forever. Real founders. Real growth.</div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+  // Generate stars
+  const starsEl = document.getElementById('stars');
+  for (let i = 0; i < 60; i++) {
+    const s = document.createElement('div');
+    s.className = 'star';
+    const size = Math.random() * 2.5 + 0.5;
+    s.style.cssText = `width:${size}px;height:${size}px;left:${Math.random()*100}%;top:${Math.random()*100}%;animation-delay:${Math.random()*4}s;animation-duration:${2+Math.random()*3}s;`;
+    starsEl.appendChild(s);
+  }
+
+  // State
+  let currentScreen = 1;
+  const answers = {};
+  const totalQuestions = 6;
+
+  // Progress map
+  const progressMap = {
+    1: 0, 2: 14, 3: 28, 4: 42, 5: 56, 6: 70,
+    'loading': 85, 7: 92, 8: 96, 9: 100
+  };
+
+  function updateProgress(screen) {
+    const pct = progressMap[screen] || 0;
+    document.getElementById('progress-bar').style.width = pct + '%';
+  }
+
+  function goTo(screenId) {
+    const cur = document.getElementById(`screen-${currentScreen}`);
+    const next = document.getElementById(`screen-${screenId}`);
+    if (!next) return;
+
+    cur.classList.remove('active');
+    cur.classList.add('exit-left');
+
+    setTimeout(() => {
+      cur.classList.remove('exit-left');
+      next.classList.add('active');
+      currentScreen = screenId;
+      updateProgress(screenId);
+      if ([2,3,4,5,6].includes(Number(screenId))) {
+        setTimeout(() => startFomoForScreen(screenId), 400);
+      }
+    }, 50);
+  }
+
+  function selectAnswer(screen, value, btn, nextScreen) {
+    answers[`q${screen}`] = value;
+
+    // Quick tap feedback
+    btn.classList.add('selected');
+
+    if (nextScreen === 'loading') {
+      setTimeout(() => goToLoading(), 300);
+    } else {
+      setTimeout(() => goTo(nextScreen), 300);
+    }
+  }
+
+  function goToLoading() {
+    const cur = document.getElementById(`screen-${currentScreen}`);
+    const next = document.getElementById('screen-loading');
+
+    cur.classList.remove('active');
+    cur.classList.add('exit-left');
+
+    setTimeout(() => {
+      cur.classList.remove('exit-left');
+      next.classList.add('active');
+      currentScreen = 'loading';
+      updateProgress('loading');
+      startFakeLoading();
+    }, 50);
+  }
+
+  function startFakeLoading() {
+    const bar = document.getElementById('fake-progress');
+    let pct = 0;
+    const interval = setInterval(() => {
+      pct += Math.random() * 18 + 5;
+      if (pct >= 100) {
+        pct = 100;
+        bar.style.width = '100%';
+        clearInterval(interval);
+        setTimeout(() => goTo(7), 400);
+      } else {
+        bar.style.width = pct + '%';
+      }
+    }, 220);
+  }
+
+  function submitPhone() {
+    const phone = document.getElementById('phone-input').value.trim();
+    if (phone.length < 10) {
+      document.getElementById('phone-input').style.borderColor = '#ef4444';
+      document.getElementById('phone-input').style.boxShadow = '0 0 15px rgba(239,68,68,0.3)';
+      setTimeout(() => {
+        document.getElementById('phone-input').style.borderColor = '';
+        document.getElementById('phone-input').style.boxShadow = '';
+      }, 1500);
+      return;
+    }
+    goTo(9);
+  }
+
+  // FOMO ticker data
+  const fomoEntries = [
+    { name: "Priya Patil", city: "Pune" },
+    { name: "Akshay Shinde", city: "Mumbai" },
+    { name: "Rahul Mane", city: "Nashik" },
+    { name: "Sneha Jadhav", city: "Aurangabad" },
+    { name: "Rohit Kulkarni", city: "Nagpur" },
+    { name: "Pooja Desai", city: "Kolhapur" },
+    { name: "Aniket More", city: "Thane" },
+    { name: "Rutuja Gaikwad", city: "Solapur" },
+    { name: "Vikas Pawar", city: "Satara" },
+    { name: "Dipali Sawant", city: "Navi Mumbai" },
+    { name: "Saurabh Kadam", city: "Pune" },
+    { name: "Tejas Bhosale", city: "Pune" },
+    { name: "Komal Wagh", city: "Amravati" },
+    { name: "Omkar Deshpande", city: "Mumbai" },
+    { name: "Shruti Patil", city: "Latur" },
+  ];
+
+  const fomoActions = [
+    "took this quiz",
+    "just joined the community",
+    "completed the test",
+    "got their roadmap",
+    "is exploring startup ideas",
+  ];
+
+  const fomoTimings = ["2 min ago", "just now", "5 min ago", "1 min ago", "3 min ago"];
+
+  function getRandomFomo() {
+    const e = fomoEntries[Math.floor(Math.random() * fomoEntries.length)];
+    const a = fomoActions[Math.floor(Math.random() * fomoActions.length)];
+    const t = fomoTimings[Math.floor(Math.random() * fomoTimings.length)];
+    return `<span>${e.name}</span> from <span>${e.city}</span> ${a} · <span>${t}</span>`;
+  }
+
+  const fomoScreenIds = [2, 3, 4, 5, 6];
+  const fomoIntervals = {};
+
+  function startFomoForScreen(screenNum) {
+    const el = document.getElementById(`fomo-${screenNum}`);
+    if (!el) return;
+    el.innerHTML = getRandomFomo();
+    if (fomoIntervals[screenNum]) clearInterval(fomoIntervals[screenNum]);
+    fomoIntervals[screenNum] = setInterval(() => {
+      el.style.animation = 'none';
+      el.offsetHeight; // reflow
+      el.style.animation = '';
+      el.innerHTML = getRandomFomo();
+    }, 3500);
+  }
+
+  // Initial setup
+  updateProgress(1);
+
+</script>
+</body>
+</html>
