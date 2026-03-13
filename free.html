@@ -1,0 +1,1093 @@
+<!DOCTYPE html>
+<html lang="mr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>FounderScan by Popcorn Patil</title>
+<meta name="description" content="Tumcha startup idea validate kara 3 minutat. Marathi founders sathi. Free forever.">
+<meta property="og:title" content="FounderScan — Popcorn Patil">
+<meta property="og:description" content="AI shivay. Pure logic. Tumcha startup score janya.">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🍿</text></svg>">
+<link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg-deep: #0a0612;
+    --bg-mid: #110920;
+    --purple-core: #7c3aed;
+    --purple-bright: #a855f7;
+    --purple-glow: #c084fc;
+    --pink-accent: #ec4899;
+    --gold-accent: #f59e0b;
+    --green-accent: #10b981;
+    --text-primary: #f0e9ff;
+    --text-muted: #a78bca;
+    --card-bg: rgba(124,58,237,0.08);
+    --card-border: rgba(168,85,247,0.2);
+    --btn-primary: linear-gradient(135deg, #7c3aed, #a855f7);
+    --btn-glow: 0 0 24px rgba(168,85,247,0.5);
+  }
+
+  html, body {
+    height: 100%; width: 100%;
+    font-family: 'Quicksand', sans-serif;
+    background: var(--bg-deep);
+    color: var(--text-primary);
+    overflow: hidden;
+    -webkit-tap-highlight-color: transparent;
+    user-select: none;
+  }
+
+  .bg-layer {
+    position: fixed; inset: 0; z-index: 0;
+    background:
+      radial-gradient(ellipse 80% 60% at 50% -10%, rgba(124,58,237,0.35) 0%, transparent 70%),
+      radial-gradient(ellipse 60% 50% at 80% 110%, rgba(236,72,153,0.18) 0%, transparent 60%),
+      linear-gradient(180deg, #0a0612 0%, #110920 50%, #0d0818 100%);
+  }
+
+  .orb {
+    position: fixed; border-radius: 50%; filter: blur(60px); z-index: 0;
+    animation: orbFloat 8s ease-in-out infinite;
+  }
+  .orb-1 { width: 280px; height: 280px; background: rgba(124,58,237,0.25); top:-80px; left:-60px; animation-delay:0s; }
+  .orb-2 { width: 200px; height: 200px; background: rgba(236,72,153,0.2); bottom:-60px; right:-40px; animation-delay:3s; }
+  .orb-3 { width: 150px; height: 150px; background: rgba(245,158,11,0.12); top:40%; left:60%; animation-delay:5s; }
+
+  @keyframes orbFloat {
+    0%,100% { transform: translate(0,0) scale(1); }
+    33%      { transform: translate(20px,-20px) scale(1.05); }
+    66%      { transform: translate(-15px,15px) scale(0.97); }
+  }
+
+  .stars { position: fixed; inset: 0; z-index: 0; overflow: hidden; }
+  .star {
+    position: absolute; background: #fff; border-radius: 50%;
+    animation: twinkle 3s ease-in-out infinite;
+  }
+  @keyframes twinkle { 0%,100%{opacity:.3} 50%{opacity:1} }
+
+  /* Progress */
+  #progress-container { position:fixed; top:0; left:0; right:0; z-index:100; height:4px; background:rgba(255,255,255,0.08); }
+  #progress-bar {
+    height:100%;
+    background: linear-gradient(90deg, var(--purple-bright), var(--pink-accent), var(--gold-accent));
+    border-radius:0 2px 2px 0;
+    transition: width 0.6s cubic-bezier(0.4,0,0.2,1);
+    box-shadow: 0 0 12px rgba(168,85,247,0.8);
+    width: 0%;
+  }
+
+  /* App */
+  #app { position:fixed; inset:0; z-index:10; display:flex; align-items:center; justify-content:center; }
+
+  .screen {
+    position:absolute; inset:0;
+    display:flex; flex-direction:column;
+    align-items:center; justify-content:center;
+    padding: 28px 20px 40px;
+    opacity:0; pointer-events:none;
+    transition: all 0.5s cubic-bezier(0.4,0,0.2,1);
+    transform: translateX(60px);
+    overflow-y: auto;
+  }
+  .screen.active { opacity:1; pointer-events:all; transform:translateX(0); }
+  .screen.exit-left { opacity:0; transform:translateX(-60px); pointer-events:none; }
+
+  .screen-inner {
+    width:100%; max-width:420px;
+    display:flex; flex-direction:column;
+    align-items:center; gap:18px;
+  }
+
+  /* Logo */
+  .logo-mark {
+    width:64px; height:64px; border-radius:20px;
+    background: linear-gradient(135deg, rgba(124,58,237,0.3), rgba(236,72,153,0.2));
+    border: 1px solid rgba(168,85,247,0.3);
+    display:flex; align-items:center; justify-content:center;
+    font-size:28px;
+    box-shadow: 0 0 30px rgba(124,58,237,0.3);
+    animation: logoPulse 3s ease-in-out infinite;
+  }
+  @keyframes logoPulse {
+    0%,100% { box-shadow: 0 0 30px rgba(124,58,237,0.3); }
+    50%      { box-shadow: 0 0 50px rgba(168,85,247,0.5); }
+  }
+
+  /* Typography */
+  .headline {
+    font-size:26px; font-weight:800;
+    line-height:1.25; text-align:center;
+    background: linear-gradient(135deg, #f0e9ff 30%, var(--purple-glow));
+    -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;
+  }
+  .subtext { font-size:15px; font-weight:500; color:var(--text-muted); text-align:center; line-height:1.6; }
+  .question-text { font-size:21px; font-weight:700; text-align:center; line-height:1.35; color:var(--text-primary); }
+
+  /* Step label */
+  .step-label {
+    font-size:12px; font-weight:600; letter-spacing:2px;
+    color:var(--purple-glow); text-transform:uppercase;
+    background:rgba(124,58,237,0.15);
+    border:1px solid rgba(168,85,247,0.25);
+    padding:6px 16px; border-radius:100px;
+  }
+
+  /* Options */
+  .options-grid { width:100%; display:flex; flex-direction:column; gap:10px; }
+
+  .option-btn {
+    width:100%; padding:16px 18px;
+    background:var(--card-bg);
+    border:1.5px solid var(--card-border);
+    border-radius:16px; color:var(--text-primary);
+    font-family:'Quicksand',sans-serif;
+    font-size:15px; font-weight:600;
+    cursor:pointer; text-align:left;
+    display:flex; align-items:center; gap:12px;
+    transition: all 0.25s cubic-bezier(0.4,0,0.2,1);
+    position:relative; overflow:hidden;
+  }
+  .option-btn::before {
+    content:''; position:absolute; inset:0;
+    background: linear-gradient(135deg, rgba(124,58,237,0.15), rgba(168,85,247,0.08));
+    opacity:0; transition:opacity 0.25s;
+  }
+  .option-btn:hover::before, .option-btn:active::before { opacity:1; }
+  .option-btn:active { transform:scale(0.96); border-color:var(--purple-bright); box-shadow:0 0 20px rgba(168,85,247,0.3); }
+  .option-btn.selected { border-color:var(--purple-bright); background:rgba(124,58,237,0.2); box-shadow:0 0 20px rgba(168,85,247,0.3); }
+
+  .option-icon {
+    width:34px; height:34px; border-radius:10px;
+    background:rgba(168,85,247,0.15);
+    display:flex; align-items:center; justify-content:center;
+    font-size:16px; flex-shrink:0;
+  }
+
+  /* Buttons */
+  .btn-primary {
+    width:100%; padding:18px;
+    background:var(--btn-primary);
+    border:none; border-radius:16px;
+    color:#fff; font-family:'Quicksand',sans-serif;
+    font-size:17px; font-weight:700;
+    cursor:pointer; letter-spacing:0.3px;
+    box-shadow:var(--btn-glow);
+    transition: all 0.25s cubic-bezier(0.4,0,0.2,1);
+    position:relative; overflow:hidden;
+  }
+  .btn-primary::after {
+    content:''; position:absolute; inset:0;
+    background:linear-gradient(180deg, rgba(255,255,255,0.15) 0%, transparent 100%);
+  }
+  .btn-primary:active { transform:scale(0.97); box-shadow:0 0 40px rgba(168,85,247,0.7); }
+
+  .btn-secondary {
+    width:100%; padding:16px;
+    background:transparent;
+    border:1.5px solid var(--card-border);
+    border-radius:16px; color:var(--text-primary);
+    font-family:'Quicksand',sans-serif;
+    font-size:16px; font-weight:700;
+    cursor:pointer; transition:all 0.25s;
+  }
+  .btn-secondary:active { transform:scale(0.97); border-color:var(--purple-bright); }
+
+  .btn-whatsapp {
+    width:100%; padding:18px;
+    background:linear-gradient(135deg,#25d366,#128c7e);
+    border:none; border-radius:16px;
+    color:#fff; font-family:'Quicksand',sans-serif;
+    font-size:17px; font-weight:700;
+    cursor:pointer; display:flex;
+    align-items:center; justify-content:center; gap:10px;
+    box-shadow:0 0 24px rgba(37,211,102,0.4);
+    text-decoration:none; transition:all 0.25s;
+  }
+  .btn-whatsapp:active { transform:scale(0.97); }
+
+  /* Divider */
+  .divider { width:100%; height:1px; background:var(--card-border); }
+
+  /* Input */
+  .input-field {
+    width:100%; padding:18px 20px;
+    background:var(--card-bg);
+    border:1.5px solid var(--card-border);
+    border-radius:16px; color:var(--text-primary);
+    font-family:'Quicksand',sans-serif;
+    font-size:16px; font-weight:600;
+    outline:none; transition:all 0.25s;
+  }
+  .input-field::placeholder { color:rgba(167,139,202,0.5); }
+  .input-field:focus { border-color:var(--purple-bright); box-shadow:0 0 20px rgba(168,85,247,0.2); }
+
+  .trust-line {
+    font-size:13px; font-weight:500; color:var(--text-muted);
+    text-align:center; display:flex; align-items:center;
+    justify-content:center; gap:6px;
+  }
+
+  /* FOMO Ticker */
+  .fomo-ticker {
+    width:100%;
+    background:rgba(16,185,129,0.07);
+    border:1px solid rgba(16,185,129,0.2);
+    border-radius:12px; padding:9px 14px;
+    display:flex; align-items:center; gap:10px;
+    overflow:hidden; min-height:42px;
+  }
+  .fomo-dot {
+    width:8px; height:8px; border-radius:50%;
+    background:#34d399; flex-shrink:0;
+    box-shadow:0 0 8px rgba(52,211,153,0.8);
+    animation: livePulse 1.5s ease-in-out infinite;
+  }
+  @keyframes livePulse { 0%,100%{transform:scale(1);opacity:1} 50%{transform:scale(1.4);opacity:0.6} }
+  .fomo-text {
+    font-size:13px; font-weight:600;
+    color:rgba(167,139,202,0.9);
+    animation:fomoSlideIn 0.5s cubic-bezier(0.4,0,0.2,1);
+  }
+  .fomo-text span { color:#a7f3d0; font-weight:700; }
+  @keyframes fomoSlideIn { from{opacity:0;transform:translateY(8px)} to{opacity:1;transform:translateY(0)} }
+
+  /* Loading */
+  .loader-ring { width:72px; height:72px; position:relative; }
+  .loader-ring::before, .loader-ring::after {
+    content:''; position:absolute; inset:0; border-radius:50%;
+    border:3px solid transparent;
+  }
+  .loader-ring::before { border-top-color:var(--purple-bright); animation:spin 1s linear infinite; }
+  .loader-ring::after { border-bottom-color:var(--pink-accent); animation:spin 1.5s linear infinite reverse; }
+  @keyframes spin { to{transform:rotate(360deg)} }
+  .loader-emoji {
+    position:absolute; inset:0;
+    display:flex; align-items:center; justify-content:center;
+    font-size:28px; animation:emojiPop 0.5s ease-in-out infinite alternate;
+  }
+  @keyframes emojiPop { from{transform:scale(0.9)} to{transform:scale(1.1)} }
+  .loading-text { font-size:16px; font-weight:600; color:var(--text-muted); animation:textFade 1s ease-in-out infinite alternate; }
+  @keyframes textFade { from{opacity:0.6} to{opacity:1} }
+  .loading-dots::after { content:''; animation:dots 1.5s steps(4,end) infinite; }
+  @keyframes dots { 0%{content:''} 25%{content:'.'} 50%{content:'..'} 75%{content:'...'} }
+
+  /* Result Card */
+  .result-card {
+    width:100%; padding:22px;
+    background:linear-gradient(135deg, rgba(124,58,237,0.15), rgba(236,72,153,0.08));
+    border:1.5px solid rgba(168,85,247,0.3);
+    border-radius:24px;
+    box-shadow:0 0 40px rgba(124,58,237,0.2);
+  }
+  .result-badge {
+    display:inline-flex; align-items:center; gap:8px;
+    background:rgba(245,158,11,0.15);
+    border:1px solid rgba(245,158,11,0.3);
+    padding:6px 14px; border-radius:100px;
+    font-size:13px; font-weight:700; color:#f59e0b;
+    margin-bottom:12px;
+  }
+  .result-title {
+    font-size:20px; font-weight:800;
+    line-height:1.3; margin-bottom:14px;
+    background:linear-gradient(135deg,#f0e9ff,var(--purple-glow));
+    -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;
+  }
+  .result-tips { display:flex; flex-direction:column; gap:10px; }
+  .tip-item {
+    display:flex; align-items:flex-start; gap:10px;
+    padding:12px; background:rgba(255,255,255,0.04);
+    border-radius:12px; border:1px solid rgba(255,255,255,0.06);
+  }
+  .tip-dot { width:8px; height:8px; border-radius:50%; background:var(--purple-bright); flex-shrink:0; margin-top:5px; box-shadow:0 0 8px rgba(168,85,247,0.8); }
+  .tip-text { font-size:14px; font-weight:600; color:var(--text-muted); line-height:1.5; }
+
+  /* Score circles */
+  .score-section { width:100%; display:flex; flex-direction:column; gap:10px; }
+  .score-row {
+    display:flex; align-items:center; gap:12px;
+    padding:12px 14px;
+    background:rgba(255,255,255,0.03);
+    border:1px solid rgba(255,255,255,0.06);
+    border-radius:14px;
+  }
+  .score-label-text { font-size:13px; font-weight:600; color:var(--text-muted); flex:1; }
+  .score-bar-wrap { width:80px; height:6px; background:rgba(255,255,255,0.1); border-radius:100px; overflow:hidden; }
+  .score-bar-fill { height:100%; border-radius:100px; transition:width 1.2s cubic-bezier(0.4,0,0.2,1); }
+  .score-val { font-size:13px; font-weight:800; color:var(--purple-glow); width:34px; text-align:right; }
+
+  /* Action plan */
+  .action-list { width:100%; display:flex; flex-direction:column; gap:8px; }
+  .action-item {
+    display:flex; align-items:flex-start; gap:10px;
+    padding:12px 14px;
+    background:rgba(124,58,237,0.06);
+    border:1px solid rgba(168,85,247,0.15);
+    border-radius:12px;
+  }
+  .action-num {
+    width:22px; height:22px; border-radius:7px;
+    background:var(--purple-core);
+    display:flex; align-items:center; justify-content:center;
+    font-size:11px; font-weight:800; flex-shrink:0; color:#fff;
+  }
+  .action-text { font-size:13px; font-weight:600; color:var(--text-muted); line-height:1.5; }
+
+  /* Danger card */
+  .danger-card {
+    width:100%; padding:16px 18px;
+    background:rgba(239,68,68,0.07);
+    border:1.5px solid rgba(239,68,68,0.25);
+    border-radius:16px;
+  }
+  .danger-title { font-size:13px; font-weight:700; color:#fca5a5; margin-bottom:6px; display:flex; align-items:center; gap:6px; }
+  .danger-text { font-size:13px; font-weight:600; color:rgba(252,165,165,0.8); line-height:1.5; }
+
+  /* Grant card */
+  .grant-card {
+    width:100%; padding:16px 18px;
+    background:rgba(16,185,129,0.07);
+    border:1.5px solid rgba(16,185,129,0.25);
+    border-radius:16px;
+  }
+  .grant-title { font-size:13px; font-weight:700; color:#6ee7b7; margin-bottom:6px; display:flex; align-items:center; gap:6px; }
+  .grant-text { font-size:13px; font-weight:600; color:rgba(110,231,183,0.8); line-height:1.5; }
+
+  /* Revenue highlight */
+  .revenue-card {
+    width:100%; padding:16px 18px;
+    background:rgba(245,158,11,0.07);
+    border:1.5px solid rgba(245,158,11,0.25);
+    border-radius:16px;
+  }
+  .revenue-title { font-size:13px; font-weight:700; color:#fcd34d; margin-bottom:6px; display:flex; align-items:center; gap:6px; }
+  .revenue-text { font-size:13px; font-weight:600; color:rgba(252,211,77,0.85); line-height:1.5; }
+
+  /* Big score number */
+  .big-score {
+    font-size:72px; font-weight:800; letter-spacing:-3px;
+    background:linear-gradient(135deg,var(--purple-glow),var(--pink-accent));
+    -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;
+    line-height:1;
+  }
+  .score-grade {
+    font-size:18px; font-weight:700;
+    margin-top:4px; text-align:center;
+  }
+
+  /* Community */
+  .access-badge {
+    display:flex; align-items:center; gap:10px;
+    background:rgba(16,185,129,0.1);
+    border:1px solid rgba(16,185,129,0.3);
+    padding:10px 20px; border-radius:100px;
+    color:#34d399; font-size:14px; font-weight:700;
+  }
+  .community-card {
+    width:100%; padding:24px;
+    background:linear-gradient(135deg,rgba(16,185,129,0.08),rgba(124,58,237,0.1));
+    border:1.5px solid rgba(16,185,129,0.2);
+    border-radius:24px; text-align:center;
+  }
+  .community-num {
+    font-size:42px; font-weight:800;
+    background:linear-gradient(135deg,#34d399,var(--purple-glow));
+    -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;
+  }
+  .social-proof { font-size:13px; font-weight:600; color:var(--text-muted); display:flex; align-items:center; justify-content:center; gap:6px; }
+  .avatars { display:flex; justify-content:center; margin-bottom:8px; }
+  .avatar {
+    width:32px; height:32px; border-radius:50%;
+    border:2px solid var(--bg-deep);
+    background:linear-gradient(135deg,var(--purple-core),var(--pink-accent));
+    margin-left:-8px; display:flex; align-items:center;
+    justify-content:center; font-size:12px;
+  }
+
+  /* Stats row */
+  .stats-row { display:flex; gap:20px; width:100%; justify-content:center; }
+  .stat-item { text-align:center; }
+  .stat-num { font-size:20px; font-weight:800; color:var(--purple-glow); }
+  .stat-label { font-size:12px; color:var(--text-muted); font-weight:600; }
+  .stat-sep { width:1px; background:var(--card-border); }
+
+  /* Tension line */
+  .tension-line {
+    width:100%; padding:14px 18px;
+    background:rgba(239,68,68,0.08);
+    border:1px solid rgba(239,68,68,0.25);
+    border-radius:14px;
+    font-size:14px; font-weight:600;
+    color:#fca5a5; line-height:1.5;
+    text-align:center;
+  }
+
+  /* Scrollable result */
+  #screen-result {
+    justify-content: flex-start;
+    padding-top: 60px;
+  }
+  #screen-result .screen-inner { gap:14px; padding-bottom:20px; }
+</style>
+</head>
+<body>
+
+<div class="bg-layer"></div>
+<div class="orb orb-1"></div><div class="orb orb-2"></div><div class="orb orb-3"></div>
+<div class="stars" id="stars"></div>
+
+<div id="progress-container"><div id="progress-bar"></div></div>
+
+<div id="app">
+
+<!-- ===== SCREEN 1: WELCOME ===== -->
+<div class="screen active" id="screen-1">
+  <div class="screen-inner">
+    <div class="logo-mark">🍿</div>
+    <div class="headline">Tumcha startup idea kiti strong aahe?</div>
+    <div class="subtext">No ChatGPT. Pure logic. Marathi founders sathi banvlela. 8 questions. 3 minutes.</div>
+    <div class="divider"></div>
+    <div class="stats-row">
+      <div class="stat-item"><div class="stat-num">8</div><div class="stat-label">Questions</div></div>
+      <div class="stat-sep"></div>
+      <div class="stat-item"><div class="stat-num">3 min</div><div class="stat-label">Time</div></div>
+      <div class="stat-sep"></div>
+      <div class="stat-item"><div class="stat-num">Free</div><div class="stat-label">Forever</div></div>
+    </div>
+    <button class="btn-primary" onclick="goTo(2)">Suru Kara → 🚀</button>
+    <div class="trust-line">🔒 AI nahi. Fakt founder logic. Result 3 minutat.</div>
+  </div>
+</div>
+
+<!-- ===== Q1: IDENTITY ===== -->
+<div class="screen" id="screen-2">
+  <div class="screen-inner">
+    <div class="step-label">Question 1 of 8</div>
+    <div class="question-text">Sadhya tumhi kontya stage madhe aahat?</div>
+    <div class="options-grid">
+      <button class="option-btn" onclick="ans('identity','professional',this,3)"><div class="option-icon">💼</div>Job karto / karti</button>
+      <button class="option-btn" onclick="ans('identity','student',this,3)"><div class="option-icon">🎓</div>Student aahe</button>
+      <button class="option-btn" onclick="ans('identity','housewife',this,3)"><div class="option-icon">🏠</div>Housewife / Ghar sambhalto</button>
+      <button class="option-btn" onclick="ans('identity','freelancer',this,3)"><div class="option-icon">🎨</div>Freelancer / Creator</button>
+      <button class="option-btn" onclick="ans('identity','exjob',this,3)"><div class="option-icon">🚪</div>Job sodli / nahi sadhya</button>
+    </div>
+    <div class="fomo-ticker"><div class="fomo-dot"></div><div class="fomo-text" id="fomo-2">...</div></div>
+  </div>
+</div>
+
+<!-- ===== Q2: IDEA CLARITY ===== -->
+<div class="screen" id="screen-3">
+  <div class="screen-inner">
+    <div class="step-label">Question 2 of 8</div>
+    <div class="question-text">Tumchya kade startup idea aahe ka?</div>
+    <div class="options-grid">
+      <button class="option-btn" onclick="ans('idea','clear',this,4)"><div class="option-icon">🎯</div>Ho — clear idea aahe</button>
+      <button class="option-btn" onclick="ans('idea','rough',this,4)"><div class="option-icon">💭</div>Rough idea aahe, paka nahi</button>
+      <button class="option-btn" onclick="ans('idea','exploring',this,4)"><div class="option-icon">🔍</div>Fakt explore karto sadhya</button>
+    </div>
+    <div class="fomo-ticker"><div class="fomo-dot"></div><div class="fomo-text" id="fomo-3">...</div></div>
+  </div>
+</div>
+
+<!-- ===== Q3: CATEGORY ===== -->
+<div class="screen" id="screen-4">
+  <div class="screen-inner">
+    <div class="step-label">Question 3 of 8</div>
+    <div class="question-text">Tumcha idea konte category madhe basto?</div>
+    <div class="options-grid">
+      <button class="option-btn" onclick="ans('category','tech',this,5)"><div class="option-icon">🤖</div>AI / Tech</button>
+      <button class="option-btn" onclick="ans('category','food',this,5)"><div class="option-icon">🍱</div>Food / Cloud Kitchen</button>
+      <button class="option-btn" onclick="ans('category','ecom',this,5)"><div class="option-icon">🛍️</div>E-commerce</button>
+      <button class="option-btn" onclick="ans('category','service',this,5)"><div class="option-icon">⚙️</div>Services / Agency</button>
+      <button class="option-btn" onclick="ans('category','edu',this,5)"><div class="option-icon">📚</div>Education / Coaching</button>
+      <button class="option-btn" onclick="ans('category','local',this,5)"><div class="option-icon">📍</div>Local / Hyperlocal</button>
+      <button class="option-btn" onclick="ans('category','content',this,5)"><div class="option-icon">📱</div>Content / Creator</button>
+    </div>
+    <div class="fomo-ticker"><div class="fomo-dot"></div><div class="fomo-text" id="fomo-4">...</div></div>
+  </div>
+</div>
+
+<!-- ===== Q4: HOURS ===== -->
+<div class="screen" id="screen-5">
+  <div class="screen-inner">
+    <div class="step-label">Question 4 of 8</div>
+    <div class="question-text">Rozcha kiti time deu shakta startup sathi?</div>
+    <div class="options-grid">
+      <button class="option-btn" onclick="ans('hours','low',this,6)"><div class="option-icon">⏱️</div>1 hour peksha kami</button>
+      <button class="option-btn" onclick="ans('hours','mid',this,6)"><div class="option-icon">⏰</div>1 te 2 hours</button>
+      <button class="option-btn" onclick="ans('hours','high',this,6)"><div class="option-icon">🕒</div>3 te 4 hours</button>
+      <button class="option-btn" onclick="ans('hours','fulltime',this,6)"><div class="option-icon">🔥</div>Full time — poorna focus</button>
+    </div>
+    <div class="fomo-ticker"><div class="fomo-dot"></div><div class="fomo-text" id="fomo-5">...</div></div>
+  </div>
+</div>
+
+<!-- ===== Q5: RISK ===== -->
+<div class="screen" id="screen-6">
+  <div class="screen-inner">
+    <div class="step-label">Question 5 of 8</div>
+    <div class="question-text">Risk la tumhi kiti tayar aahat?</div>
+    <div class="options-grid">
+      <button class="option-btn" onclick="ans('risk','low',this,7)"><div class="option-icon">🛡️</div>Kami — stability pahije</button>
+      <button class="option-btn" onclick="ans('risk','mid',this,7)"><div class="option-icon">⚖️</div>Medium — calculated bets</button>
+      <button class="option-btn" onclick="ans('risk','high',this,7)"><div class="option-icon">🚀</div>Purna risk ghya — sagle stake kara</button>
+    </div>
+    <div class="fomo-ticker"><div class="fomo-dot"></div><div class="fomo-text" id="fomo-6">...</div></div>
+  </div>
+</div>
+
+<!-- ===== Q6: INVESTMENT ===== -->
+<div class="screen" id="screen-7">
+  <div class="screen-inner">
+    <div class="step-label">Question 6 of 8</div>
+    <div class="question-text">Suruvatila kiti investment karu shakta?</div>
+    <div class="options-grid">
+      <button class="option-btn" onclick="ans('investment','zero',this,8)"><div class="option-icon">🆓</div>Zero — Bootstrap only</button>
+      <button class="option-btn" onclick="ans('investment','small',this,8)"><div class="option-icon">💵</div>₹50,000 peksha kami</button>
+      <button class="option-btn" onclick="ans('investment','mid',this,8)"><div class="option-icon">💰</div>₹50k te ₹2 Lakh</button>
+      <button class="option-btn" onclick="ans('investment','big',this,8)"><div class="option-icon">🏦</div>₹2 Lakh peksha jast</button>
+    </div>
+    <div class="fomo-ticker"><div class="fomo-dot"></div><div class="fomo-text" id="fomo-7">...</div></div>
+  </div>
+</div>
+
+<!-- ===== Q7: MARKET KNOWLEDGE ===== -->
+<div class="screen" id="screen-8">
+  <div class="screen-inner">
+    <div class="step-label">Question 7 of 8</div>
+    <div class="question-text">Tumcha target customer tumhala mahit aahe ka?</div>
+    <div class="options-grid">
+      <button class="option-btn" onclick="ans('market','none',this,9)"><div class="option-icon">🤷</div>Kahi idea nahi</button>
+      <button class="option-btn" onclick="ans('market','some',this,9)"><div class="option-icon">🧩</div>Thoda idea aahe</button>
+      <button class="option-btn" onclick="ans('market','clear',this,9)"><div class="option-icon">🎯</div>Khup clear aahe</button>
+    </div>
+    <div class="fomo-ticker"><div class="fomo-dot"></div><div class="fomo-text" id="fomo-8">...</div></div>
+  </div>
+</div>
+
+<!-- ===== Q8: CITY ===== -->
+<div class="screen" id="screen-9">
+  <div class="screen-inner">
+    <div class="step-label">Question 8 of 8</div>
+    <div class="question-text">Tumhi kuthe startup build karnaar aahat?</div>
+    <div class="options-grid">
+      <button class="option-btn" onclick="ans('city','metro',this,'loading')"><div class="option-icon">🏙️</div>Metro city (Mumbai, Pune)</button>
+      <button class="option-btn" onclick="ans('city','tier2',this,'loading')"><div class="option-icon">🌆</div>Tier-2 city (Nashik, Nagpur…)</button>
+      <button class="option-btn" onclick="ans('city','small',this,'loading')"><div class="option-icon">🏘️</div>Lahan shahar / gaav</button>
+    </div>
+    <div class="fomo-ticker"><div class="fomo-dot"></div><div class="fomo-text" id="fomo-9">...</div></div>
+  </div>
+</div>
+
+<!-- ===== LOADING ===== -->
+<div class="screen" id="screen-loading">
+  <div class="screen-inner" style="gap:28px; text-align:center;">
+    <div class="loader-ring"><div class="loader-emoji">🧠</div></div>
+    <div>
+      <div class="loading-text">Tumcha profile analyze karto<span class="loading-dots"></span></div>
+      <div style="font-size:13px;color:rgba(167,139,202,0.5);margin-top:8px;font-weight:500;">8 data points process hot aahet</div>
+    </div>
+    <div style="width:100%;background:rgba(255,255,255,0.06);border-radius:100px;height:6px;overflow:hidden;">
+      <div id="fake-progress" style="height:100%;background:linear-gradient(90deg,var(--purple-bright),var(--pink-accent));border-radius:100px;width:0%;transition:width 0.3s;"></div>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:8px;width:100%;text-align:left;" id="loading-steps"></div>
+  </div>
+</div>
+
+<!-- ===== RESULT ===== -->
+<div class="screen" id="screen-result">
+  <div class="screen-inner" id="result-inner"></div>
+</div>
+
+<!-- ===== PHONE CAPTURE ===== -->
+<div class="screen" id="screen-phone">
+  <div class="screen-inner">
+    <div class="logo-mark" style="font-size:24px;">📲</div>
+    <div class="headline">Tumcha personalized startup roadmap WhatsApp var pathavoo ka?</div>
+    <input type="tel" class="input-field" id="phone-input" placeholder="📱 WhatsApp number (10 digits)" maxlength="10" inputmode="numeric"/>
+    <button class="btn-primary" onclick="submitPhone()">Mala Roadmap Pathava 🎯</button>
+    <div class="trust-line" onclick="goTo('community')" style="cursor:pointer;text-decoration:underline;text-underline-offset:3px;">Skip → Community join kara</div>
+    <div class="trust-line">🔒 Spam nahi. Fakt startup updates.</div>
+  </div>
+</div>
+
+<!-- ===== COMMUNITY ===== -->
+<div class="screen" id="screen-community">
+  <div class="screen-inner">
+    <div class="access-badge"><span>✅</span> Access Granted</div>
+    <div class="headline">🎉 Congratulations!</div>
+    <div class="community-card">
+      <div class="avatars">
+        <div class="avatar">👨</div><div class="avatar">👩</div>
+        <div class="avatar">🧑</div><div class="avatar">👨‍💻</div>
+        <div class="avatar" style="background:linear-gradient(135deg,var(--gold-accent),var(--pink-accent))">+</div>
+      </div>
+      <div class="community-num">3,000+</div>
+      <div class="social-proof">🔥 Marathi founders already inside</div>
+    </div>
+    <div class="subtext">Tumhala Job + Startup Founder Community madhye entry milali aahe. Ithe khare founders, sandhi ani growth discussions hotat.</div>
+    <a class="btn-whatsapp" href="https://chat.whatsapp.com/LaT2d0tyZC4KjynEIXgha3" target="_blank">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="white"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+      Join Marathi Founders Community
+    </a>
+    <button class="btn-secondary" onclick="restartApp()">↩ Navin Idea Scan Kara</button>
+    <div class="trust-line">🎯 Free forever. Real founders. Real growth.</div>
+  </div>
+</div>
+
+</div><!-- #app -->
+
+<script>
+/* ============================================================
+   STARS
+============================================================ */
+const starsEl = document.getElementById('stars');
+for (let i = 0; i < 60; i++) {
+  const s = document.createElement('div');
+  s.className = 'star';
+  const size = Math.random() * 2.5 + 0.5;
+  s.style.cssText = `width:${size}px;height:${size}px;left:${Math.random()*100}%;top:${Math.random()*100}%;animation-delay:${Math.random()*4}s;animation-duration:${2+Math.random()*3}s;`;
+  starsEl.appendChild(s);
+}
+
+/* ============================================================
+   STATE
+============================================================ */
+let currentScreen = 1;
+const A = {}; // answers
+
+const progressMap = {
+  1:0, 2:10, 3:20, 4:30, 5:40, 6:50, 7:60, 8:70, 9:80,
+  'loading':88, 'result':94, 'phone':97, 'community':100
+};
+
+/* ============================================================
+   NAVIGATION
+============================================================ */
+function updateProgress(s) {
+  document.getElementById('progress-bar').style.width = (progressMap[s]||0)+'%';
+}
+
+function goTo(screenId) {
+  const cur = document.getElementById(`screen-${currentScreen}`);
+  const next = document.getElementById(`screen-${screenId}`);
+  if(!next) return;
+  cur.classList.remove('active'); cur.classList.add('exit-left');
+  setTimeout(() => {
+    cur.classList.remove('exit-left');
+    next.classList.add('active');
+    currentScreen = screenId;
+    updateProgress(screenId);
+    if([2,3,4,5,6,7,8,9].includes(Number(screenId))) {
+      setTimeout(() => startFomo(screenId), 300);
+    }
+  }, 50);
+}
+
+/* ============================================================
+   ANSWER CAPTURE
+============================================================ */
+function ans(key, val, btn, next) {
+  A[key] = val;
+  btn.classList.add('selected');
+  if(next === 'loading') {
+    setTimeout(goToLoading, 280);
+  } else {
+    setTimeout(() => goTo(next), 280);
+  }
+}
+
+/* ============================================================
+   LOADING
+============================================================ */
+function goToLoading() {
+  const cur = document.getElementById(`screen-${currentScreen}`);
+  const next = document.getElementById('screen-loading');
+  cur.classList.remove('active'); cur.classList.add('exit-left');
+  setTimeout(() => {
+    cur.classList.remove('exit-left');
+    next.classList.add('active');
+    currentScreen = 'loading';
+    updateProgress('loading');
+    runLoading();
+  }, 50);
+}
+
+function runLoading() {
+  const bar = document.getElementById('fake-progress');
+  const stepsEl = document.getElementById('loading-steps');
+  const msgs = [
+    '👤 Founder profile read kela…',
+    '💡 Idea category validate kela…',
+    '📊 Market competition check kela…',
+    '🏛️ Maharashtra government grants shodhalay…',
+    '🗓️ 90-day action plan tayyar kela…',
+  ];
+  let pct = 0, i = 0;
+  stepsEl.innerHTML = '';
+
+  const stepInterval = setInterval(() => {
+    if(i < msgs.length) {
+      const d = document.createElement('div');
+      d.style.cssText = 'font-size:13px;font-weight:600;color:rgba(167,139,202,0.8);padding:8px 12px;background:rgba(255,255,255,0.03);border-radius:10px;border:1px solid rgba(255,255,255,0.05);animation:fomoSlideIn 0.4s ease;';
+      d.textContent = msgs[i];
+      stepsEl.appendChild(d);
+      i++;
+    }
+  }, 550);
+
+  const barInterval = setInterval(() => {
+    pct += Math.random()*15 + 6;
+    if(pct >= 100) {
+      pct = 100; bar.style.width = '100%';
+      clearInterval(barInterval); clearInterval(stepInterval);
+      setTimeout(showResult, 400);
+    } else {
+      bar.style.width = pct + '%';
+    }
+  }, 200);
+}
+
+/* ============================================================
+   SMART RESULT LOGIC (pre-made, no AI)
+============================================================ */
+function calcScore() {
+  let s = 0;
+
+  // Identity
+  const idMap = { professional:18, freelancer:17, exjob:15, student:12, housewife:10 };
+  s += idMap[A.identity] || 10;
+
+  // Idea clarity
+  const ideaMap = { clear:20, rough:12, exploring:6 };
+  s += ideaMap[A.idea] || 6;
+
+  // Hours
+  const hrMap = { fulltime:20, high:15, mid:10, low:5 };
+  s += hrMap[A.hours] || 5;
+
+  // Risk
+  const riskMap = { high:12, mid:8, low:4 };
+  s += riskMap[A.risk] || 4;
+
+  // Market knowledge
+  const mktMap = { clear:15, some:10, none:3 };
+  s += mktMap[A.market] || 3;
+
+  // Investment
+  const invMap = { big:15, mid:12, small:8, zero:5 };
+  s += invMap[A.investment] || 5;
+
+  return Math.min(100, s);
+}
+
+function getGrade(score) {
+  if(score >= 85) return { label:'🔥 Exceptional Founder', color:'#a7f3d0' };
+  if(score >= 70) return { label:'⚡ Strong Contender', color:'#c084fc' };
+  if(score >= 55) return { label:'🌱 Promising Stage', color:'#fcd34d' };
+  if(score >= 40) return { label:'⚙️ Needs Work', color:'#fca5a5' };
+  return { label:'🔴 Critical Gaps Aahet', color:'#ef4444' };
+}
+
+/* Detailed content based on answers */
+function getValidation() {
+  const catText = {
+    tech: 'AI / Tech space madhe competition jast aahe — pan Indian market execution-focused startups la favors karto. Tumhala tech skill havi asel ya tech co-founder pahije.',
+    food: 'Food / Cloud Kitchen madhe margin kami astat pan volume jast asto — Swiggy/Zomato integration fast growth deto. Location selection saglyat important aahe.',
+    ecom: 'E-commerce madhe differentiation he key aahe. Generic product nako — niche ya D2C brand build kara. Fulfilment logistics he challenge asel.',
+    service: 'Service / Agency he fastest revenue model aahe — koni hi suru karu shakto. Pehla client referral madunach milto usually.',
+    edu: 'Education / Coaching madhe Maharashtra madhe khup scope aahe. Competitive exams, skills, vernacular content — sagale high demand madhe aahet.',
+    local: 'Local hyperlocal business madhe low competition aahe pan market size limited asto. Franchise model ya multi-location sathi plan kara.',
+    content: 'Content / Creator economy madhe consistency he king aahe. 90 days consistent raahlat tar audience automatically build hote. Monetization patience sathi pahije.',
+  };
+  return catText[A.category] || 'Tumcha category strong aahe — execution chi garaj aahe.';
+}
+
+function getMarket() {
+  const mkt = A.market;
+  const city = A.city;
+  if(mkt === 'clear') return `Tumhala customer khup clear mahit aahe — he tumcha saglyat motha strength aahe. ${city === 'metro' ? 'Metro madhe fast validation possible aahe — small test launch kara.' : 'Tier-2 / Lahan shahar madhe competition kami aahe — first mover advantage ghya.'}`;
+  if(mkt === 'some') return `Customer somewhat clear aahe — pan 5 real conversations kara target users sathi. Assumption ne business nako, validation madun suru kara.`;
+  return `Customer clarity nahi — he saglyat dangerous gap aahe. Validation before building mandatory aahe. Ek chhota survey kiwa 10 real conversations aajach kara.`;
+}
+
+function getFirstRevenue() {
+  const map = {
+    tech: '💡 Pehli ₹1 — freelance project ya small tool build kara, ProductHunt var post kara. Consulting charge kara tya topic var.',
+    food: '💡 Pehli ₹1 — ghar madun test menu suru kara, WhatsApp order lo, Zomato/Swiggy register kara.',
+    ecom: '💡 Pehli ₹1 — Instagram var product post kara, Meesho/Flipkart seller account open kara. Stock ghar madhe theva suruvatila.',
+    service: '💡 Pehli ₹1 — apala skill identify kara, 3 known contacts la offer kara, ₹500 peksha kami charge kara suruvatila.',
+    edu: '💡 Pehli ₹1 — ek free webinar ghya, 10 log join jhale tar paid batch start kara ₹499 madhe.',
+    local: '💡 Pehli ₹1 — Google Business profile create kara, locality WhatsApp group madhe offer post kara.',
+    content: '💡 Pehli ₹1 — 30 reels consistently post kara, brand collaboration milnaar, ya digital product bana ₹99 madhe.',
+  };
+  return map[A.category] || '💡 Tumcha skill identify kara, 3 log la offer kara, aaj revenue suru kara.';
+}
+
+function getGrant() {
+  const grants = {
+    tech: '🏛️ Maharashtra State Innovation Society (MSInS) — tech startups sathi seed funding. Startup India recognition milali tar income tax exemption. iCreate program Pune madhe aahe.',
+    food: '🏛️ PMFME (PM Formalization of Micro Food Enterprises) — ₹10 lakh paryant subsidy. FSSAI registration priority. Maharashtra Udyog Sarathi portal var apply kara.',
+    ecom: '🏛️ Udyam Registration kara — MSME benefits miltat. GeM Portal var register kara government orders sathi. Maharashtra Industrial Development Corporation (MIDC) support.',
+    service: '🏛️ Udyam Registration mandatory kara — interest subsidy, priority lending. Maharashtra Startup Week events attend kara networking sathi.',
+    edu: '🏛️ National Skill Development Corporation (NSDC) partnerships explore kara. Maharashtra Knowledge Corporation (MKCL) collaborations possible aahet.',
+    local: '🏛️ Maharashtra Entrepreneurship Development Institute (MEDI) — local business training ani support. PM SVANidhi scheme for micro enterprises.',
+    content: '🏛️ Creative Entrepreneurs — Startup India recognition ghya. Digital India initiative under content creation support. IP rights register kara.',
+  };
+  return grants[A.category] || '🏛️ Udyam Registration kara — he pehla mandatory step aahe sarkar support milnasathi.';
+}
+
+function getTensionLine() {
+  const score = calcScore();
+  if(A.market === 'none') return '⚠️ Sarvat motha gap: Tumhala customer mahit nahi. He fix kela nahi tar kuta hi investment waste honar.';
+  if(A.hours === 'low') return '⚠️ Tasa strong score aahe — pan roz 1 hour peksha kami time dilat tar startup kadhi pan udaan ghet nahi.';
+  if(A.idea === 'exploring') return '⚠️ Idea explore stage madhe aahat — he chalel, pan pudhe 30 days madhe 1 specific idea pick kara naahitar cycle madhe raahal.';
+  if(A.risk === 'low' && A.investment === 'zero') return '⚠️ Risk kami ani investment zero — tumha sathi bootstrap-only path aahe. Slow growth accept kara ya mindset badla.';
+  if(score >= 70) return '✅ Tumhi ready aahat — fakt ek step missing aahe: First customer. Baaki sagle ready aahe.';
+  return '⚠️ Idea strong aahe — pan execution plan ajun tayar jhala nahi. To tayar karna he tumcha aajcha task aahe.';
+}
+
+function getActionPlan() {
+  const base = [
+    'Aaj ek specific startup idea lihun theva paper var',
+    '10 potential customers la call kara ya message kara',
+    'Google madhe competitor search kara — 5 competitors identify kara',
+    'Udyam Registration online kara — free aahe',
+    'Instagram ya YouTube channel suru kara content sathi',
+    'Simple landing page banva — Carrd.co var free aahe',
+    '1 feedback session ghya target customer sathi',
+    'First offer create kara — price decide kara',
+    'WhatsApp Business account set up kara',
+    'Popcorn Patil community join kara — real founders miltat',
+  ];
+  const extra = {
+    tech: ['GitHub profile update kara ani portfolio banva', 'Producthunt.com var observe kara daily'],
+    food: ['Home kitchen FSSAI registration check kara', 'Local restaurant menu pricing study kara'],
+    ecom: ['Meesho app download kara ani seller account banva', 'Top selling products Amazon var study kara'],
+    service: ['Freelancer.com / Fiverr profile create kara', '3 potential clients la cold DM pathava'],
+    edu: ['Free pilot session ghya — 5 log gather kara', 'Course structure 1 page madhe lihun theva'],
+    local: ['Google Business Profile create kara', 'Local WhatsApp groups madhe announce kara'],
+    content: ['Content calendar — 30 days plan lihun theva', 'Top 3 creators study kara tya niche madhe'],
+  };
+  const specific = extra[A.category] || [];
+  return [...specific, ...base].slice(0, 10);
+}
+
+function getHiddenRisk() {
+  const risks = {
+    professional: 'Job sobat startup — energy split hote. 6 mahinyat burnout honar he dhoka 70% founders la asto. Boundary set kara velevar.',
+    student: 'Exam pressure ani startup — doni suffer hotat. Gap year ya semester off serious vichar kara.',
+    housewife: 'Family support nahi milala tar progress stuck hote. Ghar madhe concept sell kara startup la. Support system build kara.',
+    freelancer: 'Freelancing income fluctuate hote — startup sathi stable runway pahije. ₹50k emergency fund tayar theva.',
+    exjob: 'Income pressure madhe chukiche decisions hotat. Runway calculate kara — kiti mahine financially survive karu shakto?',
+  };
+  return risks[A.identity] || 'Validation na karta building suru keli tar time ani paisa dono waste honar.';
+}
+
+function getScoreBreakdown() {
+  return [
+    { label: 'Founder Profile', val: A.identity==='professional'?90:A.identity==='student'?65:75 },
+    { label: 'Idea Clarity', val: A.idea==='clear'?95:A.idea==='rough'?60:35 },
+    { label: 'Execution Time', val: A.hours==='fulltime'?100:A.hours==='high'?75:A.hours==='mid'?50:25 },
+    { label: 'Market Knowledge', val: A.market==='clear'?95:A.market==='some'?60:20 },
+    { label: 'Financial Readiness', val: A.investment==='big'?95:A.investment==='mid'?70:A.investment==='small'?45:20 },
+  ];
+}
+
+/* ============================================================
+   SHOW RESULT
+============================================================ */
+function showResult() {
+  const score = calcScore();
+  const grade = getGrade(score);
+  const actions = getActionPlan();
+  const breakdown = getScoreBreakdown();
+
+  const actionHTML = actions.map((a,i) => `
+    <div class="action-item">
+      <div class="action-num">${i+1}</div>
+      <div class="action-text">${a}</div>
+    </div>`).join('');
+
+  const breakHTML = breakdown.map(b => `
+    <div class="score-row">
+      <div class="score-label-text">${b.label}</div>
+      <div class="score-bar-wrap"><div class="score-bar-fill" style="width:0%;background:linear-gradient(90deg,var(--purple-bright),var(--pink-accent));" data-val="${b.val}"></div></div>
+      <div class="score-val">${b.val}%</div>
+    </div>`).join('');
+
+  const html = `
+    <div class="step-label">Tumcha Result ✨</div>
+
+    <div style="text-align:center;width:100%">
+      <div class="big-score" id="score-display">0</div>
+      <div class="score-grade" style="color:${grade.color}">${grade.label}</div>
+    </div>
+
+    <div class="tension-line">${getTensionLine()}</div>
+
+    <div class="result-card">
+      <div class="result-badge">📋 Idea Validation</div>
+      <div class="result-title">Category Analysis</div>
+      <div class="result-tips">
+        <div class="tip-item"><div class="tip-dot"></div><div class="tip-text">${getValidation()}</div></div>
+      </div>
+    </div>
+
+    <div class="result-card">
+      <div class="result-badge">🎯 Market Reality</div>
+      <div class="result-title">Customer Clarity Check</div>
+      <div class="result-tips">
+        <div class="tip-item"><div class="tip-dot"></div><div class="tip-text">${getMarket()}</div></div>
+      </div>
+    </div>
+
+    <div style="width:100%">
+      <div style="font-size:13px;font-weight:700;color:var(--text-muted);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:10px;">📊 Score Breakdown</div>
+      <div class="score-section">${breakHTML}</div>
+    </div>
+
+    <div class="revenue-card">
+      <div class="revenue-title">💸 Pehli Revenue Kashaatun?</div>
+      <div class="revenue-text">${getFirstRevenue()}</div>
+    </div>
+
+    <div class="grant-card">
+      <div class="grant-title">🏛️ Maharashtra Government Grant</div>
+      <div class="grant-text">${getGrant()}</div>
+    </div>
+
+    <div style="width:100%">
+      <div style="font-size:13px;font-weight:700;color:var(--text-muted);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:10px;">🗓️ 90-Day Action Plan</div>
+      <div class="action-list">${actionHTML}</div>
+    </div>
+
+    <div class="danger-card">
+      <div class="danger-title">💀 Sarvat Motha Hidden Risk</div>
+      <div class="danger-text">${getHiddenRisk()}</div>
+    </div>
+
+    <button class="btn-primary" onclick="goTo('phone')" style="margin-top:8px;">Mala WhatsApp Roadmap Pathava 📲</button>
+    <button class="btn-secondary" onclick="goTo('community')">Community Join Kara →</button>
+    <button class="btn-secondary" onclick="restartApp()">↩ Navin Idea Scan Kara</button>
+  `;
+
+  const inner = document.getElementById('result-inner');
+  inner.innerHTML = html;
+
+  // Nav to result
+  const cur = document.getElementById(`screen-${currentScreen}`);
+  const next = document.getElementById('screen-result');
+  cur.classList.remove('active'); cur.classList.add('exit-left');
+  setTimeout(() => {
+    cur.classList.remove('exit-left');
+    next.classList.add('active');
+    currentScreen = 'result';
+    updateProgress('result');
+    animateScore(score);
+    setTimeout(animateBars, 600);
+  }, 50);
+}
+
+function animateScore(target) {
+  const el = document.getElementById('score-display');
+  if(!el) return;
+  let c = 0;
+  const start = performance.now();
+  const dur = 1600;
+  function step(now) {
+    const p = Math.min((now - start)/dur, 1);
+    const ease = 1 - Math.pow(1-p, 3);
+    c = Math.round(ease * target);
+    el.textContent = c;
+    if(p < 1) requestAnimationFrame(step);
+  }
+  requestAnimationFrame(step);
+}
+
+function animateBars() {
+  document.querySelectorAll('.score-bar-fill').forEach(bar => {
+    const val = bar.getAttribute('data-val');
+    bar.style.width = val + '%';
+  });
+}
+
+/* ============================================================
+   PHONE SUBMIT
+============================================================ */
+function submitPhone() {
+  const ph = document.getElementById('phone-input').value.trim();
+  if(ph && ph.length < 10) {
+    document.getElementById('phone-input').style.borderColor = '#ef4444';
+    document.getElementById('phone-input').style.boxShadow = '0 0 15px rgba(239,68,68,0.3)';
+    setTimeout(() => {
+      document.getElementById('phone-input').style.borderColor = '';
+      document.getElementById('phone-input').style.boxShadow = '';
+    }, 1500);
+    return;
+  }
+  goTo('community');
+}
+
+/* ============================================================
+   FOMO TICKER
+============================================================ */
+const fomoNames = [
+  {n:'Priya Patil',c:'Pune'},{n:'Akshay Shinde',c:'Mumbai'},{n:'Rahul Mane',c:'Nashik'},
+  {n:'Sneha Jadhav',c:'Aurangabad'},{n:'Rohit Kulkarni',c:'Nagpur'},{n:'Pooja Desai',c:'Kolhapur'},
+  {n:'Aniket More',c:'Thane'},{n:'Rutuja Gaikwad',c:'Solapur'},{n:'Vikas Pawar',c:'Satara'},
+  {n:'Dipali Sawant',c:'Navi Mumbai'},{n:'Saurabh Kadam',c:'Pune'},{n:'Tejas Bhosale',c:'Pune'},
+  {n:'Komal Wagh',c:'Amravati'},{n:'Omkar Deshpande',c:'Mumbai'},{n:'Shruti Patil',c:'Latur'},
+];
+const fomoActs = ['he quiz dila','community join jhale','result pahila','idea scan kela','roadmap milala'];
+const fomoTimes = ['2 min aadhee','aata aata','5 min aadhee','1 min aadhee','3 min aadhee'];
+const fomoIntervals = {};
+
+function getRandomFomo() {
+  const e = fomoNames[Math.floor(Math.random()*fomoNames.length)];
+  const a = fomoActs[Math.floor(Math.random()*fomoActs.length)];
+  const t = fomoTimes[Math.floor(Math.random()*fomoTimes.length)];
+  return `<span>${e.n}</span> from <span>${e.c}</span> ${a} · <span>${t}</span>`;
+}
+
+function startFomo(num) {
+  const el = document.getElementById(`fomo-${num}`);
+  if(!el) return;
+  el.innerHTML = getRandomFomo();
+  if(fomoIntervals[num]) clearInterval(fomoIntervals[num]);
+  fomoIntervals[num] = setInterval(() => {
+    el.style.animation = 'none';
+    el.offsetHeight;
+    el.style.animation = '';
+    el.innerHTML = getRandomFomo();
+  }, 3500);
+}
+
+/* ============================================================
+   RESTART
+============================================================ */
+function restartApp() {
+  Object.keys(A).forEach(k => delete A[k]);
+  // Reset all selected
+  document.querySelectorAll('.option-btn.selected').forEach(b => b.classList.remove('selected'));
+  document.getElementById('phone-input').value = '';
+  document.getElementById('fake-progress').style.width = '0%';
+  document.getElementById('loading-steps').innerHTML = '';
+  const cur = document.getElementById(`screen-${currentScreen}`);
+  cur.classList.remove('active');
+  const first = document.getElementById('screen-1');
+  first.classList.add('active');
+  currentScreen = 1;
+  updateProgress(1);
+}
+
+/* ============================================================
+   INIT
+============================================================ */
+updateProgress(1);
+</script>
+</body>
+</html>
