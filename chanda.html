@@ -1,0 +1,686 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dadi Ki Lori  — Personalized Baby Lullaby</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=Nunito:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{--night:#060514;--moon:#ffd97d;--blush:#ffb5c8;--soft:#c4b5fd;--text:#e8e0f5;--muted:#8a7db0;--star:#f5e6c8;--card:rgba(255,255,255,0.035);--border:rgba(255,255,255,0.08);}
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{background:var(--night);color:var(--text);font-family:'Nunito',sans-serif;overflow-x:hidden;}
+#starCanvas{position:fixed;inset:0;z-index:0;pointer-events:none;}
+section,header,footer{position:relative;z-index:1;}
+.popup-overlay{position:fixed;z-index:9999;}
+
+/* HERO */
+header{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:60px 24px 90px;background:radial-gradient(ellipse at 50% 0%,rgba(80,60,160,.28) 0%,transparent 60%);}
+.moon-wrap{position:relative;display:inline-block;margin-bottom:18px;}
+.moon-glow{position:absolute;inset:-20px;background:radial-gradient(circle,rgba(255,217,125,.22) 0%,transparent 70%);border-radius:50%;animation:pulseGlow 3s ease-in-out infinite;}
+@keyframes pulseGlow{0%,100%{opacity:.6;transform:scale(1)}50%{opacity:1;transform:scale(1.2)}}
+.moon-emoji{font-size:64px;display:block;animation:float 5s ease-in-out infinite;position:relative;}
+@keyframes float{0%,100%{transform:translateY(0) rotate(-5deg)}50%{transform:translateY(-14px) rotate(4deg)}}
+h1.brand{font-family:'Playfair Display',serif;font-size:clamp(46px,12vw,82px);color:var(--moon);letter-spacing:-2px;line-height:1;margin-bottom:10px;text-shadow:0 0 60px rgba(255,217,125,.22);}
+.tagline{font-family:'Playfair Display',serif;font-style:italic;font-size:clamp(15px,4vw,20px);color:var(--soft);line-height:1.5;margin-bottom:24px;}
+.badge{display:inline-block;background:rgba(255,181,200,.1);border:1px solid rgba(255,181,200,.28);color:var(--blush);font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;padding:5px 16px;border-radius:30px;margin-bottom:20px;}
+.hero-desc{font-size:clamp(14px,3.5vw,16px);color:var(--muted);max-width:440px;line-height:1.85;margin-bottom:20px;}
+.hero-chips{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;max-width:460px;margin-bottom:36px;}
+.chip{background:rgba(196,181,253,.1);border:1px solid rgba(196,181,253,.2);border-radius:20px;padding:5px 14px;font-size:12px;color:var(--soft);font-weight:600;}
+.cta-btn{display:inline-block;background:linear-gradient(135deg,var(--moon) 0%,#ff9f43 100%);color:#1a0800;font-family:'Nunito',sans-serif;font-weight:800;font-size:16px;padding:16px 42px;border-radius:50px;text-decoration:none;box-shadow:0 8px 32px rgba(255,217,125,.42),0 2px 8px rgba(0,0,0,.3);transition:transform .2s,box-shadow .2s;cursor:pointer;border:none;letter-spacing:.3px;}
+.cta-btn:hover{transform:translateY(-3px);box-shadow:0 14px 44px rgba(255,217,125,.58);}
+.cta-btn:active{transform:translateY(-1px);}
+.price-note{margin-top:14px;font-size:13px;color:var(--muted);}
+.price-note strong{color:var(--moon);}
+
+/* SHARED */
+.section{padding:72px 24px;max-width:900px;margin:0 auto;}
+.section-title{font-family:'Playfair Display',serif;font-size:clamp(26px,6vw,36px);color:var(--moon);text-align:center;margin-bottom:8px;}
+.section-sub{text-align:center;color:var(--muted);font-size:14px;margin-bottom:46px;line-height:1.7;}
+.divider{border:none;border-top:1px solid rgba(255,255,255,.055);}
+
+/* WHY GRID */
+.why-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(225px,1fr));gap:14px;}
+.why-card{background:var(--card);border:1px solid var(--border);border-radius:18px;padding:24px 20px;transition:background .25s,transform .25s;}
+.why-card:hover{background:rgba(255,255,255,.06);transform:translateY(-3px);}
+.why-card .icon{font-size:28px;margin-bottom:10px;}
+.why-card h3{font-size:14px;font-weight:700;color:var(--star);margin-bottom:6px;}
+.why-card p{font-size:13px;color:var(--muted);line-height:1.6;}
+
+/* GET BOX */
+.get-box{background:linear-gradient(135deg,rgba(38,28,78,.85),rgba(18,14,48,.85));border:1px solid rgba(196,181,253,.18);border-radius:24px;padding:44px 32px;text-align:center;backdrop-filter:blur(8px);}
+.get-list{list-style:none;display:flex;flex-direction:column;gap:14px;margin-bottom:30px;text-align:left;max-width:340px;margin-left:auto;margin-right:auto;}
+.get-list li{display:flex;align-items:center;gap:12px;font-size:15px;color:var(--text);}
+.get-list li .dot{width:8px;height:8px;background:var(--moon);border-radius:50%;flex-shrink:0;box-shadow:0 0 6px rgba(255,217,125,.6);}
+.price-tag{font-family:'Playfair Display',serif;font-size:48px;color:var(--moon);text-shadow:0 0 30px rgba(255,217,125,.3);}
+.price-tag small{font-size:18px;color:var(--muted);font-family:'Nunito',sans-serif;}
+
+/* STEPS */
+.steps{max-width:500px;margin:0 auto;position:relative;}
+.steps::before{content:'';position:absolute;left:24px;top:0;bottom:0;width:2px;background:linear-gradient(to bottom,var(--moon),var(--soft),rgba(196,181,253,.08));}
+.step{display:flex;gap:22px;align-items:flex-start;padding-bottom:32px;}
+.step-num{width:50px;height:50px;border-radius:50%;background:linear-gradient(135deg,var(--moon),#ff9f43);color:#1a0800;font-weight:800;font-size:18px;display:flex;align-items:center;justify-content:center;flex-shrink:0;z-index:1;box-shadow:0 4px 16px rgba(255,217,125,.35);}
+.step-text h3{font-size:16px;font-weight:700;color:var(--star);margin-bottom:5px;padding-top:12px;}
+.step-text p{font-size:13px;color:var(--muted);line-height:1.6;}
+
+/* LANGUAGES */
+.lang-pills{display:flex;flex-wrap:wrap;justify-content:center;gap:10px;}
+.pill{background:rgba(196,181,253,.1);border:1px solid rgba(196,181,253,.22);border-radius:30px;padding:9px 22px;font-size:14px;color:var(--soft);font-weight:700;transition:background .2s;}
+.pill:hover{background:rgba(196,181,253,.18);}
+.pill.more{background:transparent;border-color:rgba(255,255,255,.08);color:var(--muted);font-style:italic;font-weight:400;}
+
+/* OCCASIONS */
+.occasion-list{display:flex;flex-wrap:wrap;justify-content:center;gap:12px;}
+.occ-tag{background:rgba(255,181,200,.08);border:1px solid rgba(255,181,200,.2);border-radius:14px;padding:13px 20px;font-size:14px;color:var(--blush);transition:background .2s;}
+.occ-tag:hover{background:rgba(255,181,200,.14);}
+
+/* TESTIMONIALS */
+.testi-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px;}
+.testi-card{background:rgba(255,217,125,.05);border:1px solid rgba(255,217,125,.12);border-radius:18px;padding:26px 24px;}
+.testi-stars{color:var(--moon);font-size:14px;margin-bottom:12px;display:block;}
+.testi-text{font-family:'Playfair Display',serif;font-style:italic;font-size:15px;color:var(--star);line-height:1.8;margin-bottom:14px;}
+.testi-author{font-size:12px;color:var(--muted);font-weight:600;}
+
+/* ABOUT US */
+.about-wrap{display:grid;grid-template-columns:1fr 1fr;gap:40px;align-items:center;}
+@media(max-width:640px){.about-wrap{grid-template-columns:1fr;}}
+.about-text{}
+.about-text h2{font-family:'Playfair Display',serif;font-size:clamp(26px,6vw,34px);color:var(--moon);margin-bottom:14px;}
+.about-text p{font-size:14px;color:var(--muted);line-height:1.8;margin-bottom:14px;}
+.about-trust{display:flex;flex-wrap:wrap;gap:10px;margin-top:18px;}
+.trust-chip{display:flex;align-items:center;gap:8px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.09);border-radius:12px;padding:9px 14px;font-size:13px;color:var(--star);}
+.trust-chip .ti{font-size:18px;}
+.about-photo-box{border-radius:22px;overflow:hidden;border:2px solid rgba(196,181,253,.2);background:rgba(196,181,253,.06);aspect-ratio:4/5;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;position:relative;}
+.about-photo-box img{width:100%;height:100%;object-fit:cover;display:none;border-radius:20px;}
+.photo-placeholder{text-align:center;padding:30px 20px;}
+.photo-placeholder .ph-icon{font-size:48px;margin-bottom:12px;display:block;opacity:.4;}
+.photo-placeholder p{font-size:13px;color:var(--muted);line-height:1.6;}
+.photo-placeholder strong{color:var(--soft);}
+/* When you have a real photo, just replace the img src and it will show */
+.about-photo-box.has-photo .photo-placeholder{display:none;}
+.about-photo-box.has-photo img{display:block;}
+
+.photo-upload-btn{display:inline-block;background:linear-gradient(135deg,var(--moon),#ff9f43);color:#1a0800;font-family:'Nunito',sans-serif;font-weight:800;font-size:14px;padding:11px 24px;border-radius:30px;cursor:pointer;box-shadow:0 6px 20px rgba(255,217,125,.35);transition:transform .2s,box-shadow .2s;}
+.photo-upload-btn:hover{transform:translateY(-2px);box-shadow:0 10px 28px rgba(255,217,125,.5);}
+.photo-change-btn{position:absolute;bottom:14px;left:50%;transform:translateX(-50%);background:rgba(0,0,0,.55);border:1px solid rgba(255,255,255,.18);color:var(--star);font-family:'Nunito',sans-serif;font-weight:700;font-size:12px;padding:7px 18px;border-radius:20px;cursor:pointer;backdrop-filter:blur(6px);transition:background .2s;white-space:nowrap;}
+.photo-change-btn:hover{background:rgba(0,0,0,.75);}
+/* CTA SECTION */
+.cta-section{text-align:center;padding:90px 24px;background:radial-gradient(ellipse at 50% 100%,rgba(80,60,160,.2) 0%,transparent 65%);}
+.cta-section h2{font-family:'Playfair Display',serif;font-size:clamp(28px,7vw,46px);color:var(--moon);margin-bottom:10px;line-height:1.2;}
+.cta-section p{font-size:15px;color:var(--muted);margin-bottom:32px;}
+
+/* FOOTER */
+footer{text-align:center;padding:32px 24px;border-top:1px solid rgba(255,255,255,.06);font-size:13px;color:var(--muted);}
+footer a{color:var(--soft);text-decoration:none;}
+footer .brand-small{font-family:'Playfair Display',serif;font-size:20px;color:var(--moon);margin-bottom:6px;display:block;}
+
+/* FADE */
+.fade-up{opacity:0;transform:translateY(24px);transition:opacity .65s ease,transform .65s ease;}
+.fade-up.visible{opacity:1;transform:translateY(0);}
+
+/* POPUP */
+.popup-overlay{display:none;inset:0;background:rgba(4,3,12,.9);backdrop-filter:blur(7px);align-items:center;justify-content:center;padding:20px;overflow-y:auto;}
+.popup-overlay.active{display:flex;}
+.popup{background:linear-gradient(160deg,#1c1848 0%,#0d0b24 100%);border:1px solid rgba(196,181,253,.22);border-radius:26px;width:100%;max-width:500px;padding:36px 30px 32px;position:relative;box-shadow:0 28px 90px rgba(0,0,0,.75),0 0 80px rgba(80,60,160,.15);animation:popIn .32s cubic-bezier(.34,1.56,.64,1);margin:auto;}
+@keyframes popIn{from{opacity:0;transform:scale(.88) translateY(20px)}to{opacity:1;transform:scale(1) translateY(0)}}
+.popup-close{position:absolute;top:16px;right:16px;background:rgba(255,255,255,.08);border:none;color:var(--muted);font-size:18px;width:32px;height:32px;border-radius:50%;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background .2s;}
+.popup-close:hover{background:rgba(255,255,255,.16);color:var(--text);}
+.popup-moon{font-size:38px;display:block;margin-bottom:6px;text-align:center;}
+.popup h2{font-family:'Playfair Display',serif;font-size:22px;color:var(--moon);text-align:center;margin-bottom:4px;}
+.popup-sub{text-align:center;font-size:13px;color:var(--muted);margin-bottom:22px;}
+.popup-step{display:none;}
+.popup-step.active{display:block;}
+.step-indicator{display:flex;justify-content:center;align-items:center;gap:8px;margin-bottom:22px;}
+.step-dot{width:8px;height:8px;border-radius:50%;background:rgba(255,255,255,.14);transition:all .3s;}
+.step-dot.active{background:var(--moon);width:24px;border-radius:4px;box-shadow:0 0 8px rgba(255,217,125,.5);}
+.step-dot.done{background:rgba(255,217,125,.38);}
+.form-group{margin-bottom:13px;}
+.form-group label{display:block;font-size:11px;font-weight:700;color:var(--soft);margin-bottom:6px;letter-spacing:.9px;text-transform:uppercase;}
+.form-group input,.form-group select{width:100%;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);border-radius:12px;padding:12px 16px;color:var(--text);font-family:'Nunito',sans-serif;font-size:15px;outline:none;transition:border-color .2s;}
+.form-group input::placeholder{color:var(--muted);}
+.form-group input:focus,.form-group select:focus{border-color:var(--soft);}
+.form-group select option{background:#1a1540;color:var(--text);}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+.field-error{font-size:11px;color:#ff7c7c;margin-top:4px;display:none;}
+.popup-next-btn{width:100%;padding:14px;border-radius:50px;background:linear-gradient(135deg,var(--moon),#ff9f43);color:#1a0800;font-family:'Nunito',sans-serif;font-weight:800;font-size:15px;border:none;cursor:pointer;margin-top:8px;transition:transform .2s,box-shadow .2s;box-shadow:0 6px 20px rgba(255,217,125,.3);}
+.popup-next-btn:hover{transform:translateY(-2px);box-shadow:0 10px 28px rgba(255,217,125,.46);}
+.payment-tabs{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:20px;}
+.pay-tab{padding:12px;border-radius:14px;border:2px solid rgba(255,255,255,.1);background:var(--card);cursor:pointer;text-align:center;transition:all .2s;}
+.pay-tab.selected{border-color:var(--moon);background:rgba(255,217,125,.1);}
+.pay-tab .tab-icon{font-size:22px;display:block;margin-bottom:4px;}
+.pay-tab .tab-label{font-size:12px;font-weight:700;color:var(--soft);}
+.qr-section{text-align:center;}
+.qr-hint{font-size:13px;color:var(--muted);margin-bottom:4px;}
+.qr-amount{font-family:'Playfair Display',serif;font-size:30px;color:var(--moon);margin-bottom:4px;}
+.qr-box{background:white;border-radius:16px;padding:14px;display:inline-block;margin:10px 0 8px;box-shadow:0 8px 32px rgba(0,0,0,.4);}
+.qr-box img{width:160px;height:160px;display:block;}
+.qr-upi-id{font-size:12px;color:var(--soft);background:rgba(196,181,253,.1);padding:4px 14px;border-radius:20px;display:inline-block;margin-bottom:14px;}
+.upload-area{border:2px dashed rgba(255,255,255,.14);border-radius:14px;padding:18px;text-align:center;cursor:pointer;transition:border-color .2s;margin-top:12px;}
+.upload-area:hover{border-color:rgba(196,181,253,.4);}
+.upload-area input[type=file]{display:none;}
+.upload-icon{font-size:26px;margin-bottom:5px;display:block;}
+.upload-label{font-size:13px;color:var(--muted);}
+.upload-label strong{color:var(--soft);}
+.file-chosen{font-size:12px;color:var(--moon);margin-top:6px;display:none;}
+.wa-btn{display:flex;align-items:center;justify-content:center;gap:10px;width:100%;padding:14px;border-radius:50px;background:linear-gradient(135deg,#25D366,#128C7E);color:white;font-family:'Nunito',sans-serif;font-weight:800;font-size:15px;border:none;cursor:pointer;text-decoration:none;text-align:center;box-shadow:0 6px 20px rgba(37,211,102,.3);transition:transform .2s,box-shadow .2s;}
+.wa-btn:hover{transform:translateY(-2px);box-shadow:0 10px 28px rgba(37,211,102,.46);}
+.back-link{display:block;text-align:center;margin-top:12px;font-size:13px;color:var(--muted);cursor:pointer;background:none;border:none;font-family:'Nunito',sans-serif;}
+.back-link:hover{color:var(--soft);}
+.confirm-icon{font-size:56px;text-align:center;display:block;margin-bottom:12px;}
+.order-summary{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:14px;padding:16px 18px;margin:16px 0;font-size:14px;line-height:2;}
+.order-summary span{color:var(--muted);}
+.order-summary strong{color:var(--star);}
+</style>
+</head>
+<body>
+
+<canvas id="starCanvas"></canvas>
+
+<!-- ============ POPUP ============ -->
+<div class="popup-overlay" id="popupOverlay">
+  <div class="popup">
+    <button class="popup-close" onclick="closePopup()">&#10005;</button>
+    <div class="step-indicator">
+      <div class="step-dot active" id="dot1"></div>
+      <div class="step-dot" id="dot2"></div>
+      <div class="step-dot" id="dot3"></div>
+    </div>
+
+    <!-- STEP 1 -->
+    <div class="popup-step active" id="step1">
+      <span class="popup-moon">&#127769;</span>
+      <h2>Create Your Baby's Lullaby</h2>
+      <p class="popup-sub">Fill in the details and we'll craft something magical &#10024;</p>
+      <div class="form-group">
+        <label>Baby's Name *</label>
+        <input type="text" id="babyName" placeholder="e.g. Aarav, Priya, Myra&#8230;">
+        <div class="field-error" id="babyNameErr">Please enter your baby's name</div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Father's Name *</label>
+          <input type="text" id="fatherName" placeholder="Dad's name">
+          <div class="field-error" id="fatherNameErr">Required</div>
+        </div>
+        <div class="form-group">
+          <label>Mother's Name *</label>
+          <input type="text" id="motherName" placeholder="Mom's name">
+          <div class="field-error" id="motherNameErr">Required</div>
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Language *</label>
+        <select id="language">
+          <option value="">&#8212; Choose your language &#8212;</option>
+          <option value="Hindi">&#2361;&#2367;&#2344;&#2381;&#2342;&#2368; Hindi</option>
+          <option value="Marathi">&#2350;&#2352;&#2366;&#2336;&#2368; Marathi</option>
+          <option value="Gujarati">&#2711;&#2753;&#2716;&#2736;&#2750;&#2724;&#2752; Gujarati</option>
+          <option value="Tamil">&#2980;&#2990;&#3007;&#2996;&#3021; Tamil</option>
+          <option value="Telugu">&#3108;&#3142;&#3122;&#3137;&#3095;&#3137; Telugu</option>
+          <option value="Kannada">&#3221;&#3240;&#3277;&#3240;&#3233; Kannada</option>
+          <option value="Punjabi">&#2602;&#2672;&#2588;&#2622;&#2604;&#2624; Punjabi</option>
+          <option value="Bengali">&#2476;&#2494;&#2434;&#2482;&#2494; Bengali</option>
+          <option value="English">English</option>
+        </select>
+        <div class="field-error" id="languageErr">Please select a language</div>
+      </div>
+      <div class="form-group">
+        <label>WhatsApp Number *</label>
+        <input type="tel" id="waNumber" placeholder="10-digit number (songs delivered here)" maxlength="10">
+        <div class="field-error" id="waNumberErr">Please enter a valid 10-digit number</div>
+      </div>
+      <button class="popup-next-btn" onclick="goToStep2()">Continue to Payment &#8594;</button>
+    </div>
+
+    <!-- STEP 2 -->
+    <div class="popup-step" id="step2">
+      <span class="popup-moon">&#128179;</span>
+      <h2>Pay &#8377;999</h2>
+      <p class="popup-sub">Scan QR &amp; upload screenshot &#8212; or chat with us on WhatsApp</p>
+      <div class="payment-tabs">
+        <div class="pay-tab selected" id="tab-qr" onclick="switchTab('qr')">
+          <span class="tab-icon">&#128242;</span>
+          <span class="tab-label">Pay via QR / UPI</span>
+        </div>
+        <div class="pay-tab" id="tab-wa" onclick="switchTab('wa')">
+          <span class="tab-icon">&#128172;</span>
+          <span class="tab-label">Chat on WhatsApp</span>
+        </div>
+      </div>
+
+      <!-- QR Tab -->
+      <div id="qrTab" class="qr-section">
+        <p class="qr-hint">Scan with Google Pay &#183; PhonePe &#183; Paytm &#183; any UPI app</p>
+        <div class="qr-amount">&#8377;999</div>
+        <div class="qr-box">
+          <!--
+            REPLACE THIS with your actual Google Pay QR image.
+            Upload your QR image and set the src to your image URL.
+            Example: <img src="https://yourdomain.com/gpay-qr.png" alt="Pay Rs 999">
+          -->
+          <img src="https://api.qrserver.com/v1/create-qr-code/?size=160x160&color=000000&bgcolor=ffffff&data=upi://pay?pa=sleepychanda%40okicici%26pn=SleepyChanda%26am=999%26cu=INR" alt="Scan to pay Rs 999">
+        </div>
+        <div class="qr-upi-id">sleepychanda@okicici</div>
+        <p style="font-size:13px;color:var(--muted);margin-bottom:6px;">After payment, upload your screenshot below:</p>
+        <div class="upload-area" onclick="document.getElementById('screenshotFile').click()">
+          <input type="file" id="screenshotFile" accept="image/*" onchange="fileChosen(this)">
+          <span class="upload-icon">&#128248;</span>
+          <p class="upload-label"><strong>Tap to upload</strong> payment screenshot</p>
+          <p class="file-chosen" id="fileChosen"></p>
+        </div>
+        <button class="popup-next-btn" onclick="goToStep3()" style="margin-top:16px;">Submit My Order &#127925;</button>
+      </div>
+
+      <!-- WhatsApp Tab -->
+      <div id="waTab" style="display:none;text-align:center;padding:8px 0;">
+        <p style="font-size:14px;color:var(--muted);margin-bottom:18px;line-height:1.75;">
+          Prefer to order personally? Our team will send you the QR code and confirm everything over WhatsApp. Most orders answered within 30 minutes. &#128155;
+        </p>
+        <a class="wa-btn" id="waOrderLink" href="#" target="_blank" rel="noopener">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="white"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51a12.8 12.8 0 00-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+          Talk to Us on WhatsApp
+        </a>
+        <p style="font-size:12px;color:var(--muted);margin-top:10px;">We typically respond within 30 minutes</p>
+      </div>
+
+      <button class="back-link" onclick="showStep(1)">&#8592; Back to Details</button>
+    </div>
+
+    <!-- STEP 3 -->
+    <div class="popup-step" id="step3">
+      <span class="confirm-icon">&#127769;</span>
+      <h2 style="text-align:center;font-family:'Playfair Display',serif;color:var(--moon);font-size:22px;margin-bottom:6px;">Order Received!</h2>
+      <p class="popup-sub">Your lullaby is being crafted with love &#128155;</p>
+      <div class="order-summary" id="orderSummary"></div>
+      <p style="font-size:13px;color:var(--muted);text-align:center;line-height:1.75;margin-bottom:18px;">
+        We'll send 2 personalized lullabies to your WhatsApp number <strong style="color:var(--soft)">within the same day</strong>. &#127925;
+      </p>
+      <button class="popup-next-btn" onclick="closePopup()">Close &#10024;</button>
+    </div>
+  </div>
+</div>
+
+<!-- ============ HERO ============ -->
+<header>
+  <div class="moon-wrap">
+    <div class="moon-glow"></div>
+    <span class="moon-emoji">&#127769;</span>
+  </div>
+  <h1 class="brand">Dadi Ki Lori </h1>
+  <p class="tagline">Har raat ka pyaara sa lullaby&#8230;<br>ab sirf aapke baby ke naam se</p>
+  <span class="badge">&#10022; India's First Personalized Baby Lullaby Service</span>
+  <p class="hero-desc">Your newborn is one-of-a-kind. They deserve a lori that knows their name &#8212; sung softly, made just for them. A sound they'll fall asleep to every night, and a memory your family will treasure forever.</p>
+  <div class="hero-chips">
+    <span class="chip">&#127925; Baby's name in every verse</span>
+    <span class="chip">&#128106; Mom &amp; Dad names included</span>
+    <span class="chip">&#128242; WhatsApp delivery</span>
+    <span class="chip">&#127897; Studio-quality MP3</span>
+    <span class="chip">&#127759; 10+ Indian languages</span>
+    <span class="chip">&#9889; Same day</span>
+  </div>
+  <a href="#order" class="cta-btn" onclick="openPopup(event)">&#127769; Create My Lullaby</a>
+  <p class="price-note">Just <strong>&#8377;999</strong> &#183; One-time &#183; No subscription ever</p>
+</header>
+
+<hr class="divider">
+
+<!-- WHY -->
+<section class="section fade-up">
+  <h2 class="section-title">Why Dadi Ki Lori?</h2>
+  <p class="section-sub">Those 3am moments are precious and exhausting.<br>Give your baby a voice that knows their name &#8212; a lullaby made only for them, forever.</p>
+  <div class="why-grid">
+    <div class="why-card"><div class="icon">&#10024;</div><h3>Truly Personalized</h3><p>Not a template. Your baby's name, your family names &#8212; woven into every single line of the lori.</p></div>
+    <div class="why-card"><div class="icon">&#127897;</div><h3>Studio-Quality Audio</h3><p>Soft Indian melodies recorded with clarity. Sounds beautiful on a speaker or earphones at bedtime.</p></div>
+    <div class="why-card"><div class="icon">&#127762;</div><h3>Your Language, Your Roots</h3><p>Hindi, Marathi, Tamil, Telugu, Gujarati, Punjabi, Bengali, Kannada &#8212; music in your mother tongue.</p></div>
+    <div class="why-card"><div class="icon">&#128242;</div><h3>Delivered Same Day</h3><p>Order now, receive 2 song options on WhatsApp today. No waiting, no app, no hassle.</p></div>
+    <div class="why-card"><div class="icon">&#128157;</div><h3>A Keepsake Forever</h3><p>Play it at 3am tonight. Play it at their wedding someday. This lullaby is yours &#8212; for life.</p></div>
+    <div class="why-card"><div class="icon">&#127873;</div><h3>Most Thoughtful Gift</h3><p>Give something no one else can &#8212; a naming ceremony or baby shower present they'll never forget.</p></div>
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- WHAT YOU GET -->
+<section class="section fade-up">
+  <h2 class="section-title">&#127925; What You Get</h2>
+  <p class="section-sub">Everything you need, beautifully delivered</p>
+  <div class="get-box">
+    <ul class="get-list">
+      <li><span class="dot"></span>2 unique customized lullaby options to choose from</li>
+      <li><span class="dot"></span>Baby's name + both parents' names in the lyrics</li>
+      <li><span class="dot"></span>Soft, calming Indian melody with professional vocals</li>
+      <li><span class="dot"></span>Studio-quality MP3 &#8212; download &amp; keep it forever</li>
+      <li><span class="dot"></span>Available in your preferred Indian language</li>
+      <li><span class="dot"></span>Delivered directly to WhatsApp within same day</li>
+    </ul>
+    <div class="price-tag">&#8377;999 <small>only</small></div>
+    <p style="color:var(--muted);font-size:13px;margin-top:6px;">One-time payment &#183; Yours forever &#183; No hidden charges</p>
+    <button class="cta-btn" onclick="openPopup(event)" style="margin-top:26px;">Order Now &#8594;</button>
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- HOW IT WORKS -->
+<section class="section fade-up">
+  <h2 class="section-title">How It Works</h2>
+  <p class="section-sub">From your details to baby's bedtime &#8212; in hours, not days.</p>
+  <div class="steps">
+    <div class="step"><div class="step-num">1</div><div class="step-text"><h3>Share Baby's Details</h3><p>Enter your baby's name, Mom &amp; Dad's names, choose a language. Takes less than 60 seconds.</p></div></div>
+    <div class="step"><div class="step-num">2</div><div class="step-text"><h3>Pay &#8377;999 Securely</h3><p>Scan our Google Pay QR code &#8212; or chat with us on WhatsApp. UPI, card, wallet &#8212; all accepted.</p></div></div>
+    <div class="step"><div class="step-num">3</div><div class="step-text"><h3>We Create Your Lori</h3><p>Our music team personally crafts a soft lullaby with your baby's name woven into every line.</p></div></div>
+    <div class="step"><div class="step-num">4</div><div class="step-text"><h3>Receive on WhatsApp</h3><p>Two song options delivered to your number same day. Play, share, and cherish &#8212; forever. &#127769;</p></div></div>
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- LANGUAGES -->
+<section class="section fade-up">
+  <h2 class="section-title">&#127769; Languages Available</h2>
+  <p class="section-sub">Lori in the language of your heart and home</p>
+  <div class="lang-pills">
+    <span class="pill">&#2361;&#2367;&#2344;&#2381;&#2342;&#2368; Hindi</span>
+    <span class="pill">&#2350;&#2352;&#2366;&#2336;&#2368; Marathi</span>
+    <span class="pill">&#2711;&#2753;&#2716;&#2736;&#2750;&#2724;&#2752; Gujarati</span>
+    <span class="pill">&#2980;&#2990;&#3007;&#2996;&#3021; Tamil</span>
+    <span class="pill">&#3108;&#3142;&#3122;&#3137;&#3095;&#3137; Telugu</span>
+    <span class="pill">&#3221;&#3240;&#3277;&#3240;&#3233; Kannada</span>
+    <span class="pill">&#2602;&#2672;&#2588;&#2622;&#2604;&#2624; Punjabi</span>
+    <span class="pill">&#2476;&#2494;&#2434;&#2482;&#2494; Bengali</span>
+    <span class="pill">English</span>
+    <span class="pill more">+ more languages coming soon&#8230;</span>
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- PERFECT FOR -->
+<section class="section fade-up">
+  <h2 class="section-title">&#127873; Perfect For</h2>
+  <p class="section-sub">A gift no one else will think of &#8212; and no one will ever forget.</p>
+  <div class="occasion-list">
+    <div class="occ-tag">&#127868; Daily newborn sleep routine</div>
+    <div class="occ-tag">&#127800; Naming ceremony (Naamkaran)</div>
+    <div class="occ-tag">&#127872; Baby shower gift</div>
+    <div class="occ-tag">&#127874; First birthday memory</div>
+    <div class="occ-tag">&#128157; Emotional keepsake for parents</div>
+    <div class="occ-tag">&#127882; Godh Bharai gift</div>
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- TESTIMONIALS -->
+<section class="section fade-up">
+  <h2 class="section-title">&#11088; What Parents Say</h2>
+  <p class="section-sub">Real orders. Real families. Real tears of joy.</p>
+  <div class="testi-grid">
+    <div class="testi-card">
+      <span class="testi-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</span>
+      <p class="testi-text">"When the song played for the first time and we heard 'Aarav' in the lori, we both cried. Baby went to sleep within minutes. This is pure magic."</p>
+      <span class="testi-author">&#8212; Priya &amp; Rahul, Pune &#127800;</span>
+    </div>
+    <div class="testi-card">
+      <span class="testi-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</span>
+      <p class="testi-text">"I gifted this at my best friend's baby shower. She called me crying happy tears. The Marathi lullaby with 'Saanvi' in it was just too beautiful."</p>
+      <span class="testi-author">&#8212; Neha, Mumbai &#128155;</span>
+    </div>
+    <div class="testi-card">
+      <span class="testi-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</span>
+      <p class="testi-text">"Order kiya raat ko, subah delivery aa gayi. Quality itni achhi thi ki humne dono songs daadi ko bhi bheje. Poora parivaar emotional ho gaya."</p>
+      <span class="testi-author">&#8212; Amit &amp; Sunita, Delhi &#127769;</span>
+    </div>
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- ABOUT US -->
+<section class="section fade-up" id="about">
+  <div class="about-wrap">
+    <div class="about-text">
+      <h2>The People Behind<br>Every Lullaby &#127769;</h2>
+      <p>Dadi Ki Lori was born from a simple truth &#8212; every baby deserves to hear their own name in a lullaby. We are a small, passionate team of musicians, parents, and creators from India who believe music can be the most personal gift you give.</p>
+      <p>Every lullaby we create is handcrafted by our team &#8212; not AI-generated, not a template. Real musicians, real emotions, real care poured into every note. When you order, a human being sits down and writes something just for your child.</p>
+      <p>We've helped hundreds of Indian families create a bedtime ritual their babies love &#8212; and a memory parents will never forget.</p>
+      <div class="about-trust">
+        <div class="trust-chip"><span class="ti">&#127897;</span> Real musicians, not AI</div>
+        <div class="trust-chip"><span class="ti">&#127769;</span> 500+ families served</div>
+        <div class="trust-chip"><span class="ti">&#10024;</span> 100% handcrafted</div>
+        <div class="trust-chip"><span class="ti">&#128242;</span> Same-day delivery</div>
+        <div class="trust-chip"><span class="ti">&#127759;</span> Pan-India team</div>
+        <div class="trust-chip"><span class="ti">&#128157;</span> Made with love</div>
+      </div>
+    </div>
+
+    <div class="about-photo-box has-photo" id="teamPhotoBox">
+      <img src="https://images.mid-day.com/images/images/2025/jan/spotly-0901_d.jpg" alt="SleepyChanda Team" id="teamPhoto">
+      <div class="photo-placeholder" id="photoPlaceholder" style="display:none">
+        <span class="ph-icon">&#127769;</span>
+        <p style="color:var(--star);font-weight:700;font-size:15px;margin-bottom:8px;">Our Team</p>
+        <p style="color:var(--muted);font-size:13px;margin-bottom:20px;line-height:1.6;">Click below to add<br>your team photo</p>
+        <label for="teamPhotoInput" class="photo-upload-btn">
+          &#128247; Choose Photo
+          <input type="file" id="teamPhotoInput" accept="image/*" style="display:none" onchange="loadTeamPhoto(this)">
+        </label>
+        <p style="font-size:11px;color:var(--muted);margin-top:12px;opacity:.6;">JPG, PNG — any size works</p>
+      </div>
+      <button class="photo-change-btn" id="photoChangeBtn" onclick="document.getElementById('teamPhotoInput').click()" style="display:block">&#128247; Change Photo</button>
+    </div>
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- CTA -->
+<section class="cta-section fade-up" id="order">
+  <h2>Create Your Baby's<br>Lullaby Today</h2>
+  <p>Just &#8377;999 &#183; Same Day Delivery on WhatsApp &#183; Made with Love &#127769;</p>
+  <a href="#" class="cta-btn" onclick="openPopup(event)">&#128073; Create My Lullaby</a>
+  <p style="margin-top:16px;font-size:13px;color:var(--muted);">Thousands of Indian families have their own lori. Yours deserves one too. &#10024;</p>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <span class="brand-small">&#127769; Dadi Ki Lori</span>
+  <p>Made with love in India</p>
+  <p style="margin-top:6px;"><a href="/cdn-cgi/l/email-protection#c5ada0a9a9aa85b6a9a0a0b5bca6ada4aba1a4eba6aaa8"><span class="__cf_email__" data-cfemail="4028252c2c2f00332c252530392328212e24216e232f2d">[email&#160;protected]</span></a></p>
+  <p style="margin-top:10px;font-size:12px;">&#169; 2019-2026 SDadi Ki Lori
+</footer>
+
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+// ============ STARS ============
+const canvas = document.getElementById('starCanvas');
+const ctx = canvas.getContext('2d');
+
+function resizeCanvas() {
+  canvas.width = window.innerWidth;
+  canvas.height = Math.max(document.body.scrollHeight, window.innerHeight);
+}
+
+let stars = [];
+function initStars() {
+  stars = [];
+  const count = Math.max(Math.floor((canvas.width * canvas.height) / 1200), 350);
+  for (let i = 0; i < count; i++) {
+    const r = Math.random();
+    let size, brightness;
+    if (r < 0.65) { size = Math.random() * 0.7 + 0.2; brightness = Math.random() * 0.5 + 0.2; }
+    else if (r < 0.88) { size = Math.random() * 0.9 + 0.8; brightness = Math.random() * 0.5 + 0.35; }
+    else { size = Math.random() * 1.2 + 1.6; brightness = Math.random() * 0.35 + 0.65; }
+    stars.push({
+      x: Math.random() * canvas.width,
+      y: Math.random() * canvas.height,
+      r: size, base: brightness,
+      speed: Math.random() * 0.5 + 0.15,
+      offset: Math.random() * Math.PI * 2,
+      hue: Math.random() < 0.12 ? (Math.random() < 0.5 ? 'warm' : 'cool') : 'white'
+    });
+  }
+}
+
+// ============ SHOOTING STARS ============
+class Shooter {
+  constructor(delay) {
+    this.frame = -Math.floor(delay);
+    this._init();
+  }
+  _init() {
+    this.sx = Math.random() * canvas.width * 0.65 + 10;
+    this.sy = Math.random() * canvas.height * 0.4 + 10;
+    this.angle = Math.PI / 4 + (Math.random() * 0.35 - 0.175);
+    this.len = Math.random() * 120 + 70;
+    this.spd = Math.random() * 0.55 + 0.22;
+    this.total = Math.floor(Math.random() * 240 + 280);
+  }
+  draw() {
+    this.frame++;
+    if (this.frame < 0) return;
+    const p = this.frame / this.total;
+    if (p >= 1) { this._init(); this.frame = 0; return; }
+    let a = p < 0.12 ? p / 0.12 : p > 0.78 ? 1 - (p - 0.78) / 0.22 : 1;
+    a = Math.max(0, Math.min(1, a)) * 0.82;
+    const dist = this.spd * this.frame;
+    const tx = this.sx + Math.cos(this.angle) * dist;
+    const ty = this.sy + Math.sin(this.angle) * dist;
+    const bx = tx - Math.cos(this.angle) * this.len;
+    const by = ty - Math.sin(this.angle) * this.len;
+    const g = ctx.createLinearGradient(bx, by, tx, ty);
+    g.addColorStop(0, 'rgba(255,255,255,0)');
+    g.addColorStop(0.55, `rgba(255,242,210,${a * 0.4})`);
+    g.addColorStop(0.88, `rgba(255,252,230,${a * 0.75})`);
+    g.addColorStop(1, `rgba(255,255,255,${a})`);
+    ctx.beginPath(); ctx.moveTo(bx, by); ctx.lineTo(tx, ty);
+    ctx.strokeStyle = g; ctx.lineWidth = 1.4; ctx.lineCap = 'round'; ctx.stroke();
+    const rg = ctx.createRadialGradient(tx, ty, 0, tx, ty, 4);
+    rg.addColorStop(0, `rgba(255,255,255,${a * 0.9})`);
+    rg.addColorStop(1, 'rgba(255,255,255,0)');
+    ctx.beginPath(); ctx.arc(tx, ty, 4, 0, Math.PI * 2);
+    ctx.fillStyle = rg; ctx.fill();
+  }
+}
+
+const shooters = Array.from({length: 5}, (_, i) => new Shooter(i * 115));
+let t = 0;
+
+function drawFrame() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  t += 0.02;
+  for (const s of stars) {
+    const tw = s.base + s.base * 0.55 * Math.sin(t * s.speed + s.offset);
+    const a = Math.max(0.05, Math.min(1, tw));
+    ctx.beginPath(); ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
+    ctx.fillStyle = s.hue === 'warm' ? `rgba(255,228,175,${a})` : s.hue === 'cool' ? `rgba(198,215,255,${a})` : `rgba(245,235,210,${a})`;
+    ctx.fill();
+    if (s.r > 1.6 && a > 0.6) {
+      const g = ctx.createRadialGradient(s.x, s.y, 0, s.x, s.y, s.r * 4);
+      g.addColorStop(0, `rgba(255,238,195,${a * 0.28})`); g.addColorStop(1, 'rgba(255,238,195,0)');
+      ctx.beginPath(); ctx.arc(s.x, s.y, s.r * 4, 0, Math.PI * 2); ctx.fillStyle = g; ctx.fill();
+    }
+  }
+  for (const s of shooters) s.draw();
+  requestAnimationFrame(drawFrame);
+}
+
+resizeCanvas(); initStars(); drawFrame();
+window.addEventListener('resize', () => { resizeCanvas(); initStars(); });
+new ResizeObserver(() => { resizeCanvas(); initStars(); }).observe(document.body);
+
+// ============ POPUP ============
+const WA_NUMBER = '919920050859';
+
+function openPopup(e) {
+  if (e) e.preventDefault();
+  document.getElementById('popupOverlay').classList.add('active');
+  document.body.style.overflow = 'hidden';
+}
+function closePopup() {
+  document.getElementById('popupOverlay').classList.remove('active');
+  document.body.style.overflow = '';
+}
+document.getElementById('popupOverlay').addEventListener('click', function(e) { if (e.target === this) closePopup(); });
+
+function showStep(n) {
+  document.querySelectorAll('.popup-step').forEach((s, i) => s.classList.toggle('active', i + 1 === n));
+  [1, 2, 3].forEach(i => {
+    const d = document.getElementById('dot' + i);
+    d.classList.toggle('active', i === n);
+    d.classList.toggle('done', i < n);
+  });
+}
+
+function goToStep2() {
+  const baby = document.getElementById('babyName').value.trim();
+  const dad  = document.getElementById('fatherName').value.trim();
+  const mom  = document.getElementById('motherName').value.trim();
+  const lang = document.getElementById('language').value;
+  const wa   = document.getElementById('waNumber').value.trim();
+  let ok = true;
+  const chk = (v, id) => { document.getElementById(id).style.display = v ? 'none' : 'block'; if (!v) ok = false; };
+  chk(baby, 'babyNameErr'); chk(dad, 'fatherNameErr'); chk(mom, 'motherNameErr');
+  chk(lang, 'languageErr'); chk(wa.length === 10 && /^\d+$/.test(wa), 'waNumberErr');
+  if (!ok) return;
+  const msg = `Hi! I want to order a personalized lullaby from Dadi Ki Lori \uD83C\uDF19\n\n\uD83D\uDC76 Baby: ${baby}\n\uD83D\uDC68 Father: ${dad}\n\uD83D\uDC69 Mother: ${mom}\n\uD83C\uDF10 Language: ${lang}\n\uD83D\uDCF1 WhatsApp: +91${wa}\n\nKindly share the payment QR. Total: \u20B9999 \uD83D\uDE0A`;
+  document.getElementById('waOrderLink').href = `https://wa.me/${WA_NUMBER}?text=${encodeURIComponent(msg)}`;
+  showStep(2);
+}
+
+function goToStep3() {
+  const baby = document.getElementById('babyName').value.trim();
+  const dad  = document.getElementById('fatherName').value.trim();
+  const mom  = document.getElementById('motherName').value.trim();
+  const lang = document.getElementById('language').value;
+  const wa   = document.getElementById('waNumber').value.trim();
+  document.getElementById('orderSummary').innerHTML =
+    `<span>\uD83D\uDC76 Baby's Name</span> \u2014 <strong>${baby}</strong><br>` +
+    `<span>\uD83D\uDC68 Father</span> \u2014 <strong>${dad}</strong><br>` +
+    `<span>\uD83D\uDC69 Mother</span> \u2014 <strong>${mom}</strong><br>` +
+    `<span>\uD83C\uDF10 Language</span> \u2014 <strong>${lang}</strong><br>` +
+    `<span>\uD83D\uDCF2 WhatsApp</span> \u2014 <strong>+91 ${wa}</strong><br>` +
+    `<span>\uD83D\uDCB3 Amount</span> \u2014 <strong style="color:var(--moon)">\u20B9999</strong>`;
+  showStep(3);
+}
+
+function switchTab(tab) {
+  const qr = tab === 'qr';
+  document.getElementById('tab-qr').classList.toggle('selected', qr);
+  document.getElementById('tab-wa').classList.toggle('selected', !qr);
+  document.getElementById('qrTab').style.display = qr ? 'block' : 'none';
+  document.getElementById('waTab').style.display  = qr ? 'none' : 'block';
+}
+
+function fileChosen(input) {
+  const el = document.getElementById('fileChosen');
+  if (input.files && input.files.length > 0) {
+    el.style.display = 'block';
+    el.textContent = '\u2705 ' + input.files[0].name;
+  }
+}
+
+// ============ TEAM PHOTO ============
+function loadTeamPhoto(input) {
+  if (!input.files || !input.files[0]) return;
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    const img = document.getElementById('teamPhoto');
+    const box = document.getElementById('teamPhotoBox');
+    const placeholder = document.getElementById('photoPlaceholder');
+    const changeBtn = document.getElementById('photoChangeBtn');
+    img.src = e.target.result;
+    img.style.display = 'block';
+    placeholder.style.display = 'none';
+    changeBtn.style.display = 'block';
+    box.style.background = 'transparent';
+  };
+  reader.readAsDataURL(input.files[0]);
+}
+
+// ============ FADE IN ============
+const obs = new IntersectionObserver(entries => {
+  entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); obs.unobserve(e.target); } });
+}, { threshold: 0.08 });
+document.querySelectorAll('.fade-up').forEach(el => obs.observe(el));
+</script>
+</body>
+</html>
